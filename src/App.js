@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Card from './components/Card'
 import Welcome from './pages/Welcome'
 import SignIn from './pages/SignIn'
 import Projects from './pages/Projects'
 import Contact from './pages/Contact'
+import LoggedIn from './pages/LoggedIn'
 import {Route} from 'react-router-dom'
 import NavBar from './components/NavBar'
 
@@ -39,6 +40,7 @@ function App() {
       <Route exact path='/sign-in' component={SignIn} />
       <Route exact path='/projects' component={Projects} />
       <Route exact path='/contact' component={Contact} />
+      <Route exact path='/logged-in' component={LoggedIn} />
 
     </div>
   );
