@@ -5,9 +5,9 @@ function Home() {
   return (
     <div>
       <h1>Welcome to the Library</h1>
-      <botton>
+      <button>
         <Link to='/sign-in'>Sign in</Link>
-      </botton>
+      </button>
     </div>
   ); 
 }
