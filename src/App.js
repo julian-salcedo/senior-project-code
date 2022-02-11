@@ -3,7 +3,7 @@ import Card from './components/Card'
 import Welcome from './pages/Welcome'
 import SignIn from './pages/SignIn'
 import Catalog from './pages/Catalog'
-import Contact from './pages/Contact'
+import MyBooks from './pages/MyBooks'
 import {Route} from 'react-router-dom'
 import NavBar from './components/NavBar'
 
@@ -23,7 +23,7 @@ function App() {
       <Route exact path='/' component={Welcome} />
       <Route exact path='/sign-in' component={SignIn} />
       <Route exact path='/catalog' component={Catalog} />
-      <Route exact path='/contact' component={Contact} />
+      <Route exact path='/my-books' component={MyBooks} />
 
     </div>
   );
