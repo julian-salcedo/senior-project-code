@@ -5,7 +5,7 @@ function Card({title,imageUrl,body}) {
     return (
         <div className='card-container'>
             <div className='image-container'>
-                <img src={imageUrl} alt='' />
+                <img src={imageUrl} alt='image of a book' />
             </div>
             <div className='card-title'>
                 <h3>{title}</h3>
