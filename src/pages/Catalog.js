@@ -1,5 +1,6 @@
 import React from 'react';
 import Card from '../components/Card';
+import DefaultCover from '../random-book-cover.jpg';
 
 function Catalog() {
   return (
@@ -7,7 +8,7 @@ function Catalog() {
       <h1>Our Catalog</h1>
       <Card 
         title='Random Book' 
-        imageUrl='https://m.media-amazon.com/images/I/41gr3r3FSWL.jpg'
+        image={DefaultCover}
         body='random description'
       />
       <form>
