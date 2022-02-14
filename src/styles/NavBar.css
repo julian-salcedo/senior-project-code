@@ -42,3 +42,28 @@
 .navbar .rightSide svg {
   font-size: 40px;
 }
+
+@media only screen and (max-width: 800px) {
+  .navbar .rightSide a {
+    display: none;
+  }
+
+  .navbar .rightSide {
+    justify-content: flex-end;
+    padding-right: 50px;
+  }
+
+  .navbar .rightSide button {
+    display: inherit;
+  }
+}
+
+@media only screen and (min-width: 800px) {
+  .navbar .rigthSide button {
+    display: none;
+  }
+
+  .hiddenLinks {
+    display: none;
+  }
+}
