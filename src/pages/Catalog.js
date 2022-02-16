@@ -1,6 +1,6 @@
 import React from 'react';
 import Card from '../components/Card';
-import DefaultCover from '../random-book-cover.jpg';
+import DefaultCover from '../assets/random-book-cover.jpg';
 
 function Catalog() {
   return (
