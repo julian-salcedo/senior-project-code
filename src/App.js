@@ -6,6 +6,7 @@ import MyBooks from './pages/MyBooks'
 import Admin from './pages/Admin'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import NavBar from './components/NavBar'
+import Footer from './components/Footer'
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
           <Route exact path='/my-books' component={MyBooks} />
           <Route exact path='/admin' component={Admin} />
         </Switch>
+        <Footer />
       </Router>
     
     </div>
