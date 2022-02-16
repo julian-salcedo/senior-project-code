@@ -1,11 +1,11 @@
 import React from 'react'
 import '../styles/Card.css'
 
-function Card({title,imageUrl,body}) {
+function Card({title,image,body}) {
     return (
         <div className='card-container'>
             <div className='image-container'>
-                <img src={imageUrl} alt='' />
+                <img src={image} alt='image of a book' />
             </div>
             <div className='card-title'>
                 <h3>{title}</h3>
