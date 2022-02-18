@@ -54,7 +54,7 @@ function Catalog() {
             {books.map(function(book){
               return(
                 <td key={book.id}>
-                  <Card title={book.title} image={DefaultCover} body={book.desc}/>
+                  <Card title={book.title} image={DefaultCover} body={book.desc} page={"/catalog/" + book.id}/>
                 </td>
               )
             })}
