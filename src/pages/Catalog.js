@@ -1,5 +1,6 @@
 import React from 'react';
 import Card from '../components/Card';
+import '../styles/Catalog.css';
 import DefaultCover from '../assets/random-book-cover.jpg';
 import { collection, onSnapshot, getDocs} from 'firebase/firestore';
 import { db } from '../firebaseConfig';
@@ -48,21 +49,22 @@ function Catalog() {
   return (
     <div>
       <h1>Our Catalog</h1>
-      <table>
-        <tbody>
-          <tr>
-            {books.map(function(book){
-              return(
-                <td key={book.id}>
-                  <Card title={book.title} image={DefaultCover} body={book.desc}/>
-                </td>
-              )
-            })}
-        </tr>
-
-        </tbody>
-      </table>
       <input type='text' placeholder='Search...' id='search-bar' onChange={filter}/>
+      <div className='wrapper'>
+        <table>
+          <tbody>
+            <tr>
+              {books.map(function(book){
+                return(
+                  <td key={book.id}>
+                    <Card title={book.title} image={DefaultCover} body={book.desc}/>
+                  </td>
+                )
+              })}
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   ) 
 }
