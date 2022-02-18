@@ -50,6 +50,7 @@ function Catalog() {
     <div>
       <h1>Our Catalog</h1>
       <input type='text' placeholder='Search...' id='search-bar' onChange={filter}/>
+
       <div className='wrapper'>
         <table>
           <tbody>
@@ -57,11 +58,12 @@ function Catalog() {
               {books.map(function(book){
                 return(
                   <td key={book.id}>
-                    <Card title={book.title} image={DefaultCover} body={book.desc}/>
+                    <Card title={book.title} image={DefaultCover} body={book.desc} page={"/catalog/" + book.id}/>
                   </td>
                 )
               })}
           </tr>
+
           </tbody>
         </table>
       </div>
