@@ -1,39 +1,35 @@
 import React from 'react';
-import Card from '../components/Card';
 import DefaultCover from '../assets/random-book-cover.jpg';
-import { collection, onSnapshot, getDocs} from 'firebase/firestore';
-import { db } from '../firebaseConfig';
-import { useState, useEffect } from 'react';
 import {useParams} from 'react-router-dom';
-
+import { db } from '../firebaseConfig';
+import { doc, onSnapshot, getDoc } from 'firebase/firestore';
+import { useState, useEffect } from 'react';
 
 function BookInfo() {
 
-
-  const booksColRef = collection(db, 'books');
-  const [books, setBooks] = useState([]);
   let { id } = useParams();
+  const docRef = doc(db, 'books', id)
+
+  const [bookInfo, setBookInfo] = useState();
 
   useEffect(() => {
-    const getBooks = async () => {
-      const data = await getDocs(booksColRef);
-      setBooks(data.docs.map((doc) => {return ({ ...doc.data(), id: doc.id }) }));
-    }
-    getBooks();
+    getDoc(docRef).then((book) => {
+      let data = book.data()
+      setBookInfo(data);
+    })
   }, []);
 
-  onSnapshot(booksColRef, function(snapShot){
-    let b = [];
-    snapShot.docs.forEach(function(doc){
-      b.push({...doc.data(), id: doc.id})
-    })
-    setBooks(b);
-  })
+  // let title = "";
+  // onSnapshot(docRef, (doc) => {
+  //   title = doc.data().title;
+  //   console.log(title);
+  // })
   
   return (
     <div>
-      <h1>Book</h1>
-      <p>Id: {id}</p>
+      {console.log(bookInfo.title)}
+      <h1>{bookInfo.title}</h1>
+      <img src={DefaultCover} />
     </div>
   ) 
 }
