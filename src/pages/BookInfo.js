@@ -4,32 +4,35 @@ import {useParams} from 'react-router-dom';
 import { db } from '../firebaseConfig';
 import { doc, onSnapshot, getDoc } from 'firebase/firestore';
 import { useState, useEffect } from 'react';
-//test
+
 function BookInfo() {
 
   let { id } = useParams();
   const docRef = doc(db, 'books', id)
 
-  const [bookInfo, setBookInfo] = useState();
+  const [bookInfo, setBookInfo] = useState(null);
+  const [isPending, setIsPending] = useState(true);
 
   useEffect(() => {
-    getDoc(docRef).then((book) => {
-      let data = book.data()
-      setBookInfo(data);
-    })
+    getDoc(docRef)
+      .then((book) => {
+        let data = book.data()
+        setBookInfo(data);
+        setIsPending(false);
+      })
   }, []);
-
-  // let title = "";
-  // onSnapshot(docRef, (doc) => {
-  //   title = doc.data().title;
-  //   console.log(title);
-  // })
   
   return (
     <div>
-      {console.log(bookInfo.title)}
-      <h1>{bookInfo.title}</h1>
-      <img src={DefaultCover} />
+      {isPending && <div>Loading...</div> }
+
+      {bookInfo && 
+      <div>
+        <h2>{bookInfo.title}</h2>
+        <img src={DefaultCover} />
+      </div>
+      }
+
     </div>
   ) 
 }
