@@ -1,0 +1,19 @@
+.sign-in-page{
+    text-align: center;
+}
+
+.sign-in-page p {
+    margin-bottom: 2px;
+}
+
+.sign-in-page table {
+    margin: auto;
+}
+
+form [type*='submit'] {
+    margin-top: 20px;
+    padding: 2px 25px 2px 25px;
+    background-color: rgb(5, 119, 125);
+    border-color: rgb(27, 27, 27);
+    border-radius: 10px;
+}

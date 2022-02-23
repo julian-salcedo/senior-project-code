@@ -1,6 +1,7 @@
 import React from 'react';
 import Welcome from './pages/Welcome'
 import SignIn from './pages/SignIn'
+import SignUp from './pages/SignUp'
 import Catalog from './pages/Catalog'
 import BookInfo from './pages/BookInfo'
 import MyBooks from './pages/MyBooks'
@@ -18,6 +19,7 @@ function App() {
         <Switch>
           <Route exact path='/' component={Welcome} />
           <Route exact path='/sign-in' component={SignIn} />
+          <Route exact path='/sign-up' component={SignUp} />
           <Route exact path='/catalog' component={Catalog} />
           <Route exact path='/catalog/:id' component={BookInfo} />
           <Route exact path='/my-books' component={MyBooks} />
