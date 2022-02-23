@@ -20,15 +20,19 @@ function About() {
     
   }
   return (
-    <div>
+    <div className='sign-in-page'>
       <h1>Sign In</h1>
-      <form onSubmit={handleSubmit}>
-        <input required type='text' name='id' value={email} onChange={(e)=> setEmail(e.target.value)}/><br/>
-        <input required type='text' name='password' value={password} onChange={(e)=> setPassword(e.target.value)} /><br/>
+      <form action='/action_page.php'>
+        <p>Email Address</p>
+        <input type='email' name='email' required/><br/>
+        <p>Password</p>
+        <input type='password' name='password' required/><br/>
         <input type='submit' value='Sign In' />
       </form>
+      <p>Don't have an account?</p>
+      <a href='/sign-up'>Sign Up</a>
     </div>
   ) 
 }
 
-export default About;
+export default SignIn;
