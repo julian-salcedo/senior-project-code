@@ -24,9 +24,9 @@ function SignIn() {
       <h1>Sign In</h1>
       <form onSubmit={handleSubmit}>
         <p>Email Address</p>
-        <input type='email' name='email' required/><br/>
+        <input required type='email' name='email' value={email} onChange={(e)=> setEmail(e.target.value)}/><br/>
         <p>Password</p>
-        <input type='password' name='password' required/><br/>
+        <input required type='password' name='password' value={password} onChange={(e)=> setPassword(e.target.value)}/><br/>
         <input type='submit' value='Sign In' />
       </form>
       <p>Don't have an account?</p>
