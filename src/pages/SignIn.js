@@ -2,7 +2,7 @@ import {useState} from 'react';
 import { auth } from '../firebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth'
 
-function About() {
+function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -22,7 +22,7 @@ function About() {
   return (
     <div className='sign-in-page'>
       <h1>Sign In</h1>
-      <form action='/action_page.php'>
+      <form onSubmit={handleSubmit}>
         <p>Email Address</p>
         <input type='email' name='email' required/><br/>
         <p>Password</p>
