@@ -1,0 +1,42 @@
+.info-container {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    margin-left: 25%;
+    margin-right: 25%;
+    display: grid;
+    grid-template-columns: 50fr 50fr;
+    grid-auto-rows: 150px;
+    grid-template-rows: 35px 75px auto auto;
+    grid-template-areas: 
+        "sidebar title"
+        "sidebar author"
+        "sidebar description"
+        "sidebar checkout";
+}
+
+.cover {
+    grid-area: sidebar;
+    margin-right: 50px;
+}
+
+.title {
+    grid-area: title;
+}
+
+.author {
+    grid-area: author;
+}
+
+.description {
+    grid-area: description;
+    padding: 10%;
+    border: solid;
+    border-radius: 5px;
+    margin: 5%;
+}
+
+.btn-checkout {
+    grid-area: checkout;
+    padding: 5%;
+    margin: 30%;
+}
