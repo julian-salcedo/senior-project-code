@@ -38,6 +38,7 @@ function BookInfo() {
           <p className='author'>
             by <strong>Anita Nipane</strong>
           </p>
+          <hr className='divider' />
           <p className='description'>
             Most probably, while browsing a display of books on online bookstores, you have noticed that some of the books stand-out while others don’t. The design of these book covers somehow grab your attention and spur interest.
           </p>
