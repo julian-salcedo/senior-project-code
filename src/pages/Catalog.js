@@ -5,9 +5,10 @@ import DefaultCover from '../assets/random-book-cover.jpg';
 import { collection, onSnapshot, getDocs} from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { useState, useEffect } from 'react';
+import { auth } from '../firebaseConfig';
 
 
-function Catalog() {
+function Catalog({test}) {
 
 
   const booksColRef = collection(db, 'books');
@@ -19,15 +20,18 @@ function Catalog() {
       setBooks(data.docs.map((doc) => {return ({ ...doc.data(), id: doc.id }) }));
     }
     getBooks();
+    console.log('use effect ran')
+    console.log(test)
+
   }, []);
 
-  onSnapshot(booksColRef, function(snapShot){
-    let b = [];
-    snapShot.docs.forEach(function(doc){
-      b.push({...doc.data(), id: doc.id})
-    })
-    setBooks(b);
-  })
+  // onSnapshot(booksColRef, function(snapShot){
+  //   let b = [];
+  //   snapShot.docs.forEach(function(doc){
+  //     b.push({...doc.data(), id: doc.id})
+  //   })
+  //   setBooks(b);
+  // })
 
 
   function filter(){
@@ -43,7 +47,6 @@ function Catalog() {
       }
     }) 
   }
-
   
   //Issue: Cards stay on one row
   return (
