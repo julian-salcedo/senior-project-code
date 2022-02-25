@@ -34,5 +34,16 @@
 
 .btn-checkout {
     grid-area: checkout;
-    margin: 50px 200px 50px 200px;
+    padding: 20px 50px;
+    justify-self: center;
+    align-self: center;
+    margin: 32px;
+    background: black;
+    color: white;
+    border-radius: 30px;
+    transition: transform 0.3s ease;
+}
+
+.btn-checkout:hover{
+    transform: scale(1.05);
 }
