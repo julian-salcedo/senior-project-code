@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import '../styles/SignIn.css';
-import { auth } from '../firebaseConfig';
+import { auth, db } from '../firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { useHistory, Link } from 'react-router-dom'
+import { doc, setDoc } from 'firebase/firestore';
 
 function SignUp() {
 
@@ -10,10 +12,32 @@ function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  let history = useHistory();
+
 
   function handleSubmit(e){
     e.preventDefault();
-    console.log('form submitted')
+    // console.log('form submitted')
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((cred)=> {
+        console.log('user created', cred.user.uid)
+        setDoc(doc(db, 'users', cred.user.uid), {
+          first: firstName,
+          last: lastName,
+          email: email,
+          books: []
+        }).then(()=> {
+          console.log('user added to db')
+        }).catch((err)=> {
+          console.log(err.message)
+        })
+
+        history.push('/my-books')
+
+      })
+      .catch((err)=> {
+        console.log(err.message);
+      })
 
     
   }
@@ -49,7 +73,7 @@ function SignUp() {
         <input type='submit' value='Sign Up' />
       </form>
       <p>Already have an account?</p>
-      <a href='/sign-in'>Sign In</a>
+      <Link to='/sign-in'>Sign In</Link>
     </div>
   ) 
 }

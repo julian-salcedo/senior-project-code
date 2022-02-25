@@ -1,9 +1,9 @@
 import {useState} from 'react';
 import { auth } from '../firebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth'
-import { useHistory } from 'react-router-dom'
+import { useHistory, Link } from 'react-router-dom'
 
-function SignIn() {
+function SignIn({}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -16,7 +16,7 @@ function SignIn() {
     signInWithEmailAndPassword(auth, email, password)
       .then((cred)=>{
         console.log('user signed in', cred.user.email);
-        history.push('/catalog');
+        history.push('/my-books');
       })
       .catch((err)=>{
         console.log(err.message);
@@ -34,7 +34,7 @@ function SignIn() {
         <input type='submit' value='Sign In' />
       </form>
       <p>Don't have an account?</p>
-      <a href='/sign-up'>Sign Up</a>
+      <Link to='/sign-up'>Sign Up</Link>
     </div>
   ) 
 }

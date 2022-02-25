@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 import { auth } from '../firebaseConfig';
 
 
-function Catalog({test}) {
+function Catalog({user}) {
 
 
   const booksColRef = collection(db, 'books');
@@ -20,8 +20,7 @@ function Catalog({test}) {
       setBooks(data.docs.map((doc) => {return ({ ...doc.data(), id: doc.id }) }));
     }
     getBooks();
-    console.log('catalog use effect ran')
-    console.log(test)
+    console.log('catalog use effect ran', user)
 
   }, []);
 

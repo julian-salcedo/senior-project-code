@@ -1,18 +1,35 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState} from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import Logo from '../assets/logo-mcfatter.png';
 import ReorderIcon from '@material-ui/icons/Reorder';
 import '../styles/NavBar.css';
+import { signOut } from 'firebase/auth';
+import { auth } from '../firebaseConfig';
 
 function NavBar() {
 
   const [openLinks, setOpenLinks] = useState(false);
 
+  let history = useHistory();
+
   const toggleNavbar = () => {
     setOpenLinks(!openLinks);
   };
+
+  function logOut(){
+    signOut(auth)
+      .then(()=>{
+        console.log('sign out clicked', auth.currentUser)
+        history.push('/')
+      })
+      .catch((err)=>{
+        console.log(err.message)
+      })
+  }
   return (
     <div className='navbar'>
+        {/* testing */}
+        <button onClick={logOut}> sign out</button>
       <div className='leftSide' id={openLinks ? 'open' : 'closed'}>
         <img src={Logo} />
         <div className='hiddenLinks'>
