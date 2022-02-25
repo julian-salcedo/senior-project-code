@@ -1,0 +1,26 @@
+#welcome-page{
+    text-align: center;
+}
+
+#welcome-page div{
+    margin: 15px 0px 15px 0px;
+}
+
+#welcome-page button{
+    padding: 2px 25px 2px 25px;
+    background-color: rgb(5, 119, 125);
+    font-weight: bold;
+    border-color: rgb(27, 27, 27);
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+#welcome-page button:hover {
+    transform: scale(1.1);
+    box-shadow: 5px 5px 10px black;
+}
+
+#social-media{
+    width: 400px;
+
+}

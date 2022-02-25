@@ -2,12 +2,13 @@ import React from 'react';
 import Card from '../components/Card';
 import '../styles/Catalog.css';
 import DefaultCover from '../assets/random-book-cover.jpg';
-import { collection, onSnapshot, getDocs} from 'firebase/firestore';
+import { collection, getDocs} from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { useState, useEffect } from 'react';
+import { auth } from '../firebaseConfig';
 
 
-function Catalog() {
+function Catalog({test}) {
 
 
   const booksColRef = collection(db, 'books');
@@ -19,17 +20,12 @@ function Catalog() {
       setBooks(data.docs.map((doc) => {return ({ ...doc.data(), id: doc.id }) }));
     }
     getBooks();
+    console.log('catalog use effect ran')
+    console.log(test)
+
   }, []);
 
-  onSnapshot(booksColRef, function(snapShot){
-    let b = [];
-    snapShot.docs.forEach(function(doc){
-      b.push({...doc.data(), id: doc.id})
-    })
-    setBooks(b);
-  })
-
-
+  
   function filter(){
     const books = document.querySelectorAll(".card-container")
     const query = document.getElementById("search-bar").value
@@ -43,7 +39,6 @@ function Catalog() {
       }
     }) 
   }
-
   
   //Issue: Cards stay on one row
   return (
@@ -58,7 +53,7 @@ function Catalog() {
               {books.map(function(book){
                 return(
                   <td key={book.id}>
-                    <Card title={book.title} image={DefaultCover} body={book.desc} page={"/catalog/" + book.id}/>
+                    <Card title={book.title} image={DefaultCover} author={book.author} page={"/catalog/" + book.id}/>
                   </td>
                 )
               })}
