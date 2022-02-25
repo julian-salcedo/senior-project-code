@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState} from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import Logo from '../assets/logo-mcfatter.png';
 import ReorderIcon from '@material-ui/icons/Reorder';
 import '../styles/NavBar.css';
@@ -10,6 +10,8 @@ function NavBar() {
 
   const [openLinks, setOpenLinks] = useState(false);
 
+  let history = useHistory();
+
   const toggleNavbar = () => {
     setOpenLinks(!openLinks);
   };
@@ -18,6 +20,7 @@ function NavBar() {
     signOut(auth)
       .then(()=>{
         console.log('sign out clicked', auth.currentUser)
+        history.push('/')
       })
       .catch((err)=>{
         console.log(err.message)
