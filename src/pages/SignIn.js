@@ -1,10 +1,13 @@
 import {useState} from 'react';
 import { auth } from '../firebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth'
+import { useHistory } from 'react-router-dom'
 
 function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  let history = useHistory();
 
 
   function handleSubmit(e){
@@ -13,6 +16,7 @@ function SignIn() {
     signInWithEmailAndPassword(auth, email, password)
       .then((cred)=>{
         console.log('user signed in', cred.user.email);
+        history.push('/catalog');
       })
       .catch((err)=>{
         console.log(err.message);
