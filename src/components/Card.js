@@ -1,7 +1,7 @@
 import React from 'react'
 import '../styles/Card.css'
 
-function Card({title,image,body,page}) {
+function Card({title,image,author,page}) {
     return (
         <div className='card-container'>
             <div className='image-container'>
@@ -11,7 +11,7 @@ function Card({title,image,body,page}) {
                 <h3>{title}</h3>
             </div>
             <div className='card-body'>
-                <p>{body}</p> 
+                <p>{author}</p> 
             </div>
             <button className='btn'>
                 <a href={page}>
