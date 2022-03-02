@@ -32,7 +32,7 @@ function SignUp() {
           console.log(err.message)
         })
 
-        history.push('/my-books')
+        history.push('/')
 
       })
       .catch((err)=> {
