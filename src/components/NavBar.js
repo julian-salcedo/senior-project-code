@@ -6,7 +6,7 @@ import '../styles/NavBar.css';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 
-function NavBar() {
+function NavBar({user}) {
 
   const [openLinks, setOpenLinks] = useState(false);
 
@@ -28,8 +28,7 @@ function NavBar() {
   }
   return (
     <div className='navbar'>
-        {/* testing */}
-        <button onClick={logOut}> sign out</button>
+        {/* <button onClick={logOut}> sign out</button> */}
       <div className='leftSide' id={openLinks ? 'open' : 'closed'}>
         <img src={Logo} />
         <div className='hiddenLinks'>
@@ -42,9 +41,10 @@ function NavBar() {
       </div>
       <div className='rightSide'>
         <Link to='/'>Welcome</Link>
-        <Link to='/sign-in'>Sign In</Link>
+        {!user && <Link to='/sign-in'>Sign In</Link>}
+        {user && <Link to='/' onClick={logOut}>Sign Out</Link>}
         <Link to='/catalog'>Catalog</Link>
-        <Link to='/my-books'>My Books</Link>
+        {user && <Link to='/my-books'>My Books</Link>}
         <Link to='/admin'>Admin</Link>
         <button onClick={toggleNavbar}>
           <ReorderIcon />
