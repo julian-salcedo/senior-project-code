@@ -97,3 +97,7 @@
     display: none;
   }
 }
+
+.navbar .rightSide a:hover {
+  color: rgb(51, 68, 115);
+}
