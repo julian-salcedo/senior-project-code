@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 import '../styles/Card.css'
 
 function Card({title,image,author,page}) {
@@ -13,11 +14,7 @@ function Card({title,image,author,page}) {
             <div className='card-body'>
                 <p>{author}</p> 
             </div>
-            <button className='btn'>
-                <a href={page}>
-                    View More
-                </a>
-            </button>
+            <Link to={page}> View More</Link>
         </div>
     )
 }
