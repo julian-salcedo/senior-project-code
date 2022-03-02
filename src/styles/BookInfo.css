@@ -47,6 +47,7 @@
 
 .btn-checkout:hover{
     transform: scale(1.05);
+    cursor: pointer;
 }
 
 @media only screen and (max-width: 800px) {
