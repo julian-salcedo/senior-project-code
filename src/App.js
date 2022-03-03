@@ -52,9 +52,9 @@ function App() {
   return (
     <div className='App'>
       <Router>
-        <NavBar />
+        <NavBar user={user}/>
         <Switch>
-          <Route exact path='/' component={Welcome} />
+          <Route exact path='/'><Welcome user={user}/></Route>
           <Route exact path='/sign-in'><SignIn /></Route>
           <Route exact path='/sign-up' component={SignUp} />
           <Route exact path='/catalog' ><Catalog user={user}/></Route>

@@ -33,7 +33,6 @@
 }
 
 .navbar .rightSide button {
-  background-color: transparent;
   border: none;
   color: white;
   cursor: pointer;
@@ -96,4 +95,8 @@
   .navbar #open .hiddenLinks {
     display: none;
   }
+}
+
+.navbar .rightSide a:hover {
+  color: rgb(51, 68, 115);
 }

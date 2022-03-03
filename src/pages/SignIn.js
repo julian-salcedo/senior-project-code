@@ -16,7 +16,7 @@ function SignIn({}) {
     signInWithEmailAndPassword(auth, email, password)
       .then((cred)=>{
         console.log('user signed in', cred.user.email);
-        history.push('/my-books');
+        history.push('/');
       })
       .catch((err)=>{
         console.log(err.message);
