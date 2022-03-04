@@ -10,6 +10,7 @@ function MyBooks() {
       <h3>Checked Out:</h3>
       <div className='wrapper'>
         <Card image={DefaultCover} title='Test Book' author='person' />   
+        <Card image={DefaultCover} title='Test Book' author='person' />   
       </div>
       <h3>On Hold:</h3>
     </div>
