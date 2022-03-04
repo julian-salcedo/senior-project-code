@@ -5,7 +5,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useHistory, Link } from 'react-router-dom'
 import { doc, setDoc } from 'firebase/firestore';
 
-function SignUp() {
+function SignUp({user}) {
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -42,38 +42,43 @@ function SignUp() {
     
   }
   return (
-    <div className='sign-in-page'>
-      <h1>Sign Up</h1>
-      <form onSubmit={handleSubmit}>
-        <table>
-          <tbody>
-            <tr>
-                <td>
-                    <p>First Name</p>
-                    <input required type='text' name='firstName' value={firstName} onChange={(e)=> setFirstName(e.target.value)}/>
-                </td>
-                <td>
-                    <p>Last Name</p>
-                    <input required type='text' name='lastName' value={lastName} onChange={(e)=> setLastName(e.target.value)}/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <p>Email Address</p>
-                    <input required type='email' name='email' value={email} onChange={(e)=> setEmail(e.target.value)}/>
-                </td>
-                <td>
-                    <p>Password</p>
-                    <input required type='text' name='password' value={password} onChange={(e)=> setPassword(e.target.value)}/><br/>
-                </td>
-            </tr>
+    <div>
+    { (!user &&
+      <div className='sign-in-page'>
+        <h1>Sign Up</h1>
+        <form onSubmit={handleSubmit}>
+          <table>
+            <tbody>
+              <tr>
+                  <td>
+                      <p>First Name</p>
+                      <input required type='text' name='firstName' value={firstName} onChange={(e)=> setFirstName(e.target.value)}/>
+                  </td>
+                  <td>
+                      <p>Last Name</p>
+                      <input required type='text' name='lastName' value={lastName} onChange={(e)=> setLastName(e.target.value)}/>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+                      <p>Email Address</p>
+                      <input required type='email' name='email' value={email} onChange={(e)=> setEmail(e.target.value)}/>
+                  </td>
+                  <td>
+                      <p>Password</p>
+                      <input required type='text' name='password' value={password} onChange={(e)=> setPassword(e.target.value)}/><br/>
+                  </td>
+              </tr>
 
-          </tbody>
-        </table>
-        <input type='submit' value='Sign Up' />
-      </form>
-      <p>Already have an account?</p>
-      <Link to='/sign-in'>Sign In</Link>
+            </tbody>
+          </table>
+          <input type='submit' value='Sign Up' />
+        </form>
+        <p>Already have an account?</p>
+        <Link to='/sign-in'>Sign In</Link>
+      </div>)
+      || (<h2>Already Logged In</h2>)
+    }
     </div>
   ) 
 }

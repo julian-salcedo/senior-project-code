@@ -55,8 +55,8 @@ function App() {
         <NavBar user={user}/>
         <Switch>
           <Route exact path='/'><Welcome user={user}/></Route>
-          <Route exact path='/sign-in'><SignIn /></Route>
-          <Route exact path='/sign-up' component={SignUp} />
+          <Route exact path='/sign-in'><SignIn user={user}/></Route>
+          <Route exact path='/sign-up'><SignUp user={user}/></Route>
           <Route exact path='/catalog' ><Catalog user={user}/></Route>
           <Route exact path='/catalog/:id' ><BookInfo user={user} uid={uid}/> </Route>
           <Route exact path='/my-books' component={MyBooks} />
