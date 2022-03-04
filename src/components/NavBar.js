@@ -33,9 +33,10 @@ function NavBar({user}) {
         <img src={Logo} />
         <div className='hiddenLinks'>
           <Link to='/'>Welcome</Link>
-          <Link to='/sign-in'>Sign In</Link>
+          {!user && <Link to='/sign-in'>Sign In</Link>}
+          {user && <Link to='/' onClick={logOut}>Sign Out</Link>}
           <Link to='/catalog'>Catalog</Link>
-          <Link to='/my-books'>My Books</Link>
+          {user && <Link to='/my-books'>My Books</Link>}
           <Link to='/admin'>Admin</Link>
         </div>
       </div>
