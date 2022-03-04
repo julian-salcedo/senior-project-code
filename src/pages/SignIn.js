@@ -16,10 +16,12 @@ function SignIn({}) {
     signInWithEmailAndPassword(auth, email, password)
       .then((cred)=>{
         console.log('user signed in', cred.user.email);
+        document.getElementById('error-message').innerHTML = "";
         history.push('/');
       })
       .catch((err)=>{
         console.log(err.message);
+        document.getElementById('error-message').innerHTML = "Incorrect Email or Password";
       })
     
   }
@@ -33,6 +35,7 @@ function SignIn({}) {
         <input required type='password' name='password' value={password} onChange={(e)=> setPassword(e.target.value)}/><br/>
         <input type='submit' value='Sign In' />
       </form>
+      <p id='error-message'></p>
       <p>Don't have an account?</p>
       <Link to='/sign-up'>Sign Up</Link>
     </div>
