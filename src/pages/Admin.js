@@ -28,7 +28,7 @@ function Admin() {
         title: title,
         author: author,
         desc: description,
-        amount: amount
+        amount: parseInt(amount)
       })
       .then(()=> {
         console.log('adddoc ran')
@@ -39,13 +39,17 @@ function Admin() {
 
   }
 
-  function returnBook(e){
+  function returnBookWithId(e){
     e.preventDefault();
-    console.log('return book clicked')
+    console.log('return book with id clicked')
     
     getDocs(emailQuery).then((snapshot)=>{
       const user = snapshot.docs[0];
       if(user){
+        if(!bookId){
+          console.log('no book id');
+          return;
+        }
         const id = user.id;
         const data = user.data();
         const books = data.books;
@@ -86,32 +90,37 @@ function Admin() {
     console.log('comps reset')
   }
 
+  function selectForm(formName){
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+      if(form.id === formName) {form.hidden = false}
+      else {form.hidden = true}
+    });
+  }
+
   return (
-    <div>
+    <div id='admin-page'>
       <h1>Admin</h1>
 
       <div>
-        <h3>Checkout Book</h3>
-        <form>
-            <div>Email <input required type="email" onInput={(e)=> setEmail(e.target.value)}/></div>
-            <div>Book Id <input required type="text" onInput={(e)=> setBookId(e.target.value)}/></div> 
-            <div>Days Checked Out <input type="number" /></div> 
-            <input type="submit" value="Checkout"/>
-        </form>
-      </div>
+        <h3 className='header' onClick={()=>selectForm("checkout-form")}>Checkout Book</h3>
+        <form id='checkout-form' hidden={true}>
+          <div>User Email <input type="text" /> <button>Get Holds</button></div>
+          <div>Reserved Books
+            <select>
 
-      <div>
-        <h3>Return Book</h3>
-        <form onSubmit={returnBook}>
-            <div>Email <input required type="email" onInput={(e)=> setEmail(e.target.value)}/></div>
-            <div>Book Id <input required type="text" onInput={(e)=> setBookId(e.target.value)}/></div> 
-            <input type="submit" value="Return book"/>
+            </select>
+            <br /> OR
+          </div>
+          <div>Book Id <input type="text" /></div> 
+          <div>Days Checked Out <input type="number" /></div> 
+          <button type="submit">Submit</button>
         </form>
       </div>
 
       {/* <div>
-        <h3>Update Catalog</h3>
-        <form>
+        <h3 className='header' onClick={()=>selectForm("catalog-form")}>Update Catalog</h3>
+        <form id='catalog-form' hidden='true'>
             <div>Book Id<input type="text" /></div>
             <div>Title <input type="text" /></div> 
             <div>Author <input type="text" /></div> 
@@ -121,17 +130,68 @@ function Admin() {
       </div> */}
 
       <div>
-        <h3>Add book</h3>
-        <form onSubmit={addBook}>
-          <div>Title<input required type="text" value={title} onChange={(e)=> setTitle(e.target.value)}/></div>
-          <div>Author <input required type="text" value={author} onChange={(e)=> setAuthor(e.target.value)}/></div> 
-          <div>Description <input required type="text" value={description} onChange={(e)=> setDescription(e.target.value)}/></div> 
-          <div>In Stock <input required type="number" value={amount} onChange={(e)=> setAmount(e.target.value)}/></div>
-          <input type="submit" value="Add book"/>
+        <h3 className='header' onClick={()=>selectForm("add-form")}>Add Book</h3>
+        <form id='add-form' hidden={true} onSubmit={addBook}>
+            <div>Title <input required type="text" value={title} onChange={(e)=> setTitle(e.target.value)}/></div> 
+            <div>Author <input required type="text" value={author} onChange={(e)=> setAuthor(e.target.value)}/></div>
+            <div>Description <input required type="text" value={description} onChange={(e)=> setDescription(e.target.value)}/></div> 
+            <div>In Stock <input required type="number" value={amount} onChange={(e)=> setAmount(e.target.value)}/></div> 
+            <input type="submit" value="Add Book"/>
         </form>
       </div>
-    </div>
-  ) 
-}
 
-export default Admin;
+      <div>
+        <h3 className='header' onClick={()=>selectForm("return-form")}>Return Book</h3>
+        <form id='return-form' hidden={true} onSubmit={returnBookWithId}>
+          <div>User Email <input required type="email" onInput={(e)=> setEmail(e.target.value)}/> <button>Get Books</button></div>
+          <div>Checked Out Books 
+            <select>
+              
+            </select> 
+            <br /> OR
+          </div>
+          <div>Book Id <input type="text" onInput={(e)=> setBookId(e.target.value)}/> </div>
+          <input type="submit" value="Return with ID"/>
+        </form>
+      </div>
+
+    </div>
+    ) 
+  }
+  
+  export default Admin;
+  
+  //keep for reference:
+  // <div>
+  //   <h1>Admin</h1>
+
+  //   <div>
+  //     <h3>Checkout Book</h3>
+  //     <form>
+  //         <div>Email <input required type="email" onInput={(e)=> setEmail(e.target.value)}/></div>
+  //         <div>Book Id <input required type="text" onInput={(e)=> setBookId(e.target.value)}/></div> 
+  //         <div>Days Checked Out <input type="number" /></div> 
+  //         <input type="submit" value="Checkout"/>
+  //     </form>
+  //   </div>
+
+  //   <div>
+  //     <h3>Return Book</h3>
+  //     <form onSubmit={returnBookWithId}>
+  //         <div>Email <input required type="email" onInput={(e)=> setEmail(e.target.value)}/></div>
+  //         <div>Book Id <input required type="text" onInput={(e)=> setBookId(e.target.value)}/></div> 
+  //         <input type="submit" value="Return book"/>
+  //     </form>
+  //   </div>
+
+  //   <div>
+  //     <h3>Add book</h3>
+  //     <form onSubmit={addBook}>
+  //       <div>Title<input required type="text" value={title} onChange={(e)=> setTitle(e.target.value)}/></div>
+  //       <div>Author <input required type="text" value={author} onChange={(e)=> setAuthor(e.target.value)}/></div> 
+  //       <div>Description <input required type="text" value={description} onChange={(e)=> setDescription(e.target.value)}/></div> 
+  //       <div>In Stock <input required type="number" value={amount} onChange={(e)=> setAmount(e.target.value)}/></div>
+  //       <input type="submit" value="Add book"/>
+  //     </form>
+  //   </div>
+  // </div>
