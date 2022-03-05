@@ -2,7 +2,9 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import '../styles/Card.css'
 
-function Card({title,image,author,page}) {
+function Card({title,image,author,page,dueDate}) {
+    let isOnTime = dueDate && (dueDate - (new Date()).setHours(0, 0, 0, 0) >= 0);
+
     return (
         <div className='card-container'>
             <Link className='link' to={page}>
@@ -15,6 +17,11 @@ function Card({title,image,author,page}) {
                 <div className='author'>
                     <p>{author}</p> 
                 </div>
+                {dueDate &&
+                <div className={(isOnTime && 'on-time') || 'late'}>
+                    <p>Due by {(dueDate.getMonth()+1) + '/' + (dueDate.getDate()) + '/' + (dueDate.getFullYear())}</p>
+                </div>
+                }
             </Link>
         </div>
     )

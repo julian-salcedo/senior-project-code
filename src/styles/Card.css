@@ -30,3 +30,11 @@
 .link .author {
     color: black;
 }
+
+.link .on-time {
+    color: black;
+}
+
+.link .late {
+    color: red;
+}
