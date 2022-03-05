@@ -1,7 +1,4 @@
 import React from 'react';
-import Card from '../components/Card';
-import '../styles/Catalog.css';
-import DefaultCover from '../assets/random-book-cover.jpg';
 import { collection, getDocs} from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { useState, useEffect } from 'react';
