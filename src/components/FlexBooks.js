@@ -3,14 +3,16 @@ import Card from './Card.js';
 import DefaultCover from '../assets/random-book-cover.jpg';
 import '../styles/FlexBooks.css';
 
-function FlexBooks() {
+function FlexBooks({books}) {
   return (
-    <div className='wrapper'>
-        <Card className='card' image={DefaultCover} title='Test Book' author='person' />
-        <Card className='card' image={DefaultCover} title='Test Book' author='person' />
-        <Card className='card' image={DefaultCover} title='Test Book' author='person' />
-        <Card className='card' image={DefaultCover} title='Test Book' author='person' />
-        <Card className='card' image={DefaultCover} title='Test Book' author='person' />
+    <div className='wrapper'>  
+      {books.map(function(book){
+        return(
+          <td key={book.id}>
+            <Card title={book.title} image={DefaultCover} author={book.author} page={"/catalog/" + book.id}/>
+          </td>
+        )
+      })}
     </div>
   )
 }
