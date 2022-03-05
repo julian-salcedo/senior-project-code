@@ -11,6 +11,7 @@ function Home({user}) {
       <h1>{(!user && "Welcome to the McFatter eLibrary") || ("Welcome back, " + user.first)}</h1>
       <div><img src={Storm_Logo} alt='McFatter Storm Logo'/></div>
       <div><Link to='catalog'><button>View Our Catalog</button></Link></div>
+      {user && <div><Link to='my-books'><button>View Your Books</button></Link></div>}
       {!user && <div><Link to='sign-up'><button>Sign Up</button></Link> <Link to='sign-in'><button>Sign In</button></Link></div>}
       <div><img src={Social_Media} alt='McFatter Social Media Handles' id='social-media' /></div>
       <div><a href='https://www.browardschools.com/mcfattertechhigh' target='_blank'><button>Visit Our Official Website</button></a></div>
