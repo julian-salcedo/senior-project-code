@@ -37,7 +37,7 @@ function NavBar({user}) {
           {user && <Link to='/' onClick={logOut}>Sign Out</Link>}
           <Link to='/catalog'>Catalog</Link>
           {user && <Link to='/my-books'>My Books</Link>}
-          <Link to='/admin'>Admin</Link>
+          {user && user.email == "admin@gmail.com" && <Link to='/admin'>Admin</Link>}
         </div>
       </div>
       <div className='rightSide'>
@@ -46,7 +46,7 @@ function NavBar({user}) {
         {user && <Link to='/' onClick={logOut}>Sign Out</Link>}
         <Link to='/catalog'>Catalog</Link>
         {user && <Link to='/my-books'>My Books</Link>}
-        <Link to='/admin'>Admin</Link>
+        {user && user.email == "admin@gmail.com" && <Link to='/admin'>Admin</Link>}
         <button onClick={toggleNavbar}>
           <ReorderIcon />
         </button>
