@@ -1,10 +1,16 @@
 import React from 'react';
 
-function MyBooks() {
+function MyBooks({user}) {
   return (
     <div>
-      <h1>My Books</h1>
-      <p>Total Overdue Fees:</p>
+      {(user &&
+      <div>
+        <h1>My Books</h1>
+        <p>Total Overdue Fees:</p>
+      </div>)
+      ||
+      (<h2>Not Logged In</h2>)
+      }
     </div>
   ) 
 }
