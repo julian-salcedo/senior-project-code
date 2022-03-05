@@ -25,7 +25,7 @@ function BookInfo({user, uid}) {
   }, []);
 
   function placeHold(){
-    console.log('checkout clicked...');
+    //console.log('checkout clicked...');
     if(user && uid != 'y4pfi7AYC7XwzsmgSKRLmF792VS2'){
       if(user.books.some((obj) => { return (obj.bookId == id)})){
         console.log('you already have this book: ', id)

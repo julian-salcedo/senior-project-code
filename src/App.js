@@ -34,12 +34,13 @@ function App() {
           .catch((err)=> {
             console.log(err.message)
           })
+        //subscribe to current user's document
         onSnapshot(docRef, (doc)=> {
           setUser(doc.data())
           //console.log('onsnapshot in appjs ran: ', doc.data())
 
         });
-        }else{
+      }else{
         setUser(null);
         setUid(null);
       }

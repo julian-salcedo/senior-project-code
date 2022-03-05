@@ -1,6 +1,6 @@
 import { db } from '../firebaseConfig';
 import { useState } from 'react';
-import { getDocs, addDoc, collection, query, where } from 'firebase/firestore';
+import { getDocs, addDoc, collection, query, where, updateDoc, doc } from 'firebase/firestore';
 
 
 function Admin() {
@@ -49,14 +49,20 @@ function Admin() {
         const id = user.id;
         const data = user.data();
         const books = data.books;
+        const docRef = doc(db, 'users', id);
         console.log(id, data, books);
 
         const newBooks = books.filter((bookObj)=> {
-          return ((bookObj.bookId != bookId) || (bookObj.bookId == bookId && bookObj.isCheckedOut == 'false'));
+          return ((bookObj.bookId != bookId) || ((bookObj.bookId == bookId) && !bookObj.isCheckedOut));
         })
 
-        console.log(newBooks);
-        //todo: update books field with newbooks
+        // console.log(newBooks);
+
+        updateDoc(docRef, {
+          books: newBooks
+        })
+        .then(()=> console.log('update doc fired'))
+        .catch((err)=> console.log(err.message))
 
 
         e.target.reset();
@@ -87,8 +93,8 @@ function Admin() {
       <div>
         <h3>Checkout Book</h3>
         <form>
-            <div>Email <input required type="email" onChange={(e)=> setEmail(e.target.value)}/></div>
-            <div>Book Id <input required type="text" onChange={(e)=> setBookId(e.target.value)}/></div> 
+            <div>Email <input required type="email" onInput={(e)=> setEmail(e.target.value)}/></div>
+            <div>Book Id <input required type="text" onInput={(e)=> setBookId(e.target.value)}/></div> 
             <div>Days Checked Out <input type="number" /></div> 
             <input type="submit" value="Checkout"/>
         </form>
@@ -97,8 +103,8 @@ function Admin() {
       <div>
         <h3>Return Book</h3>
         <form onSubmit={returnBook}>
-            <div>Email <input required type="email" onChange={(e)=> setEmail(e.target.value)}/></div>
-            <div>Book Id <input required type="text" onChange={(e)=> setBookId(e.target.value)}/></div> 
+            <div>Email <input required type="email" onInput={(e)=> setEmail(e.target.value)}/></div>
+            <div>Book Id <input required type="text" onInput={(e)=> setBookId(e.target.value)}/></div> 
             <input type="submit" value="Return book"/>
         </form>
       </div>
