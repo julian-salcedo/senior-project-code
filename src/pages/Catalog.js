@@ -46,6 +46,7 @@ function Catalog({user}) {
       <h1>Our Catalog</h1>
       <input type='text' placeholder='Search...' id='search-bar' onChange={filter}/>
       <FlexBooks books={books} />
+      <br />
     </div>
   ) 
 }
