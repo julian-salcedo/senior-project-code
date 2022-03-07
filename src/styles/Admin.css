@@ -1,0 +1,8 @@
+#admin-page{
+    width: 40%;
+    margin: auto;
+}
+
+#admin-page .header {
+    background-color: rgb(5, 119, 125);
+}

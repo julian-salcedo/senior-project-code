@@ -34,6 +34,7 @@
 
 .navbar .rightSide button {
   border: none;
+  background-color: #121619;
   color: white;
   cursor: pointer;
 }

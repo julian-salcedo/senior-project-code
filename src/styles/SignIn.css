@@ -6,6 +6,10 @@
     margin-bottom: 2px;
 }
 
+.sign-in-page #error-message{
+    color: rgb(220, 0, 0);
+}
+
 .sign-in-page table {
     margin: auto;
 }
