@@ -70,15 +70,13 @@ function Admin({user}) {
         .catch((err)=> console.log(err.message))
 
 
-        e.target.reset();
+        //e.target.reset();
         resetComps();
       }else{
         console.log('user no exist')
       }
       
     })
-
-    
   }
 
   function resetComps(){
@@ -92,6 +90,7 @@ function Admin({user}) {
   }
 
   function selectForm(formName){
+    resetComps();
     const forms = document.querySelectorAll('form');
     forms.forEach(form => {
       if(form.id === formName) {form.hidden = false}
@@ -107,16 +106,16 @@ function Admin({user}) {
 
         <div>
           <h3 className='header' onClick={()=>selectForm("checkout-form")}>Checkout Book</h3>
-          <form id='checkout-form' hidden='true'>
-            <div>User Email <input type="text" /> <button>Get Holds</button></div>
+          <form id='checkout-form' hidden={true}>
+            <div>User Email <input required type="email" value={email} onInput={(e)=> setEmail(e.target.value)}/> <button>Get Holds</button></div>
             <div>Reserved Books
               <select>
 
               </select>
               <br /> OR
             </div>
-            <div>Book Id <input type="text" /></div> 
-            <div>Days Checked Out <input type="number" /></div> 
+            <div>Book Id <input type="text" value={bookId} onInput={(e)=> setBookId(e.target.value)}/></div> 
+            {/* <div>Days Checked Out <input type="number" /></div>  */}
             <button type="submit">Submit</button>
           </form>
         </div>
@@ -135,14 +134,14 @@ function Admin({user}) {
         <div>
           <h3 className='header' onClick={()=>selectForm("return-form")}>Return Book</h3>
           <form id='return-form' hidden={true} onSubmit={returnBookWithId}>
-            <div>User Email <input required type="email" onInput={(e)=> setEmail(e.target.value)}/> <button>Get Books</button></div>
+            <div>User Email <input required type="email" value={email} onInput={(e)=> setEmail(e.target.value)}/> <button>Get Books</button></div>
             <div>Checked Out Books 
               <select>
                 
               </select> 
               <br /> OR
             </div>
-            <div>Book Id <input type="text" onInput={(e)=> setBookId(e.target.value)}/> </div>
+            <div>Book Id <input type="text" value={bookId} onInput={(e)=> setBookId(e.target.value)}/> </div>
             <input type="submit" value="Return with ID"/>
           </form>
         </div>
