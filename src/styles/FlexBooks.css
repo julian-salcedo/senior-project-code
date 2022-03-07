@@ -1,0 +1,22 @@
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+}
+
+.wrapper::-webkit-scrollbar {
+    height: 10px;
+}
+
+.wrapper::-webkit-scrollbar-track {
+    margin-inline: 10px;
+}
+
+.wrapper::-webkit-scrollbar-thumb {
+    background: #121619;
+    border-radius: 100vw;
+}
+
+.card {
+    min-width: 200px;
+}
