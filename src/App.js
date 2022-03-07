@@ -59,7 +59,7 @@ function App() {
           <Route exact path='/sign-up'><SignUp user={user}/></Route>
           <Route exact path='/catalog' ><Catalog user={user}/></Route>
           <Route exact path='/catalog/:id' ><BookInfo user={user} uid={uid}/> </Route>
-          <Route exact path='/my-books' component={MyBooks} />
+          <Route exact path='/my-books'><MyBooks user={user}/></Route>
           <Route exact path='/admin'><Admin user={user}/></Route>
         </Switch>
         <Footer />
