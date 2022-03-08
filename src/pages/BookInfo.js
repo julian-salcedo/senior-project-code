@@ -84,7 +84,7 @@ function BookInfo({user, uid}) {
             {bookInfo.desc}
           </p>
           {!alreadyOnHold() && <a onClick={placeHold} className='btn-checkout'>Place Hold</a>}
-          {alreadyOnHold() && <a  onClick={cancelHold} className='btn-checkout'>Cancel Hold</a>}
+          {alreadyOnHold() && <a onClick={cancelHold} className='btn-checkout'>Cancel Hold</a>}
         </div>
       </div>
       }
