@@ -18,7 +18,7 @@ function Catalog({user}) {
       setBooks(data.docs.map((doc) => {return ({ ...doc.data(), id: doc.id }) }));
     }
     getBooks();
-    //console.log('catalog use effect ran. User:', user)
+    // console.log('catalog use effect ran. User:', user)
 
   }, []);
 
