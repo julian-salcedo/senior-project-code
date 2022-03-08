@@ -24,6 +24,15 @@ function BookInfo({user, uid}) {
       })
   }, []);
 
+  function alreadyOnHold() {
+    if(user && uid != 'y4pfi7AYC7XwzsmgSKRLmF792VS2'){
+      if(user.books.some((book) => { return (book.id == id && !book.isCheckedOut)})){
+        return true;
+      }
+    }
+    return false;
+  }
+
   function placeHold(){
     console.log('place hold clicked...');
     if(user && uid != 'y4pfi7AYC7XwzsmgSKRLmF792VS2'){
@@ -43,6 +52,21 @@ function BookInfo({user, uid}) {
     }
     
   }
+
+  function cancelHold(){
+    const bookToCancel = user.books.find(book => book.id == id && !book.isCheckedOut)
+    if(!bookToCancel){
+      console.log('cancel hold unsuccessful...')
+      return;
+    }
+    console.log('cancel hold successful...')
+    const docRef = doc(db, 'users', uid)
+    updateDoc(docRef, {
+      books: user.books.filter(book => book.id != id)
+    })
+      .then(() => console.log('update doc ran'))
+      .catch((err) => console.log(err.message))
+  }
   
   return (
     <div>
@@ -59,7 +83,8 @@ function BookInfo({user, uid}) {
           <p className='description'>
             {bookInfo.desc}
           </p>
-          <a onClick={placeHold} className='btn-checkout'>Place Hold</a>
+          {!alreadyOnHold() && <a onClick={placeHold} className='btn-checkout'>Place Hold</a>}
+          {alreadyOnHold() && <a  onClick={cancelHold} className='btn-checkout'>Cancel Hold</a>}
         </div>
       </div>
       }
