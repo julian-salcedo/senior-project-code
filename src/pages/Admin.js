@@ -143,13 +143,19 @@ function Admin({user, books}) {
     e.preventDefault();
     console.log('checkout clicked')
     const user = users.find((u)=> {return u.email == email})
-    console.log(user);
-    //update docs
+
     const docRef = doc(db, 'users', user.id)
 
-    //update user.books(from state) then updatedoc
+    const theBook = user.books.find(book => book.bookId == bookId)
+    theBook.isCheckedOut = true;
+    console.log(user.books);
+
     
-    //updateDoc(docRef)
+    updateDoc(docRef, {
+      books: user.books
+    })
+      .then(()=> console.log('checkout successful'))
+      .catch((err)=> console.log(err.message))
 
 
   }
