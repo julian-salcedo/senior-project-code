@@ -173,15 +173,15 @@ function Admin({user, books}) {
         <div>
           <h3 className='header' onClick={()=>selectForm("checkout-form")}>Checkout Book</h3>
           <form id='checkout-form' hidden='true' onSubmit={checkoutBook}>
-            <div>User Email <input required type="text" id='email-input1' onInput={(e)=> setEmail(e.target.value)}/> <button type='button' onClick={getHoldsFromEmail}>Get Holds</button></div>
+            <div>User Email <input required type="email" id='email-input1' onInput={(e)=> setEmail(e.target.value)}/> <button type='button' onClick={getHoldsFromEmail}>Get Holds</button></div>
             <div>Reserved Books
               <select id='hold-list' onChange={()=>{updateBookId(1)}}>
 
               </select>
               <br />
             </div>
-            <div>Book Id <input type="text" id='book-id1' onChange={(e)=> setBookId(e.target.value)}/></div> 
-            <div>Days Checked Out <input type="number" /></div> 
+            <div>Book Id <input required type="text" id='book-id1' onChange={(e)=> setBookId(e.target.value)}/></div> 
+            {/* <div>Days Checked Out <input required type="number" /></div>  */}
             <button type="submit">Checkout Book</button>
           </form>
         </div>
@@ -208,14 +208,14 @@ function Admin({user, books}) {
         <div>
           <h3 className='header' onClick={()=>selectForm("return-form")}>Return Book</h3>
           <form id='return-form' hidden='true'>
-            <div>User Email <input type="text" id='email-input2'/> <button type='button' onClick={getCheckedOutFromEmail}>Get Books</button></div>
+            <div>User Email <input required type="email" id='email-input2'/> <button type='button' onClick={getCheckedOutFromEmail}>Get Books</button></div>
             <div>Checked Out Books 
               <select id='checkout-list'>
                 
               </select> 
               <br />
             </div>
-            <div>Book Id <input type="text" /> </div>
+            <div>Book Id <input required type="text" /> </div>
             <button type="submit">Submit</button>
           </form>
         </div>
