@@ -50,11 +50,13 @@ function App() {
 
     })
 
-    const getBooks = async () => {
-      const data = await getDocs(booksColRef);
-      setBooks(data.docs.map((doc) => {return ({ ...doc.data(), id: doc.id }) }));
-    }
-    getBooks();
+    onSnapshot(booksColRef, (snapshot)=> {
+      let books = [];
+      snapshot.docs.forEach((doc)=> {
+        books.push({...doc.data(), id: doc.id})
+      })
+      setBooks(books);
+    })
     //console.log('catalog use effect ran.', books)
     
   }, [])
