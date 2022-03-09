@@ -4,7 +4,7 @@ import { db } from '../firebaseConfig';
 import { collection, getDocs } from 'firebase/firestore';
 import { useState, useEffect } from 'react';
 
-function Admin({user}) {
+function Admin({user, books}) {
   const usersColRef = collection(db, 'users');
   const [users, setUsers] = useState([]);
 
@@ -17,6 +17,11 @@ function Admin({user}) {
     //console.log('catalog use effect ran. User:', user)
 
   }, []);
+
+  function getBookFromId(id) {
+    const book = books.find(book => book.id == id);
+    return book;
+  }
 
   function selectForm(formName){
     const forms = document.querySelectorAll('form');
@@ -34,6 +39,7 @@ function Admin({user}) {
     if(!user){
       console.log("user not found");
       selectElem.childNodes.forEach(child => child.remove())
+      alert("User does not exist")
       return;
     }
 
@@ -42,8 +48,8 @@ function Admin({user}) {
 
     holds.forEach(book => {
       const option = document.createElement("option");
-      option.innerHTML = book.title;
-      option.value = book.id;
+      option.innerHTML = getBookFromId(book.bookId).title;
+      option.value = book.bookId;
       selectElem.appendChild(option);
     })
   }
