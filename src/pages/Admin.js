@@ -84,7 +84,7 @@ function Admin({user, books}) {
     e.preventDefault();
     console.log('add book clicked');
     if(amount <= 0){
-      console.log('invalid amount')
+      alert('Invalid Amount')
     }else{
       addDoc(booksColRef, {
         title: title,
