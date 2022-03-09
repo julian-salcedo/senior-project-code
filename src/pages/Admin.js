@@ -39,6 +39,7 @@ function Admin({user}) {
 
     const holds = user.books.filter(book => !book.isCheckedOut);
     selectElem.childNodes.forEach(child => child.remove())
+    console.log(user);
 
     holds.forEach(book => {
       const option = document.createElement("option");
