@@ -37,9 +37,9 @@ function Admin({user, books}) {
     const selectElem = document.getElementById("hold-list");
 
     if(!user){
-      console.log("user not found");
       selectElem.childNodes.forEach(child => child.remove())
       alert("User does not exist")
+      updateBookId1()
       return;
     }
 
@@ -52,6 +52,22 @@ function Admin({user, books}) {
       option.value = book.bookId;
       selectElem.appendChild(option);
     })
+
+    updateBookId1()
+  }
+
+  function updateBookId1() {
+    const bookIdInput1 = document.getElementById("book-id1");
+    const selectElem = document.getElementById("hold-list");
+    if(selectElem.childNodes.length == 0){
+      bookIdInput1.value = "";
+      return;
+    }
+    const currentOption = selectElem.childNodes.find(option => option.value == selectElem.value);
+    alert(selectElem.childNodes)
+    //const bookId = selectElem.childNodes.find(option => option.value == selectElem.value).value;
+    //bookIdInput1.value = bookId;
+    
   }
 
   return (
@@ -64,12 +80,12 @@ function Admin({user, books}) {
           <form id='checkout-form' hidden='true'>
             <div>User Email <input type="text" id='email-input1' /> <button type='button' onClick={getHoldsFromEmail}>Get Holds</button></div>
             <div>Reserved Books
-              <select id='hold-list'>
+              <select id='hold-list' onChange={updateBookId1}>
 
               </select>
               <br /> OR
             </div>
-            <div>Book Id <input type="text" /></div> 
+            <div>Book Id <input type="text" id='book-id1' /></div> 
             <div>Days Checked Out <input type="number" /></div> 
             <button type="submit">Submit</button>
           </form>
