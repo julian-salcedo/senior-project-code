@@ -11,12 +11,15 @@ import NavBar from './components/NavBar'
 import Footer from './components/Footer'
 import { auth, db } from './firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
-import { getDoc, doc, onSnapshot } from 'firebase/firestore';
+import { collection, getDocs, getDoc, doc, onSnapshot } from 'firebase/firestore';
 
 function App() {
+  const booksColRef = collection(db, 'books');
 
   const [user, setUser] = useState(null);
   const [uid, setUid] = useState(null);
+  const [books, setBooks] = useState([]);
+
 
   useEffect(()=>{
     onAuthStateChanged(auth, (userAuth)=>{
@@ -46,7 +49,14 @@ function App() {
       }
 
     })
-    //console.log('app use effect ran: ', user)
+
+    const getBooks = async () => {
+      const data = await getDocs(booksColRef);
+      setBooks(data.docs.map((doc) => {return ({ ...doc.data(), id: doc.id }) }));
+    }
+    getBooks();
+    //console.log('catalog use effect ran.', books)
+    
   }, [])
 
 
@@ -58,9 +68,9 @@ function App() {
           <Route exact path='/'><Welcome user={user}/></Route>
           <Route exact path='/sign-in'><SignIn user={user}/></Route>
           <Route exact path='/sign-up'><SignUp user={user}/></Route>
-          <Route exact path='/catalog' ><Catalog user={user}/></Route>
-          <Route exact path='/catalog/:id' ><BookInfo user={user} uid={uid}/> </Route>
-          <Route exact path='/my-books'><MyBooks user={user}/></Route>
+          <Route exact path='/catalog' ><Catalog user={user} books={books}/></Route>
+          <Route exact path='/catalog/:id' ><BookInfo user={user} uid={uid} books={books} /> </Route>
+          <Route exact path='/my-books'><MyBooks user={user} books={books} /></Route>
           <Route exact path='/admin'><Admin user={user}/></Route>
         </Switch>
         <Footer />
