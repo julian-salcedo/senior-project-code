@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/Admin.css';
 import { db } from '../firebaseConfig';
-import { collection, getDocs, addDoc} from 'firebase/firestore';
+import { collection, getDocs, addDoc, updateDoc, doc} from 'firebase/firestore';
 import { useState, useEffect } from 'react';
 
 function Admin({user, books}) {
@@ -144,6 +144,13 @@ function Admin({user, books}) {
     console.log('checkout clicked')
     const user = users.find((u)=> {return u.email == email})
     console.log(user);
+    //update docs
+    const docRef = doc(db, 'users', user.id)
+
+    //update user.books(from state) then updatedoc
+    
+    //updateDoc(docRef)
+
 
   }
 
