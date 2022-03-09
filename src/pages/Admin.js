@@ -24,6 +24,7 @@ function Admin({user, books}) {
       setUsers(data.docs.map((doc) => {return ({ ...doc.data(), id: doc.id }) }));
     }
     getUsers();
+    resetComps();
     //console.log('catalog use effect ran. User:', user)
 
   }, []);
@@ -77,6 +78,7 @@ function Admin({user, books}) {
     }
 
     bookIdInput1.value = selectElem.value;
+    setBookId(selectElem.value);
   }
 
 
@@ -100,6 +102,14 @@ function Admin({user, books}) {
     }
   }
 
+  function checkoutBook(e){
+    e.preventDefault();
+    console.log('checkout clicked')
+    const user = users.find((u)=> {return u.email == email})
+    console.log(user);
+
+  }
+
   function resetComps(){
     setTitle('');
     setAuthor('');
@@ -118,15 +128,15 @@ function Admin({user, books}) {
 
         <div>
           <h3 className='header' onClick={()=>selectForm("checkout-form")}>Checkout Book</h3>
-          <form id='checkout-form' hidden='true'>
-            <div>User Email <input type="text" id='email-input1' /> <button type='button' onClick={getHoldsFromEmail}>Get Holds</button></div>
+          <form id='checkout-form' hidden='true' onSubmit={checkoutBook}>
+            <div>User Email <input required type="text" id='email-input1' onInput={(e)=> setEmail(e.target.value)}/> <button type='button' onClick={getHoldsFromEmail}>Get Holds</button></div>
             <div>Reserved Books
               <select id='hold-list' onChange={updateBookId1}>
 
               </select>
-              <br /> OR
+              <br />
             </div>
-            <div>Book Id <input type="text" id='book-id1' /></div> 
+            <div>Book Id <input type="text" id='book-id1' onChange={(e)=> setBookId(e.target.value)}/></div> 
             <div>Days Checked Out <input type="number" /></div> 
             <button type="submit">Submit</button>
           </form>
@@ -135,10 +145,10 @@ function Admin({user, books}) {
         <div>
           <h3 className='header' onClick={()=>selectForm("add-form")}>Add Book</h3>
           <form id='add-form' hidden='true' onSubmit={addBook}>
-              <div>Title <input required type="text" value={title} onChange={(e)=> setTitle(e.target.value)}/></div> 
-              <div>Author <input required type="text" value={author} onChange={(e)=> setAuthor(e.target.value)}/></div>
-              <div>Description <input required type="text" value={description} onChange={(e)=> setDescription(e.target.value)}/></div>  
-              <div>In Stock <input required type="number" value={amount} onChange={(e)=> setAmount(e.target.value)}/></div> 
+              <div>Title <input required type="text" value={title} onInput={(e)=> setTitle(e.target.value)}/></div> 
+              <div>Author <input required type="text" value={author} onInput={(e)=> setAuthor(e.target.value)}/></div>
+              <div>Description <input required type="text" value={description} onInput={(e)=> setDescription(e.target.value)}/></div>  
+              <div>In Stock <input required type="number" value={amount} onInput={(e)=> setAmount(e.target.value)}/></div> 
               <div><button type="submit">Add Book</button></div>
           </form>
         </div>
@@ -146,7 +156,7 @@ function Admin({user, books}) {
         <div>
           <h3 className='header' onClick={()=>selectForm("delete-form")}>Delete Book</h3>
           <form id='delete-form' hidden='true'>
-              <div>Book Id<input required type="text" value={bookId} onChange={(e)=> setBookId(e.target.value)}/></div>
+              <div>Book Id<input required type="text" value={bookId} onInput={(e)=> setBookId(e.target.value)}/></div>
               <div><button type="submit">Delete Book</button></div>
           </form>
         </div>
@@ -159,7 +169,7 @@ function Admin({user, books}) {
               <select>
                 
               </select> 
-              <br /> OR
+              <br />
             </div>
             <div>Book Id <input type="text" /> </div>
             <button type="submit">Submit</button>
