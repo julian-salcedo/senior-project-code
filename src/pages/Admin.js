@@ -1,12 +1,22 @@
 import React from 'react';
 import '../styles/Admin.css';
 import { db } from '../firebaseConfig';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, addDoc} from 'firebase/firestore';
 import { useState, useEffect } from 'react';
 
 function Admin({user, books}) {
   const usersColRef = collection(db, 'users');
+  const booksColRef = collection(db, 'books');
+  
   const [users, setUsers] = useState([]);
+
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [description, setDescription] = useState('');
+  const [amount, setAmount] = useState(0);
+
+  const [email, setEmail] = useState('');
+  const [bookId, setBookId] = useState('');
 
   useEffect(() => {
     const getUsers = async () => {
@@ -67,6 +77,37 @@ function Admin({user, books}) {
     bookIdInput1.value = selectElem.value;
   }
 
+
+  function addBook(e){
+    e.preventDefault();
+    console.log('add book clicked');
+    if(amount <= 0){
+      console.log('invalid amount')
+    }else{
+      addDoc(booksColRef, {
+        title: title,
+        author: author,
+        desc: description,
+        amount: parseInt(amount)
+      })
+      .then(()=> {
+        console.log('adddoc ran')
+        resetComps();
+      })
+
+    }
+  }
+
+  function resetComps(){
+    setTitle('');
+    setAuthor('');
+    setDescription('');
+    setAmount(0);
+    setEmail('');
+    setBookId('');
+    console.log('comps reset')
+  }
+
   return (
     <div>
     { ((user && user.email == "admin@gmail.com") &&
@@ -91,11 +132,11 @@ function Admin({user, books}) {
 
         <div>
           <h3 className='header' onClick={()=>selectForm("add-form")}>Add Book</h3>
-          <form id='add-form' hidden='true'>
-              <div>Title <input type="text" /></div> 
-              <div>Author <input type="text" /></div>
-              <div>Description <input type="text" /></div>  
-              <div>In Stock <input type="number" /></div> 
+          <form id='add-form' hidden='true' onSubmit={addBook}>
+              <div>Title <input required type="text" value={title} onChange={(e)=> setTitle(e.target.value)}/></div> 
+              <div>Author <input required type="text" value={author} onChange={(e)=> setAuthor(e.target.value)}/></div>
+              <div>Description <input required type="text" value={description} onChange={(e)=> setDescription(e.target.value)}/></div>  
+              <div>In Stock <input required type="number" value={amount} onChange={(e)=> setAmount(e.target.value)}/></div> 
               <div><button type="submit">Add Book</button></div>
           </form>
         </div>
@@ -103,7 +144,7 @@ function Admin({user, books}) {
         <div>
           <h3 className='header' onClick={()=>selectForm("delete-form")}>Delete Book</h3>
           <form id='delete-form' hidden='true'>
-              <div>Book Id<input type="text" /></div>
+              <div>Book Id<input required type="text" value={bookId} onChange={(e)=> setBookId(e.target.value)}/></div>
               <div><button type="submit">Delete Book</button></div>
           </form>
         </div>
