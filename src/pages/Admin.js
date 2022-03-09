@@ -24,6 +24,7 @@ function Admin({user, books}) {
       setUsers(data.docs.map((doc) => {return ({ ...doc.data(), id: doc.id }) }));
     }
     getUsers();
+    resetComps();
     //console.log('catalog use effect ran. User:', user)
 
   }, []);
@@ -83,6 +84,7 @@ function Admin({user, books}) {
     }
 
     bookIdInput.value = selectElem.value;
+    setBookId(selectElem.value);
   }
 
   function getCheckedOutFromEmail() {
@@ -121,7 +123,7 @@ function Admin({user, books}) {
     e.preventDefault();
     console.log('add book clicked');
     if(amount <= 0){
-      console.log('invalid amount')
+      alert('Invalid Amount')
     }else{
       addDoc(booksColRef, {
         title: title,
@@ -135,6 +137,14 @@ function Admin({user, books}) {
       })
 
     }
+  }
+
+  function checkoutBook(e){
+    e.preventDefault();
+    console.log('checkout clicked')
+    const user = users.find((u)=> {return u.email == email})
+    console.log(user);
+
   }
 
   function resetComps(){
@@ -155,15 +165,15 @@ function Admin({user, books}) {
 
         <div>
           <h3 className='header' onClick={()=>selectForm("checkout-form")}>Checkout Book</h3>
-          <form id='checkout-form' hidden='true'>
-            <div>User Email <input type="text" id='email-input1' /> <button type='button' onClick={getHoldsFromEmail}>Get Holds</button></div>
+          <form id='checkout-form' hidden='true' onSubmit={checkoutBook}>
+            <div>User Email <input required type="text" id='email-input1' onInput={(e)=> setEmail(e.target.value)}/> <button type='button' onClick={getHoldsFromEmail}>Get Holds</button></div>
             <div>Reserved Books
               <select id='hold-list' onChange={()=>{updateBookId(1)}}>
 
               </select>
               <br />
             </div>
-            <div>Book Id <input type="text" id='book-id1' /></div> 
+            <div>Book Id <input type="text" id='book-id1' onChange={(e)=> setBookId(e.target.value)}/></div> 
             <div>Days Checked Out <input type="number" /></div> 
             <button type="submit">Checkout Book</button>
           </form>
