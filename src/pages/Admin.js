@@ -46,15 +46,17 @@ function Admin({user, books}) {
     const user = users.find(user => user.email == email);
     const selectElem = document.getElementById("hold-list");
 
+    while(selectElem.firstChild){
+      selectElem.removeChild(selectElem.firstChild);
+    }
+
     if(!user){
-      selectElem.childNodes.forEach(child => child.remove())
       alert("User does not exist")
       updateBookId1()
       return;
     }
 
     const holds = user.books.filter(book => !book.isCheckedOut);
-    selectElem.childNodes.forEach(child => child.remove())
 
     holds.forEach(book => {
       const option = document.createElement("option");
