@@ -65,7 +65,7 @@ function Admin({user}) {
               <br /> OR
             </div>
             <div>Book Id <input type="text" /></div> 
-            <div>Days Checked Out <input type="number" /></div> 
+            {/* <div>Days Checked Out <input type="number" /></div>  */}
             <button type="submit">Submit</button>
           </form>
         </div>
