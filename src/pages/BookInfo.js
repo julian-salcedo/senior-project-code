@@ -6,27 +6,31 @@ import { db } from '../firebaseConfig';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useState, useEffect } from 'react';
 
-function BookInfo({user, uid}) {
+function BookInfo({user, uid, books}) {
 
   //book id
   let { id } = useParams();
-  const docRef = doc(db, 'books', id)
+  // const docRef = doc(db, 'books', id)
 
-  const [bookInfo, setBookInfo] = useState(null);
-  const [isPending, setIsPending] = useState(true);
+  // const [bookInfo, setBookInfo] = useState(null);
+  // const [isPending, setIsPending] = useState(true);
 
-  useEffect(() => {
-    getDoc(docRef)
-      .then((book) => {
-        let data = book.data()
-        setBookInfo(data);
-        setIsPending(false);
-      })
-  }, []);
+  const bookInfo = books.find(book => book.id == id);
+  console.log(bookInfo)
+
+  // useEffect(() => {
+  //   getDoc(docRef)
+  //     .then((book) => {
+  //       let data = book.data()
+  //       setBookInfo(data);
+  //       setIsPending(false);
+  //     })
+    
+  // }, []);
 
   function alreadyOnHold() {
     if(user && uid != 'y4pfi7AYC7XwzsmgSKRLmF792VS2'){
-      if(user.books.some((book) => { return (book.id == id && !book.isCheckedOut)})){
+      if(user.books.some((book) => { return (book.bookId == id && !book.isCheckedOut)})){
         return true;
       }
     }
@@ -36,13 +40,13 @@ function BookInfo({user, uid}) {
   function placeHold(){
     console.log('place hold clicked...');
     if(user && uid != 'y4pfi7AYC7XwzsmgSKRLmF792VS2'){
-      if(user.books.some((book) => { return (book.id == id)})){
+      if(user.books.some((book) => { return (book.bookId == id)})){
         console.log('you already have this book: ', id)
       }else{
         console.log('place hold successful...')
         const docRef = doc(db, 'users', uid)
         updateDoc(docRef, {
-          books: [...user.books, {id: id, title: bookInfo.title, author: bookInfo.author, desc: bookInfo.desc, isCheckedOut: false}]
+          books: [...user.books, {bookId: id, isCheckedOut: false}]
         })
           .then(() => console.log('update doc ran'))
           .catch((err) => console.log(err.message))
@@ -54,7 +58,7 @@ function BookInfo({user, uid}) {
   }
 
   function cancelHold(){
-    const bookToCancel = user.books.find(book => book.id == id && !book.isCheckedOut)
+    const bookToCancel = user.books.find(book => book.bookId == id && !book.isCheckedOut)
     if(!bookToCancel){
       console.log('cancel hold unsuccessful...')
       return;
@@ -62,7 +66,7 @@ function BookInfo({user, uid}) {
     console.log('cancel hold successful...')
     const docRef = doc(db, 'users', uid)
     updateDoc(docRef, {
-      books: user.books.filter(book => book.id != id)
+      books: user.books.filter(book => book.bookId != id)
     })
       .then(() => console.log('update doc ran'))
       .catch((err) => console.log(err.message))
@@ -70,7 +74,7 @@ function BookInfo({user, uid}) {
   
   return (
     <div>
-      {isPending && <div>Loading...</div> }
+      {!bookInfo && <div>Loading...</div> }
 
       {bookInfo && 
       <div>
