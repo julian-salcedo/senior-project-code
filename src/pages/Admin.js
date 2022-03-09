@@ -63,11 +63,8 @@ function Admin({user, books}) {
       bookIdInput1.value = "";
       return;
     }
-    const currentOption = selectElem.childNodes.find(option => option.value == selectElem.value);
-    alert(selectElem.childNodes)
-    //const bookId = selectElem.childNodes.find(option => option.value == selectElem.value).value;
-    //bookIdInput1.value = bookId;
-    
+
+    bookIdInput1.value = selectElem.value;
   }
 
   return (
