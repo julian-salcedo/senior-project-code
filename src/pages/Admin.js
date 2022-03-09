@@ -156,15 +156,15 @@ function Admin({user, books}) {
         <div>
           <h3 className='header' onClick={()=>selectForm("checkout-form")}>Checkout Book</h3>
           <form id='checkout-form' hidden='true'>
-            <div>User Email <input type="text" id='email-input1' /> <button type='button' onClick={getHoldsFromEmail}>Get Holds</button></div>
+            <div>User Email <input required type="text" id='email-input1' /> <button type='button' onClick={getHoldsFromEmail}>Get Holds</button></div>
             <div>Reserved Books
               <select id='hold-list' onChange={()=>{updateBookId(1)}}>
 
               </select>
               <br />
             </div>
-            <div>Book Id <input type="text" id='book-id1' /></div> 
-            <div>Days Checked Out <input type="number" /></div> 
+            <div>Book Id <input required type="text" id='book-id1' /></div> 
+            <div>Days Checked Out <input required type="number" /></div> 
             <button type="submit">Checkout Book</button>
           </form>
         </div>
