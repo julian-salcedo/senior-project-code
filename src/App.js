@@ -37,23 +37,26 @@ function App() {
           .catch((err)=> {
             console.log(err.message)
           })
+        //subscribe to current user's document
         onSnapshot(docRef, (doc)=> {
           setUser(doc.data())
           //console.log('onsnapshot in appjs ran: ', doc.data())
 
         });
-        }else{
+      }else{
         setUser(null);
         setUid(null);
       }
 
     })
 
-    const getBooks = async () => {
-      const data = await getDocs(booksColRef);
-      setBooks(data.docs.map((doc) => {return ({ ...doc.data(), id: doc.id }) }));
-    }
-    getBooks();
+    onSnapshot(booksColRef, (snapshot)=> {
+      let books = [];
+      snapshot.docs.forEach((doc)=> {
+        books.push({...doc.data(), id: doc.id})
+      })
+      setBooks(books);
+    })
     //console.log('catalog use effect ran.', books)
     
   }, [])
@@ -70,7 +73,7 @@ function App() {
           <Route exact path='/catalog' ><Catalog user={user} books={books}/></Route>
           <Route exact path='/catalog/:id' ><BookInfo user={user} uid={uid} books={books} /> </Route>
           <Route exact path='/my-books'><MyBooks user={user} books={books} /></Route>
-          <Route exact path='/admin'><Admin user={user}/></Route>
+          <Route exact path='/admin'><Admin user={user} books={books} /></Route>
         </Switch>
         <Footer />
       </Router>
