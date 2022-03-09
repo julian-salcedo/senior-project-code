@@ -74,6 +74,7 @@ function Admin({user, books}) {
     { ((user && user.email == "admin@gmail.com") &&
       <div id='admin-page'>
         <h1>Admin</h1>
+
         <div>
           <h3 className='header' onClick={()=>selectForm("checkout-form")}>Checkout Book</h3>
           <form id='checkout-form' hidden='true'>
@@ -89,16 +90,26 @@ function Admin({user, books}) {
             <button type="submit">Submit</button>
           </form>
         </div>
+
         <div>
-          <h3 className='header' onClick={()=>selectForm("catalog-form")}>Update Catalog</h3>
-          <form id='catalog-form' hidden='true'>
-              <div>Book Id<input type="text" /></div>
+          <h3 className='header' onClick={()=>selectForm("add-form")}>Add Book</h3>
+          <form id='add-form' hidden='true'>
               <div>Title <input type="text" /></div> 
-              <div>Author <input type="text" /></div> 
+              <div>Author <input type="text" /></div>
+              <div>Description <input type="text" /></div>  
               <div>In Stock <input type="number" /></div> 
-              <div><button type="submit">Add Book</button> <button type="submit">Update Book</button> <button type="submit">Delete Book</button></div>
+              <div><button type="submit">Add Book</button></div>
           </form>
         </div>
+
+        <div>
+          <h3 className='header' onClick={()=>selectForm("delete-form")}>Delete Book</h3>
+          <form id='delete-form' hidden='true'>
+              <div>Book Id<input type="text" /></div>
+              <div><button type="submit">Delete Book</button></div>
+          </form>
+        </div>
+
         <div>
           <h3 className='header' onClick={()=>selectForm("return-form")}>Return Book</h3>
           <form id='return-form' hidden='true'>
@@ -113,6 +124,7 @@ function Admin({user, books}) {
             <button type="submit">Submit</button>
           </form>
         </div>
+
       </div> )
       ||
       (<h2>Access Denied</h2>)
