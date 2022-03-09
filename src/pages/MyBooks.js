@@ -10,12 +10,9 @@ function MyBooks({user}) {
         <h1>My Books</h1>
         <p>Total Overdue Fees:</p>
         <h3>Checked Out:</h3>
-        {/* Switch to FlexBooks when info from user can be added */}
-        {/* <FlexBooks /> */}
-        <TempFlexBooks />
+        <FlexBooks books={user.books.filter(book => book.isCheckedOut)} />
         <h3>On Hold:</h3>
-        {/* <FlexBooks /> */}
-        <TempFlexBooks />
+        <FlexBooks books={user.books.filter(book => !book.isCheckedOut)} />
         <br />
       </div>)   
         ||

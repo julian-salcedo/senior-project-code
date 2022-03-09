@@ -24,16 +24,25 @@ function BookInfo({user, uid}) {
       })
   }, []);
 
-  function placeHold(){
-    console.log('checkout clicked...');
+  function alreadyOnHold() {
     if(user && uid != 'y4pfi7AYC7XwzsmgSKRLmF792VS2'){
-      if(user.books.some((obj) => { return (obj.bookId == id)})){
+      if(user.books.some((book) => { return (book.id == id && !book.isCheckedOut)})){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function placeHold(){
+    console.log('place hold clicked...');
+    if(user && uid != 'y4pfi7AYC7XwzsmgSKRLmF792VS2'){
+      if(user.books.some((book) => { return (book.id == id)})){
         console.log('you already have this book: ', id)
       }else{
-        console.log('checkout successful...')
+        console.log('place hold successful...')
         const docRef = doc(db, 'users', uid)
         updateDoc(docRef, {
-          books: [...user.books, {bookId: id, isCheckedOut: false}]
+          books: [...user.books, {id: id, title: bookInfo.title, author: bookInfo.author, desc: bookInfo.desc, isCheckedOut: false}]
         })
           .then(() => console.log('update doc ran'))
           .catch((err) => console.log(err.message))
@@ -42,6 +51,21 @@ function BookInfo({user, uid}) {
       console.log('you must be signed into student acc to checkout')
     }
     
+  }
+
+  function cancelHold(){
+    const bookToCancel = user.books.find(book => book.id == id && !book.isCheckedOut)
+    if(!bookToCancel){
+      console.log('cancel hold unsuccessful...')
+      return;
+    }
+    console.log('cancel hold successful...')
+    const docRef = doc(db, 'users', uid)
+    updateDoc(docRef, {
+      books: user.books.filter(book => book.id != id)
+    })
+      .then(() => console.log('update doc ran'))
+      .catch((err) => console.log(err.message))
   }
   
   return (
@@ -59,7 +83,8 @@ function BookInfo({user, uid}) {
           <p className='description'>
             {bookInfo.desc}
           </p>
-          <a onClick={placeHold} className='btn-checkout'>Place Hold</a>
+          {!alreadyOnHold() && <a onClick={placeHold} className='btn-checkout'>Place Hold</a>}
+          {alreadyOnHold() && <a onClick={cancelHold} className='btn-checkout'>Cancel Hold</a>}
         </div>
       </div>
       }
