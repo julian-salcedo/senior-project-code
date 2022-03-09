@@ -1,12 +1,22 @@
 import React from 'react';
 import '../styles/Admin.css';
 import { db } from '../firebaseConfig';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, addDoc} from 'firebase/firestore';
 import { useState, useEffect } from 'react';
 
-function Admin({user}) {
+function Admin({user, books}) {
   const usersColRef = collection(db, 'users');
+  const booksColRef = collection(db, 'books');
+  
   const [users, setUsers] = useState([]);
+
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [description, setDescription] = useState('');
+  const [amount, setAmount] = useState(0);
+
+  const [email, setEmail] = useState('');
+  const [bookId, setBookId] = useState('');
 
   useEffect(() => {
     const getUsers = async () => {
@@ -17,6 +27,11 @@ function Admin({user}) {
     //console.log('catalog use effect ran. User:', user)
 
   }, []);
+
+  function getBookFromId(id) {
+    const book = books.find(book => book.id == id);
+    return book;
+  }
 
   function selectForm(formName){
     const forms = document.querySelectorAll('form');
@@ -31,22 +46,68 @@ function Admin({user}) {
     const user = users.find(user => user.email == email);
     const selectElem = document.getElementById("hold-list");
 
+    while(selectElem.firstChild){
+      selectElem.removeChild(selectElem.firstChild);
+    }
+
     if(!user){
-      console.log("user not found");
-      selectElem.childNodes.forEach(child => child.remove())
+      alert("User does not exist")
+      updateBookId1()
       return;
     }
 
     const holds = user.books.filter(book => !book.isCheckedOut);
-    selectElem.childNodes.forEach(child => child.remove())
-    console.log(user);
 
     holds.forEach(book => {
       const option = document.createElement("option");
-      option.innerHTML = book.title;
-      option.value = book.id;
+      option.innerHTML = getBookFromId(book.bookId).title;
+      option.value = book.bookId;
       selectElem.appendChild(option);
     })
+
+    updateBookId1()
+  }
+
+  function updateBookId1() {
+    const bookIdInput1 = document.getElementById("book-id1");
+    const selectElem = document.getElementById("hold-list");
+    if(selectElem.childNodes.length == 0){
+      bookIdInput1.value = "";
+      return;
+    }
+
+    bookIdInput1.value = selectElem.value;
+  }
+
+
+  function addBook(e){
+    e.preventDefault();
+    console.log('add book clicked');
+    if(amount <= 0){
+      console.log('invalid amount')
+    }else{
+      addDoc(booksColRef, {
+        title: title,
+        author: author,
+        desc: description,
+        amount: parseInt(amount)
+      })
+      .then(()=> {
+        console.log('adddoc ran')
+        resetComps();
+      })
+
+    }
+  }
+
+  function resetComps(){
+    setTitle('');
+    setAuthor('');
+    setDescription('');
+    setAmount(0);
+    setEmail('');
+    setBookId('');
+    console.log('comps reset')
   }
 
   return (
@@ -54,31 +115,42 @@ function Admin({user}) {
     { ((user && user.email == "admin@gmail.com") &&
       <div id='admin-page'>
         <h1>Admin</h1>
+
         <div>
           <h3 className='header' onClick={()=>selectForm("checkout-form")}>Checkout Book</h3>
           <form id='checkout-form' hidden='true'>
             <div>User Email <input type="text" id='email-input1' /> <button type='button' onClick={getHoldsFromEmail}>Get Holds</button></div>
             <div>Reserved Books
-              <select id='hold-list'>
+              <select id='hold-list' onChange={updateBookId1}>
 
               </select>
               <br /> OR
             </div>
-            <div>Book Id <input type="text" /></div> 
-            {/* <div>Days Checked Out <input type="number" /></div>  */}
+            <div>Book Id <input type="text" id='book-id1' /></div> 
+            <div>Days Checked Out <input type="number" /></div> 
             <button type="submit">Submit</button>
           </form>
         </div>
+
         <div>
-          <h3 className='header' onClick={()=>selectForm("catalog-form")}>Update Catalog</h3>
-          <form id='catalog-form' hidden='true'>
-              <div>Book Id<input type="text" /></div>
-              <div>Title <input type="text" /></div> 
-              <div>Author <input type="text" /></div> 
-              <div>In Stock <input type="number" /></div> 
-              <div><button type="submit">Add Book</button> <button type="submit">Update Book</button> <button type="submit">Delete Book</button></div>
+          <h3 className='header' onClick={()=>selectForm("add-form")}>Add Book</h3>
+          <form id='add-form' hidden='true' onSubmit={addBook}>
+              <div>Title <input required type="text" value={title} onChange={(e)=> setTitle(e.target.value)}/></div> 
+              <div>Author <input required type="text" value={author} onChange={(e)=> setAuthor(e.target.value)}/></div>
+              <div>Description <input required type="text" value={description} onChange={(e)=> setDescription(e.target.value)}/></div>  
+              <div>In Stock <input required type="number" value={amount} onChange={(e)=> setAmount(e.target.value)}/></div> 
+              <div><button type="submit">Add Book</button></div>
           </form>
         </div>
+
+        <div>
+          <h3 className='header' onClick={()=>selectForm("delete-form")}>Delete Book</h3>
+          <form id='delete-form' hidden='true'>
+              <div>Book Id<input required type="text" value={bookId} onChange={(e)=> setBookId(e.target.value)}/></div>
+              <div><button type="submit">Delete Book</button></div>
+          </form>
+        </div>
+
         <div>
           <h3 className='header' onClick={()=>selectForm("return-form")}>Return Book</h3>
           <form id='return-form' hidden='true'>
@@ -93,6 +165,7 @@ function Admin({user}) {
             <button type="submit">Submit</button>
           </form>
         </div>
+
       </div> )
       ||
       (<h2>Access Denied</h2>)

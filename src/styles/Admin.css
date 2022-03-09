@@ -5,4 +5,5 @@
 
 #admin-page .header {
     background-color: rgb(5, 119, 125);
+    cursor: pointer;
 }
