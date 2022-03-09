@@ -1,6 +1,5 @@
 import React from 'react';
 import FlexBooks from '../components/FlexBooks.js';
-import TempFlexBooks from '../components/TempFlexBooks';
 
 function MyBooks({user, books}) {
   function getBookFromId(id) {
