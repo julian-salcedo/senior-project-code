@@ -1,12 +1,17 @@
-#welcome-page{
+.welcome-page{
+    background: #50A1A6;
+    height: calc(100vh - 100px);
+}
+
+.title {
+    padding: 15px;
     text-align: center;
+    font-size: 4rem;
+    font-family: 'Georgia', 'Century Expanded', 'Times New Roman', serif;
+    color: #F1F1F1;
 }
 
-#welcome-page div{
-    margin: 15px 0px 15px 0px;
-}
-
-#welcome-page button{
+.welcome-page button{
     padding: 2px 25px 2px 25px;
     background-color: rgb(5, 119, 125);
     font-weight: bold;
@@ -15,7 +20,7 @@
     transition: transform 0.3s ease;
 }
 
-#welcome-page button:hover {
+.welcome-page button:hover {
     transform: scale(1.1);
     box-shadow: 5px 5px 10px black;
 }
