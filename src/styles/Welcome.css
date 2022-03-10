@@ -5,13 +5,13 @@
 .welcome-top {
     border: 1px solid transparent;
     height: calc(50vh - 50px);
-    background: #487876;
+    background: #EDDDD0;
 }
 
 .welcome-bottom {
     border: 1px solid transparent;
     height: calc(50vh - 50px);
-    background: #EDDDD0;
+    background: #487876;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -24,7 +24,7 @@
     text-align: center;
     font-size: 3.5rem;
     font-family: 'Georgia', 'Century Expanded', 'Times New Roman', serif;
-    color: #F1F1F1;
+    color: #4E1D04;
 }
 
 .welcome-info {
@@ -38,7 +38,7 @@
     font-size: 2rem;
     font-family: 'Georgia', 'Century Expanded', 'Times New Roman', serif;
     text-decoration: none;
-    color: #4E1D04;
+    color: #F1F1F1;
     transition: 0.3s;
     animation: ease;
 }
@@ -52,11 +52,12 @@
 }
 
 .welcome-sign-in button {
-    border: 2px solid #4E1D04;
+    border: 2px solid #7ba09e;
     border-radius: 5px;
-    background: #EDDDD0;
+    background: #487876;
     padding: 10px 20px 10px 20px;
     font-size: 1rem;
+    color: #b4d3d1;
     font-family:'Times New Roman', Times, serif;
     transition: 0.3s;
     animation: ease;
