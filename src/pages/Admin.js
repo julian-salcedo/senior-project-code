@@ -12,6 +12,7 @@ function Admin({user, books}) {
   const [users, setUsers] = useState([]);
 
   const [options, setOptions] = useState([]);
+  const [selected, setSelected] = useState(null);
 
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
@@ -52,6 +53,7 @@ function Admin({user, books}) {
   function handleSelect(option){
     // console.log('handleselect ran', option)
     setBookId(option.value);
+    setSelected(option);
   }
 
   function getBookFromId(id) {
@@ -108,6 +110,11 @@ function Admin({user, books}) {
 
   }
 
+  function returnBook(e){
+    e.preventDefault();
+    resetComps();
+  }
+
   function resetComps(){
     setTitle('');
     setAuthor('');
@@ -116,6 +123,7 @@ function Admin({user, books}) {
     setEmail('');
     setBookId('');
     setOptions([])
+    setSelected(null)
     console.log('comps reset')
   }
 
@@ -151,7 +159,7 @@ function Admin({user, books}) {
 
         <div>
           <h3 className='header' onClick={()=>selectForm("delete-form")}>Delete Book</h3>
-          <form id='delete-form' hidden='true'>
+          <form id='delete-form' hidden={true}>
               <div>Book Id<input required type="text" value={bookId} onInput={(e)=> setBookId(e.target.value)}/></div>
               <div><button type="submit">Delete Book</button></div>
           </form>
@@ -159,10 +167,10 @@ function Admin({user, books}) {
 
         <div>
           <h3 className='header' onClick={()=>selectForm("return-form")}>Return Book</h3>
-          <form id='return-form' hidden={true}>
+          <form id='return-form' hidden={true} onSubmit={returnBook}>
             <div>User Email <input required type="email" value={email} onInput={(e)=> setEmail(e.target.value)}/> <button type='button' onClick={()=> populateOptions(true)}>Get Books</button></div>
             <div>Checked Out Books 
-              <Select options={options} onChange={handleSelect} /> 
+              <Select options={options} onChange={handleSelect} value={selected} isSearchable={false}/> 
             </div>
             <div>Book Id <input required type="text" value={bookId} onChange={(e)=> setBookId(e.target.value)}/> </div>
             <button type="submit">Submit</button>
