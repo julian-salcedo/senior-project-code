@@ -141,17 +141,24 @@ function Admin({user, books}) {
 
   function checkoutBook(e){
     e.preventDefault();
-    console.log('checkout clicked')
-    const user = users.find((u)=> {return u.email == email})
-    console.log(user);
+    console.log('checkout clicked');
+    const theUser = users.find((u)=> {return u.email == email});
+    console.log(theUser);
     //update docs
-    const docRef = doc(db, 'users', user.id)
+    const docRef = doc(db, 'users', theUser.id);
 
     //update user.books(from state) then updatedoc
-    
-    //updateDoc(docRef)
-
-
+    const theBook = theUser.books.find(book => book.bookId == bookId);
+    if(!theBook){
+      alert("User has not held this book");
+      return;
+    }
+    theBook.isCheckedOut = true;
+    updateDoc(docRef, {
+      books: theUser.books
+    })
+      .then(() => console.log('Book ' + theBook.bookId + ' checked out'))
+      .catch((err) => console.log(err.message))
   }
 
   function resetComps(){
@@ -215,7 +222,7 @@ function Admin({user, books}) {
               </select> 
               <br />
             </div>
-            <div>Book Id <input required type="text" /> </div>
+            <div>Book Id <input required type="text" id='book-id2' /> </div>
             <button type="submit">Submit</button>
           </form>
         </div>
