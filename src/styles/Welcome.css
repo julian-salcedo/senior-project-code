@@ -1,31 +1,69 @@
 .welcome-page{
-    background: #50A1A6;
-    height: calc(100vh - 100px);
+    min-height: calc(100vh - 100px);
 }
 
-.title {
-    padding: 15px;
+.welcome-top {
+    border: 1px solid transparent;
+    height: calc(50vh - 50px);
+    background: #487876;
+}
+
+.welcome-bottom {
+    border: 1px solid transparent;
+    height: calc(50vh - 50px);
+    background: #EDDDD0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.welcome-title {
+    margin: auto;
+    margin-top: 10%;
+    width: 50%;
     text-align: center;
-    font-size: 4rem;
+    font-size: 3.5rem;
     font-family: 'Georgia', 'Century Expanded', 'Times New Roman', serif;
     color: #F1F1F1;
 }
 
-.welcome-page button{
-    padding: 2px 25px 2px 25px;
-    background-color: rgb(5, 119, 125);
-    font-weight: bold;
-    border-color: rgb(27, 27, 27);
-    border-radius: 10px;
-    transition: transform 0.3s ease;
+.welcome-info {
+    margin-bottom: 2rem;
+    text-align: center;
 }
 
-.welcome-page button:hover {
-    transform: scale(1.1);
-    box-shadow: 5px 5px 10px black;
+.welcome-info button{
+    border: none;
+    background: none;
+    font-size: 2rem;
+    font-family: 'Georgia', 'Century Expanded', 'Times New Roman', serif;
+    text-decoration: none;
+    color: #4E1D04;
+    transition: 0.3s;
+    animation: ease;
 }
 
-#social-media{
-    width: 400px;
+.welcome-info button:hover {
+    color: #CDBE87;
+}
 
+.welcome-sign-in {
+    text-align: center;
+}
+
+.welcome-sign-in button {
+    border: 2px solid #4E1D04;
+    border-radius: 5px;
+    background: #EDDDD0;
+    padding: 10px 20px 10px 20px;
+    font-size: 1rem;
+    font-family:'Times New Roman', Times, serif;
+    transition: 0.3s;
+    animation: ease;
+}
+
+.welcome-sign-in button:hover {
+    border-color: #EF5D58;
+    background: #EF5D58;
+    color: #F1F1F1;
 }
