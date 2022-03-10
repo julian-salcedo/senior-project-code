@@ -4,13 +4,16 @@
 
 .welcome-top {
     border: 1px solid transparent;
-    height: calc(50vh - 50px);
+    height: calc(60vh - 60px);
     background: #EDDDD0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .welcome-bottom {
     border: 1px solid transparent;
-    height: calc(50vh - 50px);
+    height: calc(40vh - 40px);
     background: #487876;
     display: flex;
     flex-direction: column;
@@ -18,9 +21,6 @@
 }
 
 .welcome-title {
-    margin: auto;
-    margin-top: 10%;
-    width: 50%;
     text-align: center;
     font-size: 3.5rem;
     font-family: 'Georgia', 'Century Expanded', 'Times New Roman', serif;
