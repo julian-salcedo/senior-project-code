@@ -27,7 +27,7 @@ function Admin({user, books}) {
       setUsers(data.docs.map((doc) => {return ({ ...doc.data(), id: doc.id }) }));
     }
     getUsers();
-    resetComps();
+    resetStates();
     //console.log('catalog use effect ran. User:', user)
 
   }, []);
@@ -83,7 +83,7 @@ function Admin({user, books}) {
       })
       .then(()=> {
         console.log('adddoc ran')
-        resetComps();
+        resetStates();
       })
 
     }
@@ -98,24 +98,27 @@ function Admin({user, books}) {
 
     const theBook = user.books.find(book => book.bookId == bookId)
     theBook.isCheckedOut = true;
-    console.log(user.books);
+    // console.log(user.books);
 
     
     updateDoc(docRef, {
       books: user.books
+    }).then(()=> {
+      console.log('checkout successful')
+      resetStates();
+    }).catch((err)=> {
+      console.log(err.message)
     })
-      .then(()=> console.log('checkout successful'))
-      .catch((err)=> console.log(err.message))
 
 
   }
 
   function returnBook(e){
     e.preventDefault();
-    resetComps();
+    resetStates();
   }
 
-  function resetComps(){
+  function resetStates(){
     setTitle('');
     setAuthor('');
     setDescription('');
@@ -124,7 +127,7 @@ function Admin({user, books}) {
     setBookId('');
     setOptions([])
     setSelected(null)
-    console.log('comps reset')
+    console.log('states reset')
   }
 
   return (
