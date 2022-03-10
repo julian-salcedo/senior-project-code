@@ -138,7 +138,7 @@ function Admin({user, books}) {
           <form id='checkout-form' hidden={true} onSubmit={checkoutBook}>
             <div>User Email <input required type="email" value={email} onInput={(e)=> setEmail(e.target.value)}/> <button type='button' onClick={()=> {populateOptions(false)}}>Get Holds</button></div>
             <div>Reserved Books
-              <Select options={options} onChange={handleSelect} />
+              <Select options={options} onChange={handleSelect} value={selected} isSearchable={false}/>
             </div>
             <div>Book Id <input required type="text" value={bookId} onChange={(e)=> setBookId(e.target.value)}/></div> 
             {/* <div>Days Checked Out <input required type="number" /></div>  */}
