@@ -1,5 +1,5 @@
 .sign-in-page{
-    background: #487876;
+    background: #EDDDD0;
     border: 1px solid transparent;
     height: calc(100vh - 100px);
     display: flex;
@@ -12,7 +12,7 @@
     margin: 2rem;
     font-size: 2rem;
     font-family: 'Georgia', 'Century Expanded', 'Times New Roman', serif;
-    color: #F1F1F1;
+    color: #422A14;
 }
 
 .sign-in-form-container {
@@ -31,6 +31,7 @@
 .sign-in-title {
     font-size: 2rem;
     font-family: sans-serif;
+    color: #422A14;
 }
 
 .sign-in-form-container form {
@@ -60,7 +61,7 @@
     width: calc(100% - 5px);
     padding: 12px 20px;
     margin-bottom: 16px;
-    background: #422A14;
+    background: #487876;
     border: 1px solid transparent;
     border-radius: 30px;
     color: #F1F1F1;
@@ -71,8 +72,7 @@
 }
 
 .sign-in-page form [type*='submit']:hover {
-    background: #CDBE87;
-    color: #422A14;
+    background: #EF5D58;
 }
 
 .sign-in-separater {

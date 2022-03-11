@@ -44,7 +44,7 @@ function SignUp({user}) {
   return (
     <div>
     { (!user &&
-      <div className='sign-in-page'>
+      <div className='sign-up-page'>
         <h1>Sign Up</h1>
         <form onSubmit={handleSubmit}>
           <table>

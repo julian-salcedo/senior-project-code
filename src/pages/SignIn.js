@@ -28,7 +28,7 @@ function SignIn({user}) {
   return (
     <div className='sign-in-page'>
       <div className='sign-in-message'>
-        Hey, good to see you again!
+        <strong>Hey, good to see you again!</strong>
       </div>
       <div className='sign-in-form-container'>
         <form onSubmit={handleSubmit}>
