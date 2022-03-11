@@ -68,3 +68,25 @@
     background: #EF5D58;
     color: #F1F1F1;
 }
+
+.welcome-books {
+    text-align: center;
+}
+
+.welcome-books button {
+    border: 2px solid #7ba09e;
+    border-radius: 5px;
+    background: #487876;
+    padding: 10px 20px 10px 20px;
+    font-size: 1rem;
+    color: #b4d3d1;
+    font-family:'Times New Roman', Times, serif;
+    transition: 0.3s;
+    animation: ease;
+}
+
+.welcome-books button:hover {
+    border-color: #EF5D58;
+    background: #EF5D58;
+    color: #F1F1F1;
+}
