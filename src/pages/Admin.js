@@ -176,7 +176,7 @@ function Admin({user, books}) {
               <Select options={options} onChange={handleSelect} value={selected} isSearchable={false}/> 
             </div>
             <div>Book Id <input required type="text" value={bookId} onChange={(e)=> setBookId(e.target.value)}/> </div>
-            <button type="submit">Submit</button>
+            <button type="submit">Return Book</button>
           </form>
         </div>
 
