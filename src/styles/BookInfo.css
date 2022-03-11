@@ -9,8 +9,9 @@
     grid-template-areas: 
         "sidebar title"
         "sidebar author"
+        "sidebar amount"
         "sidebar description"
-        "sidebar checkout";
+        "sidebar checkout"
 }
 
 .cover {
@@ -31,6 +32,11 @@
 
 .description {
     grid-area: description;
+}
+
+.amount {
+    grid-area: amount;
+    height: 50px;
 }
 
 .btn-checkout {

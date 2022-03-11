@@ -51,12 +51,23 @@ function BookInfo({user, uid, books}) {
       if(user.books.some((book) => { return (book.bookId == id)})){
         console.log('you already have this book: ', id)
       }else{
+        if(bookInfo.amount <= 0){
+          alert("Book is out of stock")
+          return;
+        }
         console.log('place hold successful...')
         const docRef = doc(db, 'users', uid)
         updateDoc(docRef, {
           books: [...user.books, {bookId: id, isCheckedOut: false}]
         })
           .then(() => console.log('update doc ran'))
+          .catch((err) => console.log(err.message))
+
+        const bookRef = doc(db, 'books', bookInfo.id)
+        updateDoc(bookRef, {
+          amount: bookInfo.amount - 1
+        })
+          .then(() => console.log('book amount decremented'))
           .catch((err) => console.log(err.message))
       }
     }else{
@@ -78,6 +89,13 @@ function BookInfo({user, uid, books}) {
     })
       .then(() => console.log('update doc ran'))
       .catch((err) => console.log(err.message))
+    
+    const bookRef = doc(db, 'books', bookInfo.id)
+    updateDoc(bookRef, {
+      amount: bookInfo.amount + 1
+    })
+      .then(() => console.log('book amount incremented'))
+      .catch((err) => console.log(err.message))
   }
   
   return (
@@ -91,6 +109,9 @@ function BookInfo({user, uid, books}) {
           <h2 className='title'>{bookInfo.title}</h2>
           <p className='author'>
             by <strong>{bookInfo.author}</strong>
+          </p>
+          <p className='amount'>
+            Amount: {bookInfo.amount}
           </p>
           <p className='description'>
             {bookInfo.desc}

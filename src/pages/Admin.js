@@ -99,7 +99,6 @@ function Admin({user, books}) {
     const theBook = user.books.find(book => book.bookId == bookId)
     theBook.isCheckedOut = true;
     // console.log(user.books);
-
     
     updateDoc(docRef, {
       books: user.books
