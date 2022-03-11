@@ -122,18 +122,13 @@ function Admin({user, books}) {
     // Upload file and metadata to the object
     const storageRef = ref(storage, '/' + imageFile.name);
     const uploadTask = uploadBytesResumable(storageRef, imageFile, metadata);
-    let updateProgress;
 
     // Listen for state changes, errors, and completion of the upload.
     uploadTask.on('state_changed',
     (snapshot) => {
       // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
       let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      // updateProgress = setInterval(()=>{
-      //   progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      //   setUploadProgress(progress)
-      //   console.log('Upload is ' + progress + '% done');
-      // }, 1000)
+
       setUploadProgress(progress)
       //console.log('Upload is ' + progress + '% done');
       switch (snapshot.state) {
@@ -162,7 +157,6 @@ function Admin({user, books}) {
     () => {
       // Upload completed successfully, now we can get the download URL
       getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-        //clearInterval(updateProgress)
         console.log('File available at', downloadURL);
         console.log("The download URL is " + downloadURL)
         addDoc(booksColRef, {
