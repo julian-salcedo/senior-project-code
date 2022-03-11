@@ -2,15 +2,18 @@ import React from 'react';
 import Select from 'react-select';
 import '../styles/Admin.css';
 import { db } from '../firebaseConfig';
-import { collection, getDocs, addDoc, updateDoc, doc} from 'firebase/firestore';
+import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc, onSnapshot} from 'firebase/firestore';
 import { useState, useEffect } from 'react';
 
 function Admin({user, books}) {
   const usersColRef = collection(db, 'users');
   const booksColRef = collection(db, 'books');
   
+
+  //users state has user id
   const [users, setUsers] = useState([]);
 
+  //options state holds options to populate dropdown {label: "", value: theValue}
   const [options, setOptions] = useState([]);
   const [selected, setSelected] = useState(null);
 
@@ -29,6 +32,15 @@ function Admin({user, books}) {
     getUsers();
     resetStates();
     //console.log('catalog use effect ran. User:', user)
+
+    onSnapshot(usersColRef, (snapshot)=> {
+      let users = []
+      // console.log('onsnap ran for usercol in admin(inside useeffect)')
+      snapshot.docs.forEach((doc)=> {
+        users.push({...doc.data(), id: doc.id})
+      })
+      setUsers(users)
+    })
 
   }, []);
 
@@ -115,7 +127,55 @@ function Admin({user, books}) {
 
   function returnBook(e){
     e.preventDefault();
-    resetStates();
+    const user = users.find((u)=> {return u.email== email})
+    const returnArr = user.books.filter((book)=> {return ((book.bookId != bookId) || (book.bookId == bookId && !book.isCheckedOut))})
+    const docRef = doc(db, 'users', user.id)
+
+    updateDoc(docRef, {
+      books: returnArr
+    }).then(()=> {
+      console.log('return successful')
+      resetStates();
+    }).catch((err)=> {
+      console.log(err.message)
+    })
+
+  }
+
+  function deleteBook(e){
+    e.preventDefault()
+    // console.log('deletebook ran')
+
+    //first erase book from all users
+    //doesnt update users state directly
+    const usersWithBook = users.filter((user)=> {return user.books.some((book)=> {return book.bookId == bookId})})
+    usersWithBook.forEach((user)=> {
+      const docRef = doc(db, 'users', user.id)
+      const newArr = user.books.filter((book)=> {return book.bookId != bookId} )
+      user.books = newArr
+
+      //update firebase field
+      updateDoc(docRef, {
+        books: newArr
+      }).then(()=> {
+        // console.log('book deleted from books field for user', bookId ,user.email)
+        resetStates();
+      }).catch((err)=> {
+        console.log(err.message)
+      })
+    })
+
+    //then delete book from bookscol
+    const docRef = doc(db, 'books', bookId)
+    deleteDoc(docRef)
+      .then(()=> {
+        // console.log('book deleted from bookcol')
+        resetStates();
+      })
+      .catch((err)=> {
+        console.log(err.message);
+      })
+
   }
 
   function resetStates(){
@@ -162,7 +222,7 @@ function Admin({user, books}) {
 
         <div>
           <h3 className='header' onClick={()=>selectForm("delete-form")}>Delete Book</h3>
-          <form id='delete-form' hidden={true}>
+          <form id='delete-form' hidden={true} onSubmit={deleteBook}>
               <div>Book Id<input required type="text" value={bookId} onInput={(e)=> setBookId(e.target.value)}/></div>
               <div><button type="submit">Delete Book</button></div>
           </form>
