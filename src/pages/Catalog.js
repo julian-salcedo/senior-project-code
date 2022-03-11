@@ -3,6 +3,7 @@ import { collection, getDocs} from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { useState, useEffect } from 'react';
 import FlexBooks from '../components/FlexBooks.js';
+import '../styles/Catalog.css';
 
 
 function Catalog({user, books}) {
@@ -39,10 +40,14 @@ function Catalog({user, books}) {
   //Issue: Cards stay on one row
   return (
     <div>
-      <h1>Our Catalog</h1>
-      <input type='text' placeholder='Search...' id='search-bar' onChange={filter}/>
-      <FlexBooks books={books} />
-      <br />
+      <div className='catalog-top'>
+        <div className='catalog-title'>Our Catalog</div>
+        <input className='catalog-search' type='text' placeholder='Search...' id='search-bar' onChange={filter}/>
+      </div>
+      <div className='catalog-bottom'>
+        <br/>
+        <FlexBooks className='flex-books' books={books} />
+      </div>
     </div>
   ) 
 }
