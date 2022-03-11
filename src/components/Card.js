@@ -8,20 +8,24 @@ function Card({title,image,author,page,dueDate}) {
     return (
         <div className='card-container'>
             <Link className='link' to={page}>
-                <div className='image-container'>
-                    <img src={image} alt='image of a book' />
-                </div>
-                <div className='title'>
-                    <h3>{title}</h3>
-                </div>
-                <div className='author'>
-                    <p>{author}</p> 
-                </div>
-                {dueDate &&
-                <div className={(isOnTime && 'on-time') || 'late'}>
-                    <p>Due by {(dueDate.getMonth()+1) + '/' + (dueDate.getDate()) + '/' + (dueDate.getFullYear())}</p>
-                </div>
-                }
+                <button>
+                    <div className='card-image'>
+                        <img src={image} alt='image of a book' />
+                    </div>
+                    <div className='card-text'>
+                        <div className='card-title'>
+                            <strong>{title}</strong>
+                        </div>
+                        <div className='card-author'>
+                            {author}
+                        </div>
+                        {dueDate &&
+                        <div className={(isOnTime && 'on-time') || 'late'}>
+                            <p>Due by {(dueDate.getMonth()+1) + '/' + (dueDate.getDate()) + '/' + (dueDate.getFullYear())}</p>
+                        </div>
+                        }
+                    </div>
+                </button>
             </Link>
         </div>
     )
