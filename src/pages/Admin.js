@@ -175,11 +175,7 @@ function Admin({user, books}) {
             <div>Checked Out Books 
               <Select options={options} onChange={handleSelect} value={selected} isSearchable={false}/> 
             </div>
-<<<<<<< HEAD
-            <div>Book Id <input required type="text" id='book-id2' /> </div>
-=======
             <div>Book Id <input required type="text" value={bookId} onChange={(e)=> setBookId(e.target.value)}/> </div>
->>>>>>> 80a9fc06afebeabd8e168c96d5fd776a4b1bfe57
             <button type="submit">Submit</button>
           </form>
         </div>
