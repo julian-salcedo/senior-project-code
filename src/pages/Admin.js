@@ -25,6 +25,7 @@ function Admin({user, books}) {
   const [imageFile, setImageFile] = useState('');
   const [email, setEmail] = useState('');
   const [bookId, setBookId] = useState('');
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {
     const getUsers = async () => {
@@ -102,7 +103,12 @@ function Admin({user, books}) {
       })
       .then(()=> {
         console.log('adddoc ran')
+        alert("Successfully added book")
         resetStates();
+      })
+      .catch((err) => {
+        console.log(err.message)
+        alert("Error adding book: ", err.message)
       })
       return
     }
@@ -116,13 +122,20 @@ function Admin({user, books}) {
     // Upload file and metadata to the object
     const storageRef = ref(storage, '/' + imageFile.name);
     const uploadTask = uploadBytesResumable(storageRef, imageFile, metadata);
+    let updateProgress;
 
     // Listen for state changes, errors, and completion of the upload.
     uploadTask.on('state_changed',
     (snapshot) => {
       // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      console.log('Upload is ' + progress + '% done');
+      let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      // updateProgress = setInterval(()=>{
+      //   progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      //   setUploadProgress(progress)
+      //   console.log('Upload is ' + progress + '% done');
+      // }, 1000)
+      setUploadProgress(progress)
+      //console.log('Upload is ' + progress + '% done');
       switch (snapshot.state) {
         case 'paused':
           console.log('Upload is paused');
@@ -133,8 +146,6 @@ function Admin({user, books}) {
       }
     }, 
     (error) => {
-      // A full list of error codes is available at
-      // https://firebase.google.com/docs/storage/web/handle-errors
       switch (error.code) {
         case 'storage/unauthorized':
           // User doesn't have permission to access the object
@@ -142,8 +153,6 @@ function Admin({user, books}) {
         case 'storage/canceled':
           // User canceled the upload
           break;
-
-        // ...
 
         case 'storage/unknown':
           // Unknown error occurred, inspect error.serverResponse
@@ -153,6 +162,7 @@ function Admin({user, books}) {
     () => {
       // Upload completed successfully, now we can get the download URL
       getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        //clearInterval(updateProgress)
         console.log('File available at', downloadURL);
         console.log("The download URL is " + downloadURL)
         addDoc(booksColRef, {
@@ -164,15 +174,19 @@ function Admin({user, books}) {
         })
         .then(()=> {
           console.log('adddoc ran')
+          alert("Successfully added book with image")
           resetStates();
         })
-      });
+        .catch((err)=>{
+          console.log(err.message)
+          alert("Error adding book with image: ", err.message)
+        })
+      })
+      .catch((err)=>{
+        alert("Could not retrieve image URL")
+      })
     }
     );
-
-    
-
-    
   }
 
   function checkoutBook(e){
@@ -190,9 +204,11 @@ function Admin({user, books}) {
       books: user.books
     }).then(()=> {
       console.log('checkout successful')
+      alert("Successfully checked out book")
       resetStates();
     }).catch((err)=> {
       console.log(err.message)
+      alert("Error checking out book: ", err.message)
     })
 
 
@@ -261,6 +277,7 @@ function Admin({user, books}) {
     setBookId('');
     setOptions([])
     setSelected(null)
+    setUploadProgress(0)
     console.log('states reset')
   }
 
@@ -290,7 +307,8 @@ function Admin({user, books}) {
               <div>Author <input required type="text" value={author} onInput={(e)=> setAuthor(e.target.value)}/></div>
               <div>Description <input required type="text" value={description} onInput={(e)=> setDescription(e.target.value)}/></div>  
               <div>In Stock <input required type="number" value={amount} onInput={(e)=> setAmount(e.target.value)}/></div>
-              <div>Cover Image <input type="file" onInput={(e)=> setImageFile(e.target.files[0])}/></div>
+              <div>Cover Image <input type="file" accept="image/*" onInput={(e)=> setImageFile(e.target.files[0])}/></div>
+              <div><p>Progress: {Math.round(uploadProgress)}%</p></div>
               <div><button type="submit">Add Book</button></div>
           </form>
         </div>
