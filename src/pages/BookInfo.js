@@ -37,6 +37,14 @@ function BookInfo({user, uid, books}) {
     return false;
   }
 
+  function alreadyCheckedOut(){
+    if(user && uid != 'y4pfi7AYC7XwzsmgSKRLmF792VS2'){
+      const checkedOutBooks = user.books.filter((book)=> {return book.isCheckedOut});
+      if(checkedOutBooks.some((book)=> book.bookId == id)) return true;
+    }
+    return false;
+  }
+
   function placeHold(){
     console.log('place hold clicked...');
     if(user && uid != 'y4pfi7AYC7XwzsmgSKRLmF792VS2'){
@@ -87,7 +95,8 @@ function BookInfo({user, uid, books}) {
           <p className='description'>
             {bookInfo.desc}
           </p>
-          {!alreadyOnHold() && <a onClick={placeHold} className='btn-checkout'>Place Hold</a>}
+          {alreadyCheckedOut() && <p>Already checked out</p>}
+          {(!alreadyCheckedOut() && !alreadyOnHold()) && <a onClick={placeHold} className='btn-checkout'>Place Hold</a>}
           {alreadyOnHold() && <a onClick={cancelHold} className='btn-checkout'>Cancel Hold</a>}
         </div>
       </div>
