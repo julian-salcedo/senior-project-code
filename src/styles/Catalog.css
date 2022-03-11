@@ -10,6 +10,9 @@
     height: calc(70vh - 70px);
     border: 1px solid transparent;
     background: #EDDDD0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .catalog-title {

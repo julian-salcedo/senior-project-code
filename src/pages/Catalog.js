@@ -45,7 +45,6 @@ function Catalog({user, books}) {
         <input className='catalog-search' type='text' placeholder='Search...' id='search-bar' onChange={filter}/>
       </div>
       <div className='catalog-bottom'>
-        <br/>
         <FlexBooks className='flex-books' books={books} />
       </div>
     </div>
