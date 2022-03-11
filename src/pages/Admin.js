@@ -2,7 +2,7 @@ import React from 'react';
 import Select from 'react-select';
 import '../styles/Admin.css';
 import { db } from '../firebaseConfig';
-import { collection, getDocs, addDoc, updateDoc, doc} from 'firebase/firestore';
+import { collection, getDocs, addDoc, updateDoc, doc, onSnapshot, deleteDoc} from 'firebase/firestore';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useState, useEffect } from 'react';
 
