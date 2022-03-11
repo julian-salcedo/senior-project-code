@@ -105,7 +105,7 @@ function BookInfo({user, uid, books}) {
       {bookInfo && 
       <div>
         <div className='info-container'>
-          <img className='cover' src={DefaultCover} />
+          <img className='cover' src={(bookInfo.imageURL != "" && bookInfo.imageURL) || DefaultCover} />
           <h2 className='title'>{bookInfo.title}</h2>
           <p className='author'>
             by <strong>{bookInfo.author}</strong>

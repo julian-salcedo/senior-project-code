@@ -3,6 +3,7 @@ import Select from 'react-select';
 import '../styles/Admin.css';
 import { db } from '../firebaseConfig';
 import { collection, getDocs, addDoc, updateDoc, doc} from 'firebase/firestore';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useState, useEffect } from 'react';
 
 function Admin({user, books}) {
@@ -18,6 +19,7 @@ function Admin({user, books}) {
   const [author, setAuthor] = useState('');
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState(0);
+  const [imageFile, setImageFile] = useState('');
   const [email, setEmail] = useState('');
   const [bookId, setBookId] = useState('');
 
@@ -72,21 +74,93 @@ function Admin({user, books}) {
   function addBook(e){
     e.preventDefault();
     console.log('add book clicked');
+    console.log(imageFile)
     if(amount <= 0){
       alert('Invalid Amount')
-    }else{
+      return
+    }
+
+    if(!imageFile){
       addDoc(booksColRef, {
         title: title,
         author: author,
         desc: description,
-        amount: parseInt(amount)
+        amount: parseInt(amount),
+        imageURL: ""
       })
       .then(()=> {
         console.log('adddoc ran')
         resetStates();
       })
-
+      return
     }
+
+    const storage = getStorage();
+    // Create the file metadata
+    const metadata = {
+      contentType: imageFile.type
+    };
+
+    // Upload file and metadata to the object
+    const storageRef = ref(storage, '/' + imageFile.name);
+    const uploadTask = uploadBytesResumable(storageRef, imageFile, metadata);
+
+    // Listen for state changes, errors, and completion of the upload.
+    uploadTask.on('state_changed',
+    (snapshot) => {
+      // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      console.log('Upload is ' + progress + '% done');
+      switch (snapshot.state) {
+        case 'paused':
+          console.log('Upload is paused');
+          break;
+        case 'running':
+          console.log('Upload is running');
+          break;
+      }
+    }, 
+    (error) => {
+      // A full list of error codes is available at
+      // https://firebase.google.com/docs/storage/web/handle-errors
+      switch (error.code) {
+        case 'storage/unauthorized':
+          // User doesn't have permission to access the object
+          break;
+        case 'storage/canceled':
+          // User canceled the upload
+          break;
+
+        // ...
+
+        case 'storage/unknown':
+          // Unknown error occurred, inspect error.serverResponse
+          break;
+      }
+    }, 
+    () => {
+      // Upload completed successfully, now we can get the download URL
+      getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        console.log('File available at', downloadURL);
+        console.log("The download URL is " + downloadURL)
+        addDoc(booksColRef, {
+          title: title,
+          author: author,
+          desc: description,
+          amount: parseInt(amount),
+          imageURL: downloadURL
+        })
+        .then(()=> {
+          console.log('adddoc ran')
+          resetStates();
+        })
+      });
+    }
+    );
+
+    
+
+    
   }
 
   function checkoutBook(e){
@@ -122,6 +196,7 @@ function Admin({user, books}) {
     setAuthor('');
     setDescription('');
     setAmount(0);
+    setImageFile('');
     setEmail('');
     setBookId('');
     setOptions([])
@@ -154,7 +229,8 @@ function Admin({user, books}) {
               <div>Title <input required type="text" value={title} onInput={(e)=> setTitle(e.target.value)}/></div> 
               <div>Author <input required type="text" value={author} onInput={(e)=> setAuthor(e.target.value)}/></div>
               <div>Description <input required type="text" value={description} onInput={(e)=> setDescription(e.target.value)}/></div>  
-              <div>In Stock <input required type="number" value={amount} onInput={(e)=> setAmount(e.target.value)}/></div> 
+              <div>In Stock <input required type="number" value={amount} onInput={(e)=> setAmount(e.target.value)}/></div>
+              <div>Cover Image <input type="file" onInput={(e)=> setImageFile(e.target.files[0])}/></div>
               <div><button type="submit">Add Book</button></div>
           </form>
         </div>
