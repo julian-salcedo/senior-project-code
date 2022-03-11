@@ -59,6 +59,7 @@ function SignIn({user}) {
                 <button>Sign Up</button>
               </Link>
             </div>
+            <p id='error-message'></p>
           </div>
         </form>
       </div>
