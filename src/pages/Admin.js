@@ -1,4 +1,5 @@
 import React from 'react';
+import Select from 'react-select';
 import '../styles/Admin.css';
 import { db } from '../firebaseConfig';
 import { collection, getDocs, addDoc, updateDoc, doc} from 'firebase/firestore';
@@ -10,11 +11,13 @@ function Admin({user, books}) {
   
   const [users, setUsers] = useState([]);
 
+  const [options, setOptions] = useState([]);
+  const [selected, setSelected] = useState(null);
+
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState(0);
-
   const [email, setEmail] = useState('');
   const [bookId, setBookId] = useState('');
 
@@ -24,10 +27,34 @@ function Admin({user, books}) {
       setUsers(data.docs.map((doc) => {return ({ ...doc.data(), id: doc.id }) }));
     }
     getUsers();
-    resetComps();
+    resetStates();
     //console.log('catalog use effect ran. User:', user)
 
   }, []);
+
+  //populates options state depending on if you want isCheckedOut to be true or false
+  function populateOptions(isCheckedOut){
+    const user = users.find((u)=> {return u.email == email})
+    if(!user) {console.log('invalid user'); return;}
+    
+    const holds = user.books.filter((book)=> book.isCheckedOut == isCheckedOut);
+    const opts = []
+
+    holds.forEach((hold)=> {
+      opts.push({
+        label: getBookFromId(hold.bookId).title,
+        value: hold.bookId
+      })
+    })
+
+    setOptions(opts)
+  }
+
+  function handleSelect(option){
+    // console.log('handleselect ran', option)
+    setBookId(option.value);
+    setSelected(option);
+  }
 
   function getBookFromId(id) {
     const book = books.find(book => book.id == id);
@@ -40,83 +67,6 @@ function Admin({user, books}) {
       if(form.id === formName) {form.hidden = false}
       else {form.hidden = true}
     });
-  }
-
-  function getHoldsFromEmail() {
-    const email = document.getElementById("email-input1").value
-    const user = users.find(user => user.email == email);
-    const selectElem = document.getElementById("hold-list");
-
-    while(selectElem.firstChild){
-      selectElem.removeChild(selectElem.firstChild);
-    }
-
-    if(!user){
-      alert("User does not exist")
-      updateBookId(1)
-      return;
-    }
-
-    const defaultOption = document.createElement("option");
-    defaultOption.innerHTML = "--Select a Book--";
-    defaultOption.value = "";
-    selectElem.appendChild(defaultOption)
-
-    const holds = user.books.filter(book => !book.isCheckedOut);
-
-    holds.forEach(book => {
-      const option = document.createElement("option");
-      option.innerHTML = getBookFromId(book.bookId).title;
-      option.value = book.bookId;
-      selectElem.appendChild(option);
-    })
-
-    updateBookId(1)
-  }
-
-  function updateBookId(id) {
-    const bookIdInput = document.getElementById("book-id" + id);
-    const selectElemList = ["hold-list", "checkout-list"];
-    const selectElem = document.getElementById(selectElemList[id - 1]);
-    if(selectElem.childNodes.length == 0){
-      bookIdInput.value = "";
-      return;
-    }
-
-    bookIdInput.value = selectElem.value;
-    setBookId(selectElem.value);
-  }
-
-  function getCheckedOutFromEmail() {
-    const email = document.getElementById("email-input2").value
-    const user = users.find(user => user.email == email);
-    const selectElem = document.getElementById("checkout-list");
-
-    while(selectElem.firstChild){
-      selectElem.removeChild(selectElem.firstChild);
-    }
-
-    if(!user){
-      alert("User does not exist")
-      updateBookId(2)
-      return;
-    }
-
-    const defaultOption = document.createElement("option");
-    defaultOption.innerHTML = "--Select a Book--";
-    defaultOption.value = "";
-    selectElem.appendChild(defaultOption)
-
-    const checkedOut = user.books.filter(book => book.isCheckedOut);
-
-    checkedOut.forEach(book => {
-      const option = document.createElement("option");
-      option.innerHTML = getBookFromId(book.bookId).title;
-      option.value = book.bookId;
-      selectElem.appendChild(option);
-    })
-
-    updateBookId(2)
   }
 
   function addBook(e){
@@ -133,7 +83,7 @@ function Admin({user, books}) {
       })
       .then(()=> {
         console.log('adddoc ran')
-        resetComps();
+        resetStates();
       })
 
     }
@@ -141,34 +91,43 @@ function Admin({user, books}) {
 
   function checkoutBook(e){
     e.preventDefault();
-    console.log('checkout clicked');
-    const theUser = users.find((u)=> {return u.email == email});
-    console.log(theUser);
-    //update docs
-    const docRef = doc(db, 'users', theUser.id);
+    console.log('checkout clicked')
+    const user = users.find((u)=> {return u.email == email})
 
-    //update user.books(from state) then updatedoc
-    const theBook = theUser.books.find(book => book.bookId == bookId);
-    if(!theBook){
-      alert("User has not held this book");
-      return;
-    }
+    const docRef = doc(db, 'users', user.id)
+
+    const theBook = user.books.find(book => book.bookId == bookId)
     theBook.isCheckedOut = true;
+    // console.log(user.books);
+
+    
     updateDoc(docRef, {
-      books: theUser.books
+      books: user.books
+    }).then(()=> {
+      console.log('checkout successful')
+      resetStates();
+    }).catch((err)=> {
+      console.log(err.message)
     })
-      .then(() => console.log('Book ' + theBook.bookId + ' checked out'))
-      .catch((err) => console.log(err.message))
+
+
   }
 
-  function resetComps(){
+  function returnBook(e){
+    e.preventDefault();
+    resetStates();
+  }
+
+  function resetStates(){
     setTitle('');
     setAuthor('');
     setDescription('');
     setAmount(0);
     setEmail('');
     setBookId('');
-    console.log('comps reset')
+    setOptions([])
+    setSelected(null)
+    console.log('states reset')
   }
 
   return (
@@ -179,15 +138,12 @@ function Admin({user, books}) {
 
         <div>
           <h3 className='header' onClick={()=>selectForm("checkout-form")}>Checkout Book</h3>
-          <form id='checkout-form' hidden='true' onSubmit={checkoutBook}>
-            <div>User Email <input required type="email" id='email-input1' onInput={(e)=> setEmail(e.target.value)}/> <button type='button' onClick={getHoldsFromEmail}>Get Holds</button></div>
+          <form id='checkout-form' hidden={true} onSubmit={checkoutBook}>
+            <div>User Email <input required type="email" value={email} onInput={(e)=> setEmail(e.target.value)}/> <button type='button' onClick={()=> {populateOptions(false)}}>Get Holds</button></div>
             <div>Reserved Books
-              <select id='hold-list' onChange={()=>{updateBookId(1)}}>
-
-              </select>
-              <br />
+              <Select options={options} onChange={handleSelect} value={selected} isSearchable={false}/>
             </div>
-            <div>Book Id <input required type="text" id='book-id1' onChange={(e)=> setBookId(e.target.value)}/></div> 
+            <div>Book Id <input required type="text" value={bookId} onChange={(e)=> setBookId(e.target.value)}/></div> 
             {/* <div>Days Checked Out <input required type="number" /></div>  */}
             <button type="submit">Checkout Book</button>
           </form>
@@ -195,7 +151,7 @@ function Admin({user, books}) {
 
         <div>
           <h3 className='header' onClick={()=>selectForm("add-form")}>Add Book</h3>
-          <form id='add-form' hidden='true' onSubmit={addBook}>
+          <form id='add-form' hidden={true} onSubmit={addBook}>
               <div>Title <input required type="text" value={title} onInput={(e)=> setTitle(e.target.value)}/></div> 
               <div>Author <input required type="text" value={author} onInput={(e)=> setAuthor(e.target.value)}/></div>
               <div>Description <input required type="text" value={description} onInput={(e)=> setDescription(e.target.value)}/></div>  
@@ -206,7 +162,7 @@ function Admin({user, books}) {
 
         <div>
           <h3 className='header' onClick={()=>selectForm("delete-form")}>Delete Book</h3>
-          <form id='delete-form' hidden='true'>
+          <form id='delete-form' hidden={true}>
               <div>Book Id<input required type="text" value={bookId} onInput={(e)=> setBookId(e.target.value)}/></div>
               <div><button type="submit">Delete Book</button></div>
           </form>
@@ -214,15 +170,16 @@ function Admin({user, books}) {
 
         <div>
           <h3 className='header' onClick={()=>selectForm("return-form")}>Return Book</h3>
-          <form id='return-form' hidden='true'>
-            <div>User Email <input required type="email" id='email-input2'/> <button type='button' onClick={getCheckedOutFromEmail}>Get Books</button></div>
+          <form id='return-form' hidden={true} onSubmit={returnBook}>
+            <div>User Email <input required type="email" value={email} onInput={(e)=> setEmail(e.target.value)}/> <button type='button' onClick={()=> populateOptions(true)}>Get Books</button></div>
             <div>Checked Out Books 
-              <select id='checkout-list'>
-                
-              </select> 
-              <br />
+              <Select options={options} onChange={handleSelect} value={selected} isSearchable={false}/> 
             </div>
+<<<<<<< HEAD
             <div>Book Id <input required type="text" id='book-id2' /> </div>
+=======
+            <div>Book Id <input required type="text" value={bookId} onChange={(e)=> setBookId(e.target.value)}/> </div>
+>>>>>>> 80a9fc06afebeabd8e168c96d5fd776a4b1bfe57
             <button type="submit">Submit</button>
           </form>
         </div>
