@@ -13,10 +13,6 @@
 }
 
 .wrapper::-webkit-scrollbar-thumb {
-    background: #121619;
+    background: #422A14;
     border-radius: 100vw;
-}
-
-.card {
-    min-width: 200px;
 }
