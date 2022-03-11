@@ -21,4 +21,5 @@ form [type*='submit'] {
     font-weight: bold;
     border-color: rgb(27, 27, 27);
     border-radius: 10px;
+    cursor: pointer;
 }

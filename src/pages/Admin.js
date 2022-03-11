@@ -1,22 +1,31 @@
 import React from 'react';
+import Select from 'react-select';
 import '../styles/Admin.css';
 import { db } from '../firebaseConfig';
-import { collection, getDocs, addDoc} from 'firebase/firestore';
+import { collection, getDocs, addDoc, updateDoc, doc, onSnapshot, deleteDoc} from 'firebase/firestore';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useState, useEffect } from 'react';
 
 function Admin({user, books}) {
   const usersColRef = collection(db, 'users');
   const booksColRef = collection(db, 'books');
   
+
+  //users state has user id
   const [users, setUsers] = useState([]);
+
+  //options state holds options to populate dropdown {label: "", value: theValue}
+  const [options, setOptions] = useState([]);
+  const [selected, setSelected] = useState(null);
 
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState(0);
-
+  const [imageFile, setImageFile] = useState('');
   const [email, setEmail] = useState('');
   const [bookId, setBookId] = useState('');
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {
     const getUsers = async () => {
@@ -24,9 +33,43 @@ function Admin({user, books}) {
       setUsers(data.docs.map((doc) => {return ({ ...doc.data(), id: doc.id }) }));
     }
     getUsers();
+    resetStates();
     //console.log('catalog use effect ran. User:', user)
 
+    onSnapshot(usersColRef, (snapshot)=> {
+      let users = []
+      // console.log('onsnap ran for usercol in admin(inside useeffect)')
+      snapshot.docs.forEach((doc)=> {
+        users.push({...doc.data(), id: doc.id})
+      })
+      setUsers(users)
+    })
+
   }, []);
+
+  //populates options state depending on if you want isCheckedOut to be true or false
+  function populateOptions(isCheckedOut){
+    const user = users.find((u)=> {return u.email == email})
+    if(!user) {console.log('invalid user'); return;}
+    
+    const holds = user.books.filter((book)=> book.isCheckedOut == isCheckedOut);
+    const opts = []
+
+    holds.forEach((hold)=> {
+      opts.push({
+        label: getBookFromId(hold.bookId).title,
+        value: hold.bookId
+      })
+    })
+
+    setOptions(opts)
+  }
+
+  function handleSelect(option){
+    // console.log('handleselect ran', option)
+    setBookId(option.value);
+    setSelected(option);
+  }
 
   function getBookFromId(id) {
     const book = books.find(book => book.id == id);
@@ -41,73 +84,195 @@ function Admin({user, books}) {
     });
   }
 
-  function getHoldsFromEmail() {
-    const email = document.getElementById("email-input1").value
-    const user = users.find(user => user.email == email);
-    const selectElem = document.getElementById("hold-list");
-
-    while(selectElem.firstChild){
-      selectElem.removeChild(selectElem.firstChild);
-    }
-
-    if(!user){
-      alert("User does not exist")
-      updateBookId1()
-      return;
-    }
-
-    const holds = user.books.filter(book => !book.isCheckedOut);
-
-    holds.forEach(book => {
-      const option = document.createElement("option");
-      option.innerHTML = getBookFromId(book.bookId).title;
-      option.value = book.bookId;
-      selectElem.appendChild(option);
-    })
-
-    updateBookId1()
-  }
-
-  function updateBookId1() {
-    const bookIdInput1 = document.getElementById("book-id1");
-    const selectElem = document.getElementById("hold-list");
-    if(selectElem.childNodes.length == 0){
-      bookIdInput1.value = "";
-      return;
-    }
-
-    bookIdInput1.value = selectElem.value;
-  }
-
-
   function addBook(e){
     e.preventDefault();
     console.log('add book clicked');
+    console.log(imageFile)
     if(amount <= 0){
       alert('Invalid Amount')
-    }else{
+      return
+    }
+
+    if(!imageFile){
       addDoc(booksColRef, {
         title: title,
         author: author,
         desc: description,
-        amount: parseInt(amount)
+        amount: parseInt(amount),
+        imageURL: ""
       })
       .then(()=> {
         console.log('adddoc ran')
-        resetComps();
+        alert("Successfully added book")
+        resetStates();
       })
-
+      .catch((err) => {
+        console.log(err.message)
+        alert("Error adding book: ", err.message)
+      })
+      return
     }
+
+    const storage = getStorage();
+    // Create the file metadata
+    const metadata = {
+      contentType: imageFile.type
+    };
+
+    // Upload file and metadata to the object
+    const storageRef = ref(storage, '/' + imageFile.name);
+    const uploadTask = uploadBytesResumable(storageRef, imageFile, metadata);
+
+    // Listen for state changes, errors, and completion of the upload.
+    uploadTask.on('state_changed',
+    (snapshot) => {
+      // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+      let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+      setUploadProgress(progress)
+      //console.log('Upload is ' + progress + '% done');
+      switch (snapshot.state) {
+        case 'paused':
+          console.log('Upload is paused');
+          break;
+        case 'running':
+          console.log('Upload is running');
+          break;
+      }
+    }, 
+    (error) => {
+      switch (error.code) {
+        case 'storage/unauthorized':
+          // User doesn't have permission to access the object
+          break;
+        case 'storage/canceled':
+          // User canceled the upload
+          break;
+
+        case 'storage/unknown':
+          // Unknown error occurred, inspect error.serverResponse
+          break;
+      }
+    }, 
+    () => {
+      // Upload completed successfully, now we can get the download URL
+      getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        console.log('File available at', downloadURL);
+        console.log("The download URL is " + downloadURL)
+        addDoc(booksColRef, {
+          title: title,
+          author: author,
+          desc: description,
+          amount: parseInt(amount),
+          imageURL: downloadURL
+        })
+        .then(()=> {
+          console.log('adddoc ran')
+          alert("Successfully added book with image")
+          resetStates();
+        })
+        .catch((err)=>{
+          console.log(err.message)
+          alert("Error adding book with image: ", err.message)
+        })
+      })
+      .catch((err)=>{
+        alert("Could not retrieve image URL")
+      })
+    }
+    );
   }
 
-  function resetComps(){
+  function checkoutBook(e){
+    e.preventDefault();
+    console.log('checkout clicked')
+    const user = users.find((u)=> {return u.email == email})
+
+    const docRef = doc(db, 'users', user.id)
+
+    const theBook = user.books.find(book => book.bookId == bookId)
+    theBook.isCheckedOut = true;
+    // console.log(user.books);
+    
+    updateDoc(docRef, {
+      books: user.books
+    }).then(()=> {
+      console.log('checkout successful')
+      alert("Successfully checked out book")
+      resetStates();
+    }).catch((err)=> {
+      console.log(err.message)
+      alert("Error checking out book: ", err.message)
+    })
+
+
+  }
+
+  function returnBook(e){
+    e.preventDefault();
+    const user = users.find((u)=> {return u.email== email})
+    const returnArr = user.books.filter((book)=> {return ((book.bookId != bookId) || (book.bookId == bookId && !book.isCheckedOut))})
+    const docRef = doc(db, 'users', user.id)
+
+    updateDoc(docRef, {
+      books: returnArr
+    }).then(()=> {
+      console.log('return successful')
+      resetStates();
+    }).catch((err)=> {
+      console.log(err.message)
+    })
+
+  }
+
+  function deleteBook(e){
+    e.preventDefault()
+    // console.log('deletebook ran')
+
+    //first erase book from all users
+    //doesnt update users state directly
+    const usersWithBook = users.filter((user)=> {return user.books.some((book)=> {return book.bookId == bookId})})
+    usersWithBook.forEach((user)=> {
+      const docRef = doc(db, 'users', user.id)
+      const newArr = user.books.filter((book)=> {return book.bookId != bookId} )
+      user.books = newArr
+
+      //update firebase field
+      updateDoc(docRef, {
+        books: newArr
+      }).then(()=> {
+        // console.log('book deleted from books field for user', bookId ,user.email)
+        resetStates();
+      }).catch((err)=> {
+        console.log(err.message)
+      })
+    })
+
+    //then delete book from bookscol
+    const docRef = doc(db, 'books', bookId)
+    deleteDoc(docRef)
+      .then(()=> {
+        // console.log('book deleted from bookcol')
+        resetStates();
+      })
+      .catch((err)=> {
+        console.log(err.message);
+      })
+
+  }
+
+  function resetStates(){
     setTitle('');
     setAuthor('');
     setDescription('');
     setAmount(0);
+    setImageFile('');
     setEmail('');
     setBookId('');
-    console.log('comps reset')
+    setOptions([])
+    setSelected(null)
+    setUploadProgress(0)
+    console.log('states reset')
   }
 
   return (
@@ -118,51 +283,47 @@ function Admin({user, books}) {
 
         <div>
           <h3 className='header' onClick={()=>selectForm("checkout-form")}>Checkout Book</h3>
-          <form id='checkout-form' hidden='true'>
-            <div>User Email <input type="text" id='email-input1' /> <button type='button' onClick={getHoldsFromEmail}>Get Holds</button></div>
+          <form id='checkout-form' hidden={true} onSubmit={checkoutBook}>
+            <div>User Email <input required type="email" value={email} onInput={(e)=> setEmail(e.target.value)}/> <button type='button' onClick={()=> {populateOptions(false)}}>Get Holds</button></div>
             <div>Reserved Books
-              <select id='hold-list' onChange={updateBookId1}>
-
-              </select>
-              <br /> OR
+              <Select options={options} onChange={handleSelect} value={selected} isSearchable={false}/>
             </div>
-            <div>Book Id <input type="text" id='book-id1' /></div> 
-            <div>Days Checked Out <input type="number" /></div> 
-            <button type="submit">Submit</button>
+            <div>Book Id <input required type="text" value={bookId} onChange={(e)=> setBookId(e.target.value)}/></div> 
+            {/* <div>Days Checked Out <input required type="number" /></div>  */}
+            <button type="submit">Checkout Book</button>
           </form>
         </div>
 
         <div>
           <h3 className='header' onClick={()=>selectForm("add-form")}>Add Book</h3>
-          <form id='add-form' hidden='true' onSubmit={addBook}>
-              <div>Title <input required type="text" value={title} onChange={(e)=> setTitle(e.target.value)}/></div> 
-              <div>Author <input required type="text" value={author} onChange={(e)=> setAuthor(e.target.value)}/></div>
-              <div>Description <input required type="text" value={description} onChange={(e)=> setDescription(e.target.value)}/></div>  
-              <div>In Stock <input required type="number" value={amount} onChange={(e)=> setAmount(e.target.value)}/></div> 
+          <form id='add-form' hidden={true} onSubmit={addBook}>
+              <div>Title <input required type="text" value={title} onInput={(e)=> setTitle(e.target.value)}/></div> 
+              <div>Author <input required type="text" value={author} onInput={(e)=> setAuthor(e.target.value)}/></div>
+              <div>Description <input required type="text" value={description} onInput={(e)=> setDescription(e.target.value)}/></div>  
+              <div>In Stock <input required type="number" value={amount} onInput={(e)=> setAmount(e.target.value)}/></div>
+              <div>Cover Image <input type="file" accept="image/*" onInput={(e)=> setImageFile(e.target.files[0])}/></div>
+              <div><p>Progress: {Math.round(uploadProgress)}%</p></div>
               <div><button type="submit">Add Book</button></div>
           </form>
         </div>
 
         <div>
           <h3 className='header' onClick={()=>selectForm("delete-form")}>Delete Book</h3>
-          <form id='delete-form' hidden='true'>
-              <div>Book Id<input required type="text" value={bookId} onChange={(e)=> setBookId(e.target.value)}/></div>
+          <form id='delete-form' hidden={true} onSubmit={deleteBook}>
+              <div>Book Id<input required type="text" value={bookId} onInput={(e)=> setBookId(e.target.value)}/></div>
               <div><button type="submit">Delete Book</button></div>
           </form>
         </div>
 
         <div>
           <h3 className='header' onClick={()=>selectForm("return-form")}>Return Book</h3>
-          <form id='return-form' hidden='true'>
-            <div>User Email <input type="text" /> <button>Get Books</button></div>
+          <form id='return-form' hidden={true} onSubmit={returnBook}>
+            <div>User Email <input required type="email" value={email} onInput={(e)=> setEmail(e.target.value)}/> <button type='button' onClick={()=> populateOptions(true)}>Get Books</button></div>
             <div>Checked Out Books 
-              <select>
-                
-              </select> 
-              <br /> OR
+              <Select options={options} onChange={handleSelect} value={selected} isSearchable={false}/> 
             </div>
-            <div>Book Id <input type="text" /> </div>
-            <button type="submit">Submit</button>
+            <div>Book Id <input required type="text" value={bookId} onChange={(e)=> setBookId(e.target.value)}/> </div>
+            <button type="submit">Return Book</button>
           </form>
         </div>
 

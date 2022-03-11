@@ -13,6 +13,7 @@
     border-color: rgb(27, 27, 27);
     border-radius: 10px;
     transition: transform 0.3s ease;
+    cursor: pointer;
 }
 
 #welcome-page button:hover {

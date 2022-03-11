@@ -20,10 +20,11 @@ function App() {
   const [uid, setUid] = useState(null);
   const [books, setBooks] = useState([]);
 
+  const [unsubUser, setUnsubUser] = useState();
 
   useEffect(()=>{
     onAuthStateChanged(auth, (userAuth)=>{
-      //console.log('auth state change ran from app', userAuth)
+      // console.log('auth state change ran from app')
       if(userAuth){
         const id = userAuth.uid;
         const docRef = doc(db, 'users', id)
@@ -38,14 +39,15 @@ function App() {
             console.log(err.message)
           })
         //subscribe to current user's document
-        onSnapshot(docRef, (doc)=> {
+        const unsub = onSnapshot(docRef, (doc)=> {
           setUser(doc.data())
-          //console.log('onsnapshot in appjs ran: ', doc.data())
-
+          // console.log('onsnapshot in appjs ran for user doc(inside onauthchanged)')
+          setUnsubUser(()=> unsub);
         });
       }else{
         setUser(null);
         setUid(null);
+        setUnsubUser();
       }
 
     })
@@ -56,7 +58,9 @@ function App() {
         books.push({...doc.data(), id: doc.id})
       })
       setBooks(books);
+      // console.log('appjs onsnapshot ran for bookscol')
     })
+
     //console.log('catalog use effect ran.', books)
     
   }, [])
@@ -65,7 +69,7 @@ function App() {
   return (
     <div className='App'>
       <Router>
-        <NavBar user={user}/>
+        <NavBar user={user} unsubUser={unsubUser}/>
         <Switch>
           <Route exact path='/'><Welcome user={user}/></Route>
           <Route exact path='/sign-in'><SignIn user={user}/></Route>

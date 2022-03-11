@@ -7,3 +7,7 @@
     background-color: rgb(5, 119, 125);
     cursor: pointer;
 }
+
+#admin-page button {
+    cursor: pointer;
+}
