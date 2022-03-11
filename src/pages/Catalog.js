@@ -27,7 +27,7 @@ function Catalog({user, books}) {
     const books = document.querySelectorAll(".card-container")
     const query = document.getElementById("search-bar").value
     books.forEach(book => {
-      const title = book.querySelector(".title").querySelector("h3").innerHTML
+      const title = book.querySelector(".card-title").querySelector("strong").innerHTML
       if(title.toLowerCase().startsWith(query.toLowerCase())) {
         book.hidden = false
       }
