@@ -1,6 +1,7 @@
 import React from 'react';
 import FlexBooks from '../components/FlexBooks.js';
 import TempFlexBooks from '../components/TempFlexBooks';
+import '../styles/MyBooks.css';
 
 function MyBooks({user, books}) {
   function getBookFromId(id) {
@@ -12,13 +13,26 @@ function MyBooks({user, books}) {
     <div>
       {(user && books &&
       <div>
-        <h1>My Books</h1>
-        <p>Total Overdue Fees:</p>
-        <h3>Checked Out:</h3>
-        <FlexBooks books={(user.books.filter(book => book.isCheckedOut)).map(checkedOut => {return getBookFromId(checkedOut.bookId);})} />
-        <h3>On Hold:</h3>
-        <FlexBooks books={(user.books.filter(book => !book.isCheckedOut)).map(hold => {return getBookFromId(hold.bookId);})} />
-        <br />
+        <div className='my-books-top'>
+          <div className='my-books-title'>
+            My Books
+          </div>
+          <div className='my-books-fees'>
+            Total Overdue Fees:
+          </div>
+        </div>
+        <div className='my-books-middle'>
+          <div className='my-books-checked'>
+            Checked Out
+          </div>
+          <FlexBooks books={(user.books.filter(book => book.isCheckedOut)).map(checkedOut => {return getBookFromId(checkedOut.bookId);})} />
+        </div>
+        <div className='my-books-bottom'>
+          <div className='my-books-hold'>
+            On Hold
+          </div>
+          <FlexBooks books={(user.books.filter(book => !book.isCheckedOut)).map(hold => {return getBookFromId(hold.bookId);})} />
+        </div>
       </div>)
         || (!user &&
         <h2>Not Logged In</h2>) 
