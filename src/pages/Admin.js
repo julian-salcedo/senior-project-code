@@ -2,7 +2,7 @@ import React from 'react';
 import Select from 'react-select';
 import '../styles/Admin.css';
 import { db } from '../firebaseConfig';
-import { collection, getDocs, addDoc, updateDoc, doc, onSnapshot, deleteDoc} from 'firebase/firestore';
+import { collection, getDocs, addDoc, updateDoc, doc, onSnapshot, deleteDoc, Timestamp} from 'firebase/firestore';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useState, useEffect } from 'react';
 
@@ -26,6 +26,9 @@ function Admin({user, books}) {
   const [email, setEmail] = useState('');
   const [bookId, setBookId] = useState('');
   const [uploadProgress, setUploadProgress] = useState(0);
+
+  // const today = new Date()
+  // const todayString = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate()
 
   useEffect(() => {
     const getUsers = async () => {
@@ -205,26 +208,25 @@ function Admin({user, books}) {
   function checkoutBook(e){
     e.preventDefault();
     console.log('checkout clicked')
-    const user = users.find((u)=> {return u.email == email})
-
-    const docRef = doc(db, 'users', user.id)
-
-    const theBook = user.books.find(book => book.bookId == bookId)
-    theBook.isCheckedOut = true;
-    // console.log(user.books);
     
-    updateDoc(docRef, {
-      books: user.books
-    }).then(()=> {
-      console.log('checkout successful')
-      alert("Successfully checked out book")
-      resetStates();
-    }).catch((err)=> {
-      console.log(err.message)
-      alert("Error checking out book: ", err.message)
-    })
+    // const user = users.find((u)=> {return u.email == email})
 
+    // const docRef = doc(db, 'users', user.id)
 
+    // const theBook = user.books.find(book => book.bookId == bookId)
+    // theBook.isCheckedOut = true;
+    // // console.log(user.books);
+    
+    // updateDoc(docRef, {
+    //   books: user.books
+    // }).then(()=> {
+    //   console.log('checkout successful')
+    //   alert("Successfully checked out book")
+    //   resetStates();
+    // }).catch((err)=> {
+    //   console.log(err.message)
+    //   alert("Error checking out book: ", err.message)
+    // })
   }
 
   function returnBook(e){
@@ -308,7 +310,7 @@ function Admin({user, books}) {
               <Select options={options} onChange={handleSelect} value={selected} isSearchable={false}/>
             </div>
             <div>Book Id <input required type="text" value={bookId} onChange={(e)=> setBookId(e.target.value)}/></div> 
-            {/* <div>Days Checked Out <input required type="number" /></div>  */}
+            {/* <div>Due Date <input required type="date" min={todayString} /></div> */}
             <button type="submit">Checkout Book</button>
           </form>
         </div>
