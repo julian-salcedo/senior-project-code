@@ -9,7 +9,7 @@ function MyBooks({user, books}) {
 
   return (
     <div>
-      {(user && books &&
+      {(user && user.email != "admin@gmail.com" && books &&
       <div>
         <h1>My Books</h1>
         <p>Total Overdue Fees:</p>
@@ -19,6 +19,8 @@ function MyBooks({user, books}) {
         <FlexBooks books={(user.books.filter(book => !book.isCheckedOut)).map(hold => {return getBookFromId(hold.bookId);})} />
         <br />
       </div>)
+        || (user && user.email == "admin@gmail.com" &&
+          <h2>Not Signed In As Student</h2>) 
         || (!user &&
         <h2>Not Logged In</h2>) 
       }
