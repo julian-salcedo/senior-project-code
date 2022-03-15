@@ -94,6 +94,7 @@ function Admin({user, books}) {
     }
 
     if(!imageFile){
+      document.getElementById('adding-book-label').hidden = false;
       addDoc(booksColRef, {
         title: title,
         author: author,
@@ -104,10 +105,12 @@ function Admin({user, books}) {
       .then(()=> {
         console.log('adddoc ran')
         alert("Successfully added book")
+        document.getElementById('adding-book-label').hidden = true;
         resetStates();
       })
       .catch((err) => {
         console.log(err.message)
+        document.getElementById('adding-book-label').hidden = true;
         alert("Error adding book: ", err.message)
       })
       return
@@ -118,6 +121,7 @@ function Admin({user, books}) {
       return
     }
 
+    document.getElementById('adding-book-label').hidden = false;
     const storage = getStorage();
     // Create the file metadata
     const metadata = {
@@ -151,6 +155,7 @@ function Admin({user, books}) {
       }
     }, 
     (error) => {
+      document.getElementById('adding-book-label').hidden = true;
       switch (error.code) {
         case 'storage/unauthorized':
           // User doesn't have permission to access the object
@@ -179,15 +184,18 @@ function Admin({user, books}) {
         })
         .then(()=> {
           console.log('adddoc ran')
+          document.getElementById('adding-book-label').hidden = true;
           alert("Successfully added book with image")
           resetStates();
         })
         .catch((err)=>{
           console.log(err.message)
+          document.getElementById('adding-book-label').hidden = true;
           alert("Error adding book with image: ", err.message)
         })
       })
       .catch((err)=>{
+        document.getElementById('adding-book-label').hidden = true;
         alert("Could not retrieve image URL")
       })
     }
@@ -313,7 +321,9 @@ function Admin({user, books}) {
               <div>Description <input required type="text" value={description} onInput={(e)=> setDescription(e.target.value)}/></div>  
               <div>In Stock <input required type="number" value={amount} onInput={(e)=> setAmount(e.target.value)}/></div>
               <div>Cover Image <input type="file" accept="image/*" onInput={(e)=> setImageFile(e.target.files[0])}/></div>
-              <div><p>Progress: {Math.round(uploadProgress)}%</p></div>
+              <br />
+              <div hidden='true' id='adding-book-label'>Adding Book...</div>
+              <div>Progress: {Math.round(uploadProgress)}%</div>
               <div><button type="submit">Add Book</button></div>
           </form>
         </div>
