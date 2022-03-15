@@ -113,6 +113,11 @@ function Admin({user, books}) {
       return
     }
 
+    if(!imageFile.type.startsWith("image/")){
+      alert("File must be an image")
+      return
+    }
+
     const storage = getStorage();
     // Create the file metadata
     const metadata = {
