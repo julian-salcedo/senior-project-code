@@ -3,7 +3,7 @@ import { auth } from '../firebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { useHistory, Link } from 'react-router-dom'
 
-function SignIn({user}) {
+function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 

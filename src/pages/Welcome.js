@@ -1,9 +1,6 @@
-import { formatMs } from '@material-ui/core';
 import React from 'react';
 import {Link} from 'react-router-dom';
 import '../styles/Welcome.css'
-import Storm_Logo from '../assets/mcfatter-storm-logo.png';
-import Social_Media from '../assets/social-media-handles.png';
 
 function Home({user}) {
   return (

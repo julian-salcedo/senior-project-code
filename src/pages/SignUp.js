@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../styles/SignIn.css';
 import { auth, db } from '../firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { useHistory, Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { doc, setDoc } from 'firebase/firestore';
 import '../styles/SignUp.css';
 
@@ -18,7 +18,6 @@ function SignUp({user}) {
 
   function handleSubmit(e){
     e.preventDefault();
-    // console.log('form submitted')
     createUserWithEmailAndPassword(auth, email, password)
       .then((cred)=> {
         console.log('user created', cred.user.uid)
