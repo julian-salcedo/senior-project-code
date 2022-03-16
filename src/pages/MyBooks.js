@@ -1,10 +1,6 @@
 import React from 'react';
 import FlexBooks from '../components/FlexBooks.js';
-<<<<<<< HEAD
-import TempFlexBooks from '../components/TempFlexBooks';
 import '../styles/MyBooks.css';
-=======
->>>>>>> master
 
 function MyBooks({user, books}) {
   function getBookFromId(id) {
