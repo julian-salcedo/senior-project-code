@@ -20,10 +20,11 @@ function App() {
   const [uid, setUid] = useState(null);
   const [books, setBooks] = useState([]);
 
+  const [unsubUser, setUnsubUser] = useState();
 
   useEffect(()=>{
     onAuthStateChanged(auth, (userAuth)=>{
-      //console.log('auth state change ran from app', userAuth)
+      // console.log('auth state change ran from app')
       if(userAuth){
         const id = userAuth.uid;
         const docRef = doc(db, 'users', id)
@@ -37,23 +38,29 @@ function App() {
           .catch((err)=> {
             console.log(err.message)
           })
-        onSnapshot(docRef, (doc)=> {
+        //subscribe to current user's document
+        const unsub = onSnapshot(docRef, (doc)=> {
           setUser(doc.data())
-          //console.log('onsnapshot in appjs ran: ', doc.data())
-
+          // console.log('onsnapshot in appjs ran for user doc(inside onauthchanged)')
+          setUnsubUser(()=> unsub);
         });
-        }else{
+      }else{
         setUser(null);
         setUid(null);
+        setUnsubUser();
       }
 
     })
 
-    const getBooks = async () => {
-      const data = await getDocs(booksColRef);
-      setBooks(data.docs.map((doc) => {return ({ ...doc.data(), id: doc.id }) }));
-    }
-    getBooks();
+    onSnapshot(booksColRef, (snapshot)=> {
+      let books = [];
+      snapshot.docs.forEach((doc)=> {
+        books.push({...doc.data(), id: doc.id})
+      })
+      setBooks(books);
+      // console.log('appjs onsnapshot ran for bookscol')
+    })
+
     //console.log('catalog use effect ran.', books)
     
   }, [])
@@ -62,7 +69,7 @@ function App() {
   return (
     <div className='App'>
       <Router>
-        <NavBar user={user}/>
+        <NavBar user={user} unsubUser={unsubUser}/>
         <Switch>
           <Route exact path='/'><Welcome user={user}/></Route>
           <Route exact path='/sign-in'><SignIn user={user}/></Route>
@@ -70,7 +77,7 @@ function App() {
           <Route exact path='/catalog' ><Catalog user={user} books={books}/></Route>
           <Route exact path='/catalog/:id' ><BookInfo user={user} uid={uid} books={books} /> </Route>
           <Route exact path='/my-books'><MyBooks user={user} books={books} /></Route>
-          <Route exact path='/admin'><Admin user={user}/></Route>
+          <Route exact path='/admin'><Admin user={user} books={books} /></Route>
         </Switch>
         <Footer />
       </Router>

@@ -6,7 +6,7 @@ import '../styles/NavBar.css';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 
-function NavBar({user}) {
+function NavBar({user, unsubUser}) {
 
   const [openLinks, setOpenLinks] = useState(false);
 
@@ -17,10 +17,12 @@ function NavBar({user}) {
   };
 
   function logOut(){
+    unsubUser();
+    console.log('unsubbing to user doc in appjs...')
     signOut(auth)
-      .then(()=>{
-        console.log('sign out clicked', auth.currentUser)
-        history.push('/')
+    .then(()=>{
+      console.log('sign out clicked', auth.currentUser)
+      history.push('/')
       })
       .catch((err)=>{
         console.log(err.message)

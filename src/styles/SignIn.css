@@ -34,6 +34,7 @@
     color: #422A14;
 }
 
+<<<<<<< HEAD
 .sign-in-form-container form {
     height: 100%;
     width: 100%;
@@ -110,4 +111,14 @@
 
 .sign-in-sign-up button:hover {
     background: #b1a59c;
+=======
+form [type*='submit'] {
+    margin-top: 20px;
+    padding: 2px 25px 2px 25px;
+    background-color: rgb(5, 119, 125);
+    font-weight: bold;
+    border-color: rgb(27, 27, 27);
+    border-radius: 10px;
+    cursor: pointer;
+>>>>>>> master
 }

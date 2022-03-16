@@ -1,6 +1,7 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 import '../styles/Card.css'
+import DefaultCover from '../assets/random-book-cover.jpg';
 
 function Card({title,image,author,page,dueDate}) {
     let isOnTime = dueDate && (dueDate - (new Date()).setHours(0, 0, 0, 0) >= 0);
@@ -10,7 +11,7 @@ function Card({title,image,author,page,dueDate}) {
             <Link className='link' to={page}>
                 <button>
                     <div className='card-image'>
-                        <img src={image} alt='image of a book' />
+                        <img src={(image != "" && image) || DefaultCover} alt='image of a book' />
                     </div>
                     <div className='card-text'>
                         <div className='card-title'>

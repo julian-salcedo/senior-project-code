@@ -37,18 +37,37 @@ function BookInfo({user, uid, books}) {
     return false;
   }
 
+  function alreadyCheckedOut(){
+    if(user && uid != 'y4pfi7AYC7XwzsmgSKRLmF792VS2'){
+      const checkedOutBooks = user.books.filter((book)=> {return book.isCheckedOut});
+      if(checkedOutBooks.some((book)=> book.bookId == id)) return true;
+    }
+    return false;
+  }
+
   function placeHold(){
     console.log('place hold clicked...');
     if(user && uid != 'y4pfi7AYC7XwzsmgSKRLmF792VS2'){
       if(user.books.some((book) => { return (book.bookId == id)})){
         console.log('you already have this book: ', id)
       }else{
+        if(bookInfo.amount <= 0){
+          alert("Book is out of stock")
+          return;
+        }
         console.log('place hold successful...')
         const docRef = doc(db, 'users', uid)
         updateDoc(docRef, {
           books: [...user.books, {bookId: id, isCheckedOut: false}]
         })
           .then(() => console.log('update doc ran'))
+          .catch((err) => console.log(err.message))
+
+        const bookRef = doc(db, 'books', bookInfo.id)
+        updateDoc(bookRef, {
+          amount: bookInfo.amount - 1
+        })
+          .then(() => console.log('book amount decremented'))
           .catch((err) => console.log(err.message))
       }
     }else{
@@ -70,6 +89,13 @@ function BookInfo({user, uid, books}) {
     })
       .then(() => console.log('update doc ran'))
       .catch((err) => console.log(err.message))
+    
+    const bookRef = doc(db, 'books', bookInfo.id)
+    updateDoc(bookRef, {
+      amount: bookInfo.amount + 1
+    })
+      .then(() => console.log('book amount incremented'))
+      .catch((err) => console.log(err.message))
   }
   
   return (
@@ -78,6 +104,7 @@ function BookInfo({user, uid, books}) {
 
       {bookInfo && 
       <div>
+<<<<<<< HEAD
         <div className='info-page'>
           <img className='info-cover' src={DefaultCover} />
           <div className='info-text'>
@@ -92,6 +119,23 @@ function BookInfo({user, uid, books}) {
             {!alreadyOnHold() && <a onClick={placeHold} className='info-checkout'>Place Hold</a>}
             {alreadyOnHold() && <a onClick={cancelHold} className='info-checkout'>Cancel Hold</a>}
           </div>
+=======
+        <div className='info-container'>
+          <img className='cover' src={(bookInfo.imageURL != "" && bookInfo.imageURL) || DefaultCover} />
+          <h2 className='title'>{bookInfo.title}</h2>
+          <p className='author'>
+            by <strong>{bookInfo.author}</strong>
+          </p>
+          <p className='amount'>
+            Amount: {bookInfo.amount}
+          </p>
+          <p className='description'>
+            {bookInfo.desc}
+          </p>
+          {alreadyCheckedOut() && <p>Already checked out</p>}
+          {(!alreadyCheckedOut() && !alreadyOnHold()) && <a onClick={placeHold} className='btn-checkout'>Place Hold</a>}
+          {alreadyOnHold() && <a onClick={cancelHold} className='btn-checkout'>Cancel Hold</a>}
+>>>>>>> master
         </div>
       </div>
       }
