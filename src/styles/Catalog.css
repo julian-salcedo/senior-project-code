@@ -1,4 +1,5 @@
 .catalog-top {
+    min-height: 150px;
     height: calc(30vh - 30px);
     border: 1px solid transparent;
     background: #487876;
@@ -18,7 +19,7 @@
 .catalog-title {
     margin: auto;
     margin-top: 2rem;
-    margin-bottom: 2rem;
+    margin-bottom: 4vh;
     font-size: 3rem;
     font-family: 'Georgia', 'Century Expanded', 'Times New Roman', serif;
     color: #F1F1F1;

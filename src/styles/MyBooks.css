@@ -1,5 +1,6 @@
 .my-books-top {
     background: #487876;
+    min-height: 150px;
     height: calc(30vh - 30px);
     display: flex;
     flex-direction: column;
@@ -15,6 +16,7 @@
 
 .my-books-bottom {
     background: #EDDDD0;
+    min-height: calc(100vh - 375px - calc(30vh - 30px) - 70px);
     height: 375px;
     border: 1px solid transparent;
 }
