@@ -26,6 +26,7 @@ function Admin({user, books}) {
   const [email, setEmail] = useState('');
   const [bookId, setBookId] = useState('');
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [dueDate, setDueDate] = useState('')
 
   const todayString = (new Date()).toISOString().substring(0, 10)
 
@@ -315,9 +316,10 @@ function Admin({user, books}) {
     setImageFile('');
     setEmail('');
     setBookId('');
-    setOptions([])
-    setSelected(null)
+    setOptions([]);
+    setSelected(null);
     setUploadProgress(0)
+    setDueDate('');
     console.log('states reset')
   }
 
@@ -335,7 +337,7 @@ function Admin({user, books}) {
               <Select options={options} onChange={handleSelect} value={selected} isSearchable={false}/>
             </div>
             <div>Book Id <input required type="text" value={bookId} onChange={(e)=> setBookId(e.target.value)}/></div> 
-            <div>Due Date <input required type="date" min={todayString} id='due-date-input' /></div>
+            <div>Due Date <input required type="date" value={dueDate} onInput={(e)=> setDueDate(e.target.value)} min={todayString} id='due-date-input' /></div>
             <div hidden id='checkout-label'><br />Checking Out Book...</div>
             <button type="submit">Checkout Book</button>
           </form>
