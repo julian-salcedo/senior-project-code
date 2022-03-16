@@ -12,64 +12,95 @@
     width: 300px;
 }
 
+.info-hidden-cover {
+    visibility: hidden;
+    position: absolute;
+}
+
 .info-text {
-    background: grey;
+    background: #EDDDD0;
     height: 65vh;
     width: 45vw;
     padding: 3rem;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: flex-start;
 }
 
 .info-title {
     color: #422A14;
     font-size: 3rem;
+    padding-bottom: 3%;
+    font-size: 3rem;
+    font-family: 'Georgia', 'Century Expanded', 'Times New Roman', serif;
 }
 
 .info-author {
     color: #422A14;
     border-bottom: 2px solid #422A14;
+    padding-bottom: 5%;
+    font-size: 1rem;
+    font-family: 'Georgia', 'Century Expanded', 'Times New Roman', serif;
 }
 
 .info-description {
     color: #422A14;
+    height: 50%;
+    padding-top: 3%;
+    font-size: 1rem;
+    font-family: 'Times New Roman', serif;
 }
 
 .info-checkout {
     padding: 20px 50px;
-    justify-self: center;
     align-self: center;
     margin: 32px;
-    background: black;
-    color: white;
+    background: #487876;
+    color: #F1F1F1;
+    font-size: 1rem;
+    font-family: 'Times New Roman', serif;
     border-radius: 30px;
-    transition: transform 0.3s ease;
+    transition: 0.3s;
+    animation: ease;
 }
 
-.btn-checkout:hover{
-    transform: scale(1.05);
+.info-checkout:hover{
     cursor: pointer;
+    background: #EF5D58;
 }
 
 @media only screen and (max-width: 800px) {
-    .info-container {
-        margin-left: 25%;
-        grid-template-rows: 35px 75px 350px;
-        grid-template-areas: 
-        "title"
-        "author"
-        "sidebar"
-        "description"
-        "checkout";
+    .info-page {
+        flex-direction: column;
+        min-height: calc(100vh - 100px);
+        height: fit-content;
+    }    
+
+    .info-text {
+        height: fit-content;
+        width: 90vw;
+        padding: 0px;
     }
 
-    .cover {
-        height: 350px;
-        justify-self: center;
+    .info-title {
+        padding-top: 1rem;
     }
 
-    .btn-checkout {
-        margin: 30px;
+    .info-cover {
+        visibility: hidden;
+        position: absolute;
+    }
+
+    .info-hidden-cover{
+        visibility: visible;
+        position: inherit;
+        width: 250px;
+        margin: 2rem 0rem;
+        align-self: center;
+    }
+
+    .info-checkout {
+        width: 5rem;
+        text-align: center;
     }
 }

@@ -85,6 +85,7 @@ function BookInfo({user, uid, books}) {
             <div className='info-author'>
               by <strong>{bookInfo.author}</strong>
             </div>
+            <img className='info-hidden-cover' src={DefaultCover} />
             <div className='info-description'>
               {bookInfo.desc}
             </div>
