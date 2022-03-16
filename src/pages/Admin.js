@@ -2,14 +2,14 @@ import React from 'react';
 import Select from 'react-select';
 import '../styles/Admin.css';
 import { db } from '../firebaseConfig';
-import { collection, getDocs, addDoc, updateDoc, doc, onSnapshot, deleteDoc} from 'firebase/firestore';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { collection, getDocs, addDoc, updateDoc, doc, onSnapshot, deleteDoc, Timestamp, getDoc} from 'firebase/firestore';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
 import { useState, useEffect } from 'react';
 
 function Admin({user, books}) {
   const usersColRef = collection(db, 'users');
   const booksColRef = collection(db, 'books');
-  
+  const storage = getStorage();
 
   //users state has user id
   const [users, setUsers] = useState([]);
@@ -23,9 +23,17 @@ function Admin({user, books}) {
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState(0);
   const [imageFile, setImageFile] = useState('');
+  const [filePath, setFilePath] = useState("");
   const [email, setEmail] = useState('');
   const [bookId, setBookId] = useState('');
-  const [uploadProgress, setUploadProgress] = useState(0);
+  const [dueDate, setDueDate] = useState('')
+
+  const todayString = (new Date()).toISOString().substring(0, 10)
+
+  const checkoutLabel = document.getElementById('checkout-label')
+  const addingBookLabel = document.getElementById('adding-book-label')
+  const deleteLabel = document.getElementById('delete-label')
+  const returnLabel = document.getElementById('return-label')
 
   useEffect(() => {
     const getUsers = async () => {
@@ -73,7 +81,7 @@ function Admin({user, books}) {
 
   function getBookFromId(id) {
     const book = books.find(book => book.id == id);
-    return book;
+    return Object.create(book);
   }
 
   function selectForm(formName){
@@ -82,18 +90,25 @@ function Admin({user, books}) {
       if(form.id === formName) {form.hidden = false}
       else {form.hidden = true}
     });
+    checkoutLabel.parentNode.hidden = true
+    addingBookLabel.parentNode.hidden = true
+    deleteLabel.parentNode.hidden = true
+    returnLabel.parentNode.hidden = true
   }
 
   function addBook(e){
     e.preventDefault();
-    console.log('add book clicked');
-    console.log(imageFile)
+    // console.log('add book clicked');
+    // console.log(imageFile)
+    addingBookLabel.parentNode.hidden = false
+
     if(amount <= 0){
-      alert('Invalid Amount')
+      addingBookLabel.innerHTML = 'Invalid Amount'
       return
     }
 
     if(!imageFile){
+      addingBookLabel.innerHTML = "Adding Book..."
       addDoc(booksColRef, {
         title: title,
         author: author,
@@ -103,17 +118,23 @@ function Admin({user, books}) {
       })
       .then(()=> {
         console.log('adddoc ran')
-        alert("Successfully added book")
+        addingBookLabel.innerHTML = "Successfully added book"
         resetStates();
       })
       .catch((err) => {
         console.log(err.message)
-        alert("Error adding book: ", err.message)
+        addingBookLabel.innerHTML = "Error adding book: " + err.message
       })
       return
     }
 
-    const storage = getStorage();
+    if(!(imageFile.type.includes("jpg") || imageFile.type.includes("jpeg") || imageFile.type.includes("png"))){
+      addingBookLabel.innerHTML = "File must be an image"
+      return
+    }
+
+    addingBookLabel.innerHTML = "Adding Book..."
+    
     // Create the file metadata
     const metadata = {
       contentType: imageFile.type
@@ -122,14 +143,12 @@ function Admin({user, books}) {
     // Upload file and metadata to the object
     const storageRef = ref(storage, '/' + imageFile.name);
     const uploadTask = uploadBytesResumable(storageRef, imageFile, metadata);
-
+    
     // Listen for state changes, errors, and completion of the upload.
     uploadTask.on('state_changed',
     (snapshot) => {
       // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-      let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-
-      setUploadProgress(progress)
+      // progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
       //console.log('Upload is ' + progress + '% done');
       switch (snapshot.state) {
         case 'paused':
@@ -143,22 +162,25 @@ function Admin({user, books}) {
     (error) => {
       switch (error.code) {
         case 'storage/unauthorized':
+          addingBookLabel.innerHTML = "Error: storage/unauthorized"
           // User doesn't have permission to access the object
           break;
         case 'storage/canceled':
           // User canceled the upload
+          addingBookLabel.innerHTML = "Error: storage/canceled"
           break;
 
         case 'storage/unknown':
           // Unknown error occurred, inspect error.serverResponse
+          addingBookLabel.innerHTML = "Error: storage/unknown"
           break;
       }
     }, 
     () => {
       // Upload completed successfully, now we can get the download URL
       getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-        console.log('File available at', downloadURL);
-        console.log("The download URL is " + downloadURL)
+        // console.log('File available at', downloadURL);
+        // console.log("The download URL is " + downloadURL)
         addDoc(booksColRef, {
           title: title,
           author: author,
@@ -168,18 +190,18 @@ function Admin({user, books}) {
         })
         .then(()=> {
           console.log('adddoc ran')
-          alert("Successfully added book with image")
+          addingBookLabel.innerHTML = "Successfully added book with image"
           resetStates();
         })
         .catch((err)=>{
           console.log(err.message)
-          alert("Error adding book with image: ", err.message)
+          addingBookLabel.innerHTML = "Error adding book with image: " + err.message
         })
       })
       .catch((err)=>{
-        alert("Could not retrieve image URL")
+        addingBookLabel.innerHTML = "Could not retrieve image URL"
       })
-    }
+      }
     );
   }
 
@@ -187,40 +209,89 @@ function Admin({user, books}) {
     e.preventDefault();
     console.log('checkout clicked')
     const user = users.find((u)=> {return u.email == email})
+    checkoutLabel.parentNode.hidden = false
+
+    if(!user){
+      checkoutLabel.innerHTML = "User not found"
+      return
+    }
+
+    checkoutLabel.innerHTML = "Checking Out Book..."
 
     const docRef = doc(db, 'users', user.id)
-
+    
     const theBook = user.books.find(book => book.bookId == bookId)
-    theBook.isCheckedOut = true;
+    let dueDate = document.getElementById('due-date-input').valueAsDate
+    dueDate = new Timestamp((Date.parse(dueDate) + (dueDate.getTimezoneOffset() * 60 * 1000)) / 1000, 0)
+
+    if(theBook && !theBook.isCheckedOut){
+      theBook.isCheckedOut = true;
+      theBook.dueDate = dueDate;
+    }
+    else if(theBook && theBook.isCheckedOut){
+      checkoutLabel.innerHTML = "Book is already checked out by user"
+      return
+    }
+    else if(books.find(book => book.id == bookId)){
+      const bookInfo = books.find(book => book.id == bookId)
+      if(bookInfo.amount == 0){
+        checkoutLabel.innerHTML = "Book is out of stock"
+        return
+      }
+      const bookRef = doc(db, 'books', bookInfo.id)
+      updateDoc(bookRef, {
+        amount: bookInfo.amount - 1
+      })
+        .then(() => console.log('book amount decremented'))
+        .catch((err) => console.log(err.message))
+      user.books.push({bookId: bookId, isCheckedOut: true, dueDate: dueDate})
+    }
+    else{
+      checkoutLabel.innerHTML = "Book not found"
+      return
+    }
+
     // console.log(user.books);
     
     updateDoc(docRef, {
       books: user.books
     }).then(()=> {
       console.log('checkout successful')
-      alert("Successfully checked out book")
+      checkoutLabel.innerHTML = "Successfully checked out book"
       resetStates();
     }).catch((err)=> {
       console.log(err.message)
-      alert("Error checking out book: ", err.message)
+      checkoutLabel.innerHTML = "Error checking out book: " + err.message
     })
-
-
   }
 
   function returnBook(e){
     e.preventDefault();
+    returnLabel.parentNode.hidden = false
     const user = users.find((u)=> {return u.email== email})
+
+    if(!user){
+      returnLabel.innerHTML = "User not found"
+      return
+    }
+
+    if(!user.books.find(book=> book.bookId == bookId && book.isCheckedOut)){
+      returnLabel.innerHTML = "Book not found"
+      return
+    }
+    returnLabel.innerHTML = "Returning Book..."
     const returnArr = user.books.filter((book)=> {return ((book.bookId != bookId) || (book.bookId == bookId && !book.isCheckedOut))})
+
     const docRef = doc(db, 'users', user.id)
 
     updateDoc(docRef, {
       books: returnArr
     }).then(()=> {
-      console.log('return successful')
+      returnLabel.innerHTML = 'Successfully returned book'
       resetStates();
     }).catch((err)=> {
       console.log(err.message)
+      returnLabel.innerHTML = 'Error: ' + err.message
     })
 
   }
@@ -231,6 +302,15 @@ function Admin({user, books}) {
 
     //first erase book from all users
     //doesnt update users state directly
+    deleteLabel.parentNode.hidden = false
+
+    if(!books.find(book=> book.id == bookId)){
+      deleteLabel.innerHTML = "Book not found"
+      return
+    }
+
+    deleteLabel.innerHTML = "Deleting Book..."
+
     const usersWithBook = users.filter((user)=> {return user.books.some((book)=> {return book.bookId == bookId})})
     usersWithBook.forEach((user)=> {
       const docRef = doc(db, 'users', user.id)
@@ -248,16 +328,50 @@ function Admin({user, books}) {
       })
     })
 
-    //then delete book from bookscol
-    const docRef = doc(db, 'books', bookId)
-    deleteDoc(docRef)
+    
+    //delete img file from firebase storage
+    const theBook = books.find((book)=> {return book.id == bookId})
+    const imgUrl = theBook.imageURL
+    
+    //delete img file if exists
+    if(imgUrl){
+      const imgRef = ref(storage, imgUrl)
+      deleteObject(imgRef)
       .then(()=> {
-        // console.log('book deleted from bookcol')
-        resetStates();
-      })
-      .catch((err)=> {
-        console.log(err.message);
-      })
+        console.log('img deleted')
+        //then delete book from bookscol
+        const docRef = doc(db, 'books', bookId)
+        deleteDoc(docRef)
+          .then(()=> {
+            // console.log('book deleted from bookcol')
+            deleteLabel.innerHTML = "Successfully deleted book"
+            resetStates();
+          })
+          .catch((err)=> {
+            console.log(err.message);
+            deleteLabel.innerHTML = "Error: " + err.message
+          })
+  
+        })
+        .catch((err)=> {
+          console.log(err.message)
+          deleteLabel.innerHTML = "Error: " + err.message
+        })
+
+    }else{
+      const docRef = doc(db, 'books', bookId)
+      deleteDoc(docRef)
+        .then(()=> {
+          // console.log('book deleted from bookcol')
+          deleteLabel.innerHTML = "Successfully deleted book"
+          resetStates();
+        })
+        .catch((err)=> {
+          console.log(err.message);
+          deleteLabel.innerHTML = "Error: " + err.message
+        })
+    }
+    
 
   }
 
@@ -267,11 +381,12 @@ function Admin({user, books}) {
     setDescription('');
     setAmount(0);
     setImageFile('');
+    setFilePath("");
     setEmail('');
     setBookId('');
-    setOptions([])
-    setSelected(null)
-    setUploadProgress(0)
+    setOptions([]);
+    setSelected(null);
+    setDueDate('');
     console.log('states reset')
   }
 
@@ -289,7 +404,8 @@ function Admin({user, books}) {
               <Select options={options} onChange={handleSelect} value={selected} isSearchable={false}/>
             </div>
             <div>Book Id <input required type="text" value={bookId} onChange={(e)=> setBookId(e.target.value)}/></div> 
-            {/* <div>Days Checked Out <input required type="number" /></div>  */}
+            <div>Due Date <input required type="date" value={dueDate} onInput={(e)=> setDueDate(e.target.value)} min={todayString} id='due-date-input' /></div>
+            <div hidden><br /><div id='checkout-label'>Checking Out Book...</div></div>
             <button type="submit">Checkout Book</button>
           </form>
         </div>
@@ -301,8 +417,8 @@ function Admin({user, books}) {
               <div>Author <input required type="text" value={author} onInput={(e)=> setAuthor(e.target.value)}/></div>
               <div>Description <input required type="text" value={description} onInput={(e)=> setDescription(e.target.value)}/></div>  
               <div>In Stock <input required type="number" value={amount} onInput={(e)=> setAmount(e.target.value)}/></div>
-              <div>Cover Image <input type="file" accept="image/*" onInput={(e)=> setImageFile(e.target.files[0])}/></div>
-              <div><p>Progress: {Math.round(uploadProgress)}%</p></div>
+              <div>Cover Image <input type="file" value={filePath} accept=".jpg, .jpeg, .png" onInput={(e)=> {setImageFile(e.target.files[0]); setFilePath(e.target.value)}}/></div>
+              <div hidden><br /><div id='adding-book-label'>Adding Book...</div></div>
               <div><button type="submit">Add Book</button></div>
           </form>
         </div>
@@ -311,6 +427,7 @@ function Admin({user, books}) {
           <h3 className='header' onClick={()=>selectForm("delete-form")}>Delete Book</h3>
           <form id='delete-form' hidden={true} onSubmit={deleteBook}>
               <div>Book Id<input required type="text" value={bookId} onInput={(e)=> setBookId(e.target.value)}/></div>
+              <div hidden><br /><div id='delete-label'>Deleting Book...</div></div>
               <div><button type="submit">Delete Book</button></div>
           </form>
         </div>
@@ -323,6 +440,7 @@ function Admin({user, books}) {
               <Select options={options} onChange={handleSelect} value={selected} isSearchable={false}/> 
             </div>
             <div>Book Id <input required type="text" value={bookId} onChange={(e)=> setBookId(e.target.value)}/> </div>
+            <div hidden><br /><div id='return-label'>Returning Book...</div></div>
             <button type="submit">Return Book</button>
           </form>
         </div>

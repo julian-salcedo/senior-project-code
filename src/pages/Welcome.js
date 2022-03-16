@@ -33,6 +33,7 @@ function Home({user}) {
             <button>Sign In</button>
           </Link>
         </div>}
+        {user && user.email == "admin@gmail.com" && <div><Link to='admin'><button>View Admin Page</button></Link></div>}
       </div>
      </div>
   ); 
