@@ -27,8 +27,7 @@ function Admin({user, books}) {
   const [bookId, setBookId] = useState('');
   const [uploadProgress, setUploadProgress] = useState(0);
 
-  // const today = new Date()
-  // const todayString = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate()
+  const todayString = (new Date()).toISOString().substring(0, 10)
 
   useEffect(() => {
     const getUsers = async () => {
@@ -208,25 +207,51 @@ function Admin({user, books}) {
   function checkoutBook(e){
     e.preventDefault();
     console.log('checkout clicked')
+    const user = users.find((u)=> {return u.email == email})
     
-    // const user = users.find((u)=> {return u.email == email})
+    if(!user){
+      alert("User not found")
+      return
+    }
 
-    // const docRef = doc(db, 'users', user.id)
-
-    // const theBook = user.books.find(book => book.bookId == bookId)
-    // theBook.isCheckedOut = true;
-    // // console.log(user.books);
+    const docRef = doc(db, 'users', user.id)
     
-    // updateDoc(docRef, {
-    //   books: user.books
-    // }).then(()=> {
-    //   console.log('checkout successful')
-    //   alert("Successfully checked out book")
-    //   resetStates();
-    // }).catch((err)=> {
-    //   console.log(err.message)
-    //   alert("Error checking out book: ", err.message)
-    // })
+    const theBook = user.books.find(book => book.bookId == bookId)
+    let dueDate = document.getElementById('due-date-input').valueAsDate
+    dueDate = new Timestamp((Date.parse(dueDate) + (dueDate.getTimezoneOffset() * 60 * 1000)) / 1000, 0)
+
+    if(theBook && !theBook.isCheckedOut){
+      theBook.isCheckedOut = true;
+      theBook.dueDate = dueDate;
+      document.getElementById('checkout-label').hidden = false;
+    }
+    else if(theBook && theBook.isCheckedOut){
+      alert("Book is already checked out")
+      return
+    }
+    else if(books.find(book => book.id == bookId)){
+      user.books.push({bookId: bookId, isCheckedOut: true, dueDate: dueDate})
+      document.getElementById('checkout-label').hidden = false;
+    }
+    else{
+      alert("Book not found")
+      return
+    }
+
+    // console.log(user.books);
+    
+    updateDoc(docRef, {
+      books: user.books
+    }).then(()=> {
+      console.log('checkout successful')
+      document.getElementById('checkout-label').hidden = true;
+      alert("Successfully checked out book")
+      resetStates();
+    }).catch((err)=> {
+      console.log(err.message)
+      document.getElementById('checkout-label').hidden = true;
+      alert("Error checking out book: ", err.message)
+    })
   }
 
   function returnBook(e){
@@ -310,7 +335,8 @@ function Admin({user, books}) {
               <Select options={options} onChange={handleSelect} value={selected} isSearchable={false}/>
             </div>
             <div>Book Id <input required type="text" value={bookId} onChange={(e)=> setBookId(e.target.value)}/></div> 
-            {/* <div>Due Date <input required type="date" min={todayString} /></div> */}
+            <div>Due Date <input required type="date" min={todayString} id='due-date-input' /></div>
+            <div hidden id='checkout-label'><br />Checking Out Book...</div>
             <button type="submit">Checkout Book</button>
           </form>
         </div>
@@ -323,9 +349,8 @@ function Admin({user, books}) {
               <div>Description <input required type="text" value={description} onInput={(e)=> setDescription(e.target.value)}/></div>  
               <div>In Stock <input required type="number" value={amount} onInput={(e)=> setAmount(e.target.value)}/></div>
               <div>Cover Image <input type="file" accept="image/*" onInput={(e)=> setImageFile(e.target.files[0])}/></div>
-              <br />
-              <div hidden='true' id='adding-book-label'>Adding Book...</div>
-              <div>Progress: {Math.round(uploadProgress)}%</div>
+              <div hidden id='adding-book-label'><br />Adding Book...</div>
+              <div hidden id='upload-progress-label'>Progress: {Math.round(uploadProgress)}%</div>
               <div><button type="submit">Add Book</button></div>
           </form>
         </div>
