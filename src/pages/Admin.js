@@ -2,13 +2,14 @@ import React from 'react';
 import Select from 'react-select';
 import '../styles/Admin.css';
 import { db } from '../firebaseConfig';
-import { collection, getDocs, addDoc, updateDoc, doc, onSnapshot, deleteDoc, Timestamp} from 'firebase/firestore';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { collection, getDocs, addDoc, updateDoc, doc, onSnapshot, deleteDoc, Timestamp, getDoc} from 'firebase/firestore';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
 import { useState, useEffect } from 'react';
 
 function Admin({user, books}) {
   const usersColRef = collection(db, 'users');
   const booksColRef = collection(db, 'books');
+  const storage = getStorage();
   
 
   //users state has user id
@@ -125,7 +126,6 @@ function Admin({user, books}) {
     }
 
     document.getElementById('adding-book-label').hidden = false;
-    const storage = getStorage();
     // Create the file metadata
     const metadata = {
       contentType: imageFile.type
@@ -307,16 +307,43 @@ function Admin({user, books}) {
       })
     })
 
-    //then delete book from bookscol
-    const docRef = doc(db, 'books', bookId)
-    deleteDoc(docRef)
+    
+    //delete img file from firebase storage
+    const theBook = books.find((book)=> {return book.id == bookId})
+    const imgUrl = theBook.imageURL
+    
+    //delete img file if exists
+    if(imgUrl){
+      const imgRef = ref(storage, imgUrl)
+      deleteObject(imgRef)
       .then(()=> {
-        // console.log('book deleted from bookcol')
-        resetStates();
-      })
-      .catch((err)=> {
-        console.log(err.message);
-      })
+        console.log('img deleted')
+        //then delete book from bookscol
+        const docRef = doc(db, 'books', bookId)
+        deleteDoc(docRef)
+          .then(()=> {
+            // console.log('book deleted from bookcol')
+            resetStates();
+          })
+          .catch((err)=> {
+            console.log(err.message);
+          })
+  
+        })
+        .catch((err)=> console.log(err.message))
+
+    }else{
+      const docRef = doc(db, 'books', bookId)
+      deleteDoc(docRef)
+        .then(()=> {
+          // console.log('book deleted from bookcol')
+          resetStates();
+        })
+        .catch((err)=> {
+          console.log(err.message);
+        })
+    }
+    
 
   }
 
