@@ -127,10 +127,7 @@ function Admin({user, books}) {
       return
     }
 
-    console.log(imageFile.type)
-
-    return
-    if(true){
+    if(!(imageFile.type.includes("jpg") || imageFile.type.includes("jpeg") || imageFile.type.includes("png"))){
       addingBookLabel.innerHTML = "File must be an image"
       return
     }
