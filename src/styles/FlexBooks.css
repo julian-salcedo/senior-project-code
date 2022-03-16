@@ -1,4 +1,5 @@
 .wrapper {
+    margin: 1rem 0px 1rem 0px;
     display: flex;
     flex-direction: row;
     overflow-x: scroll;
@@ -13,10 +14,6 @@
 }
 
 .wrapper::-webkit-scrollbar-thumb {
-    background: #121619;
+    background: #422A14;
     border-radius: 100vw;
-}
-
-.card {
-    min-width: 200px;
 }

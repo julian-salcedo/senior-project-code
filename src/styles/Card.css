@@ -1,40 +1,63 @@
-.card-container{
-    background-color: #FFFFFF;
-    min-width: 200px;
-    margin: 10px;
+.card-container button {
+    background-color: #d8c9be;
+    width: 400px;
+    padding: 1rem;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    margin: 1rem;
     overflow: hidden;
-    box-shadow: 0px 0px 15px -5px;
+    box-shadow: 0px 0px 10px 0px #b1a59c;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
     transition: 0.3s;
     animation: ease-in;
 }
 
-.card-container:hover{
-    transform: scale(1.01);
-    background-color: #CCCCCC;
-    box-shadow: 0px 0px 15px 0px;
-}
-
-.image-container img{
-    overflow: hidden;
-    width: 200px;
+.card-container button:hover {
+    transform: scale(1.05);
+    background-color: #c7bab0;
 }
 
 .link {
     text-decoration: none;
 }
 
-.link .title {
-    color: black;
+.card-image img{
+    overflow: hidden;
+    width: 150px;
+    border-radius: 3px;
 }
 
-.link .author {
-    color: black;
+.card-text {
+    height: 225px;
+    margin-left: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.link .card-title {
+    color: #422A14;
+    width: 200px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-family: 'Georgia', 'Century Expanded', 'Times New Roman', serif;
+}
+
+.link .card-author {
+    color: #422A14;
+    width: 200px;
+    margin-top: 0.5rem;
+    font-size: 1.2rem;
+    font-family: 'Times New Roman', serif;
 }
 
 .link .on-time {
-    color: black;
+    color: #422A14;
 }
 
 .link .late {
-    color: red;
+    color: #EF5D58;
 }

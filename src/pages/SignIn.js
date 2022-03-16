@@ -26,24 +26,43 @@ function SignIn({user}) {
     
   }
   return (
-    <div>
-    { (!user &&
-      <div className='sign-in-page'>
-        <h1>Sign In</h1>
+    <div className='sign-in-page'>
+      <div className='sign-in-message'>
+        <strong>Hey, good to see you again!</strong>
+      </div>
+      <div className='sign-in-form-container'>
         <form onSubmit={handleSubmit}>
-          <p>Email Address</p>
-          <input required type='email' name='email' value={email} onChange={(e)=> setEmail(e.target.value)}/><br/>
-          <p>Password</p>
-          <input required type='password' name='password' value={password} onChange={(e)=> setPassword(e.target.value)}/><br/>
-          <input type='submit' value='Sign In' />
+          <div className='sign-in-title'>
+            Sign in
+          </div>
+          <div className='sign-in-form'>
+            <input
+              required type='email' 
+              name='email' value={email} 
+              onChange={(e)=> setEmail(e.target.value)}
+              placeholder='Email'
+            />
+            <input 
+              required type='password' 
+              name='password' value={password} 
+              onChange={(e)=> setPassword(e.target.value)}
+              placeholder='Password'
+            />
+            <input type='submit' value='Sign In'/>
+            <div className='sign-in-separater'>
+              <div className='line'></div>
+              <div className='text'>or</div>
+              <div className='line'></div>
+            </div>
+            <div className='sign-in-sign-up'>
+              <Link to='/sign-up'>
+                <button>Sign Up</button>
+              </Link>
+            </div>
+            <p id='error-message'></p>
+          </div>
         </form>
-        <p id='error-message'></p>
-        <p>Don't have an account?</p>
-        <Link to='/sign-up'>Sign Up</Link>
-      </div>)
-      ||
-      (<h2>Already Logged In</h2>)
-    }
+      </div>
     </div>
   ) 
 }

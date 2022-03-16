@@ -104,21 +104,24 @@ function BookInfo({user, uid, books}) {
 
       {bookInfo && 
       <div>
-        <div className='info-container'>
-          <img className='cover' src={(bookInfo.imageURL != "" && bookInfo.imageURL) || DefaultCover} />
-          <h2 className='title'>{bookInfo.title}</h2>
-          <p className='author'>
-            by <strong>{bookInfo.author}</strong>
-          </p>
-          <p className='amount'>
-            Amount: {bookInfo.amount}
-          </p>
-          <p className='description'>
-            {bookInfo.desc}
-          </p>
-          {alreadyCheckedOut() && <p>Already checked out</p>}
-          {(!alreadyCheckedOut() && !alreadyOnHold()) && <a onClick={placeHold} className='btn-checkout'>Place Hold</a>}
-          {alreadyOnHold() && <a onClick={cancelHold} className='btn-checkout'>Cancel Hold</a>}
+        <div className='info-page'>
+          <img className='info-cover' src={(bookInfo.imageURL != "" && bookInfo.imageURL) || DefaultCover} />
+          <div className='info-text'>
+            <div className='info-title'>{bookInfo.title}</div>
+            <div className='info-author'>
+              by <strong>{bookInfo.author}</strong>
+            </div>
+            <img className='info-hidden-cover' src={(bookInfo.imageURL != "" && bookInfo.imageURL) || DefaultCover} />
+            <div className='info-amount'>
+              <strong>Amount:</strong> {bookInfo.amount}
+            </div>
+            <div className='info-description'>
+              {bookInfo.desc}
+            </div>
+            {alreadyCheckedOut() && <p>Already checked out</p>}
+            {(!alreadyCheckedOut() && !alreadyOnHold()) && <a onClick={placeHold} className='info-checkout'>Place Hold</a>}
+            {alreadyOnHold() && <a onClick={cancelHold} className='info-checkout'>Cancel Hold</a>}
+          </div>
         </div>
       </div>
       }

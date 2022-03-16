@@ -1,0 +1,56 @@
+.my-books-top {
+    background: #487876;
+    min-height: 150px;
+    height: calc(30vh - 30px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.my-books-middle {
+    background: #EDDDD0;
+    height: 375px;
+    border: 1px solid transparent;
+}
+
+.my-books-bottom {
+    background: #EDDDD0;
+    min-height: calc(100vh - 375px - calc(30vh - 30px) - 70px);
+    height: 375px;
+    border: 1px solid transparent;
+}
+
+.my-books-title {
+    color: #F1F1F1;
+    font-size: 3rem;
+    font-family: 'Georgia', 'Century Expanded', 'Times New Roman', serif;
+}
+
+.my-books-days {
+    color: #F1F1F1;
+    font-size: 1rem;
+    font-family: 'Times New Roman', serif;
+    margin-top: 2vh;
+}
+
+.my-books-fees {
+    color: #F1F1F1;
+    font-size: 1rem;
+    font-family: 'Times New Roman', serif;
+    margin-top: 2vh;
+}
+
+.my-books-checked {
+    color: #422A14;
+    margin: 1rem 0rem -0.5rem 2rem;
+    font-size: 2rem;
+    font-family: 'Georgia', 'Century Expanded', 'Times New Roman', serif;
+}
+
+.my-books-hold {
+    color: #422A14;
+    margin: 1rem 0rem -0.5rem 2rem;
+    font-size: 2rem;
+    font-family: 'Georgia', 'Century Expanded', 'Times New Roman', serif;
+}

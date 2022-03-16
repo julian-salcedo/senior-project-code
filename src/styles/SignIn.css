@@ -1,25 +1,113 @@
 .sign-in-page{
-    text-align: center;
+    background: #EDDDD0;
+    border: 1px solid transparent;
+    height: calc(100vh - 100px);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
 }
 
-.sign-in-page p {
-    margin-bottom: 2px;
+.sign-in-message {
+    margin: 2rem;
+    font-size: 2rem;
+    font-family: 'Georgia', 'Century Expanded', 'Times New Roman', serif;
+    color: #422A14;
 }
 
-.sign-in-page #error-message{
-    color: rgb(220, 0, 0);
+.sign-in-form-container {
+    background: #d8c9be;
+    box-shadow: 0px 0px 10px #b1a59c;
+    border-radius: 5px;
+    height: 350px;
+    width: 300px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.sign-in-page table {
-    margin: auto;
+.sign-in-title {
+    font-size: 2rem;
+    font-family: sans-serif;
+    color: #422A14;
 }
 
-form [type*='submit'] {
-    margin-top: 20px;
-    padding: 2px 25px 2px 25px;
-    background-color: rgb(5, 119, 125);
-    font-weight: bold;
-    border-color: rgb(27, 27, 27);
-    border-radius: 10px;
-    cursor: pointer;
+.sign-in-form-container form {
+    height: 100%;
+    width: 100%;
+}
+
+.sign-in-form-container form [type*='email']{
+    width: calc(100% - 50px);
+    padding: 12px 20px;
+    margin: 16px 0px 16px 0px;
+    border: none;
+    border-bottom: 1px solid #422A14;
+    border-radius: 3px;
+    background: #F1F1F1;
+}
+
+.sign-in-form-container form [type*='password'] {
+    width: calc(100% - 50px);
+    padding: 12px 20px;
+    margin-bottom: 16px;
+    border: none;
+    border-bottom: 1px solid #422A14;
+    border-radius: 3px;
+    background: #F1F1F1;
+}
+
+.sign-in-page form [type*='submit'] {
+    width: calc(100% - 5px);
+    padding: 12px 20px;
+    margin-bottom: 16px;
+    background: #487876;
+    border: 1px solid transparent;
+    border-radius: 30px;
+    color: #F1F1F1;
+    font-size: 1rem;
+    font-family: 'Georgia', 'Century Expanded', 'Times New Roman', serif;
+    transition: 0.3s;
+    animation: ease;
+}
+
+.sign-in-page form [type*='submit']:hover {
+    background: #EF5D58;
+}
+
+.sign-in-separater {
+    display: flex;
+    align-items: center;
+}
+
+.sign-in-separater .line {
+    flex: 1;
+    height: 0.7px;
+    margin-top: 5px;
+    background: #858585;
+}
+
+.sign-in-separater .text {
+    padding: 0px 10px 0px 10px;
+    color: #858585;
+}
+
+.sign-in-sign-up button {
+    width: calc(100% - 5px);
+    padding: 12px 20px;
+    margin: 20px 0px 16px 0px;
+    border: 1px solid #422A14;
+    border-radius: 30px;
+    background: #EDDDD0;
+    color: #422A14;
+    font-size: 1rem;
+    font-family: 'Georgia', 'Century Expanded', 'Times New Roman', serif;
+    transition: 0.3s;
+    animation: ease;
+}
+
+.sign-in-sign-up button:hover {
+    background: #b1a59c;
 }
