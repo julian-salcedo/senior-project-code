@@ -1,12 +1,9 @@
 import React from 'react';
-import { collection, getDocs} from 'firebase/firestore';
-import { db } from '../firebaseConfig';
-import { useState, useEffect } from 'react';
 import FlexBooks from '../components/FlexBooks.js';
 import '../styles/Catalog.css';
 
 
-function Catalog({user, books}) {
+function Catalog({books}) {
 
   function filter(){
     const books = document.querySelectorAll(".card-container")

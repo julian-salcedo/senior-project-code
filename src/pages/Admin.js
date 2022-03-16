@@ -42,11 +42,9 @@ function Admin({user, books}) {
     }
     getUsers();
     resetStates();
-    //console.log('catalog use effect ran. User:', user)
 
     onSnapshot(usersColRef, (snapshot)=> {
       let users = []
-      // console.log('onsnap ran for usercol in admin(inside useeffect)')
       snapshot.docs.forEach((doc)=> {
         users.push({...doc.data(), id: doc.id})
       })
@@ -74,7 +72,6 @@ function Admin({user, books}) {
   }
 
   function handleSelect(option){
-    // console.log('handleselect ran', option)
     setBookId(option.value);
     setSelected(option);
   }
@@ -98,8 +95,6 @@ function Admin({user, books}) {
 
   function addBook(e){
     e.preventDefault();
-    // console.log('add book clicked');
-    // console.log(imageFile)
     addingBookLabel.parentNode.hidden = false
 
     if(amount <= 0){
@@ -147,9 +142,6 @@ function Admin({user, books}) {
     // Listen for state changes, errors, and completion of the upload.
     uploadTask.on('state_changed',
     (snapshot) => {
-      // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-      // progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      //console.log('Upload is ' + progress + '% done');
       switch (snapshot.state) {
         case 'paused':
           console.log('Upload is paused');
@@ -179,8 +171,6 @@ function Admin({user, books}) {
     () => {
       // Upload completed successfully, now we can get the download URL
       getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-        // console.log('File available at', downloadURL);
-        // console.log("The download URL is " + downloadURL)
         addDoc(booksColRef, {
           title: title,
           author: author,
@@ -250,8 +240,6 @@ function Admin({user, books}) {
       checkoutLabel.innerHTML = "Book not found"
       return
     }
-
-    // console.log(user.books);
     
     updateDoc(docRef, {
       books: user.books
@@ -298,7 +286,6 @@ function Admin({user, books}) {
 
   function deleteBook(e){
     e.preventDefault()
-    // console.log('deletebook ran')
 
     //first erase book from all users
     //doesnt update users state directly
@@ -321,7 +308,6 @@ function Admin({user, books}) {
       updateDoc(docRef, {
         books: newArr
       }).then(()=> {
-        // console.log('book deleted from books field for user', bookId ,user.email)
         resetStates();
       }).catch((err)=> {
         console.log(err.message)
@@ -343,7 +329,6 @@ function Admin({user, books}) {
         const docRef = doc(db, 'books', bookId)
         deleteDoc(docRef)
           .then(()=> {
-            // console.log('book deleted from bookcol')
             deleteLabel.innerHTML = "Successfully deleted book"
             resetStates();
           })
@@ -362,7 +347,6 @@ function Admin({user, books}) {
       const docRef = doc(db, 'books', bookId)
       deleteDoc(docRef)
         .then(()=> {
-          // console.log('book deleted from bookcol')
           deleteLabel.innerHTML = "Successfully deleted book"
           resetStates();
         })

@@ -72,9 +72,9 @@ function App() {
         <NavBar user={user} unsubUser={unsubUser}/>
         <Switch>
           <Route exact path='/'><Welcome user={user}/></Route>
-          <Route exact path='/sign-in'><SignIn user={user}/></Route>
+          <Route exact path='/sign-in'><SignIn/></Route>
           <Route exact path='/sign-up'><SignUp user={user}/></Route>
-          <Route exact path='/catalog' ><Catalog user={user} books={books}/></Route>
+          <Route exact path='/catalog' ><Catalog books={books}/></Route>
           <Route exact path='/catalog/:id' ><BookInfo user={user} uid={uid} books={books} /> </Route>
           <Route exact path='/my-books'><MyBooks user={user} books={books} /></Route>
           <Route exact path='/admin'><Admin user={user} books={books} /></Route>

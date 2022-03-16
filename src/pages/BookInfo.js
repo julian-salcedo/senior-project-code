@@ -3,30 +3,15 @@ import DefaultCover from '../assets/random-book-cover.jpg';
 import '../styles/BookInfo.css';
 import {useParams} from 'react-router-dom';
 import { db } from '../firebaseConfig';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { useState, useEffect } from 'react';
+import { doc,  updateDoc } from 'firebase/firestore';
 
 function BookInfo({user, uid, books}) {
 
   //book id
   let { id } = useParams();
-  // const docRef = doc(db, 'books', id)
-
-  // const [bookInfo, setBookInfo] = useState(null);
-  // const [isPending, setIsPending] = useState(true);
 
   const bookInfo = books.find(book => book.id == id);
   console.log(bookInfo)
-
-  // useEffect(() => {
-  //   getDoc(docRef)
-  //     .then((book) => {
-  //       let data = book.data()
-  //       setBookInfo(data);
-  //       setIsPending(false);
-  //     })
-    
-  // }, []);
 
   function alreadyOnHold() {
     if(user && uid != 'y4pfi7AYC7XwzsmgSKRLmF792VS2'){
@@ -119,7 +104,7 @@ function BookInfo({user, uid, books}) {
               {bookInfo.desc}
             </div>
             {alreadyCheckedOut() && <p>Already checked out</p>}
-            {(!alreadyCheckedOut() && !alreadyOnHold()) && <a onClick={placeHold} className='info-checkout'>Place Hold</a>}
+            {(!alreadyCheckedOut() && !alreadyOnHold() && user.email != "admin@gmail.com") && <a onClick={placeHold} className='info-checkout'>Place Hold</a>}
             {alreadyOnHold() && <a onClick={cancelHold} className='info-checkout'>Cancel Hold</a>}
           </div>
         </div>
