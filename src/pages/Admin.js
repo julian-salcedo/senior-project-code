@@ -127,7 +127,10 @@ function Admin({user, books}) {
       return
     }
 
-    if(!imageFile.type.startsWith("image/")){
+    console.log(imageFile.type)
+
+    return
+    if(true){
       addingBookLabel.innerHTML = "File must be an image"
       return
     }
@@ -362,10 +365,12 @@ function Admin({user, books}) {
       deleteDoc(docRef)
         .then(()=> {
           // console.log('book deleted from bookcol')
+          deleteLabel.innerHTML = "Successfully deleted book"
           resetStates();
         })
         .catch((err)=> {
           console.log(err.message);
+          deleteLabel.innerHTML = "Error: " + err.message
         })
     }
     
@@ -413,7 +418,7 @@ function Admin({user, books}) {
               <div>Author <input required type="text" value={author} onInput={(e)=> setAuthor(e.target.value)}/></div>
               <div>Description <input required type="text" value={description} onInput={(e)=> setDescription(e.target.value)}/></div>  
               <div>In Stock <input required type="number" value={amount} onInput={(e)=> setAmount(e.target.value)}/></div>
-              <div>Cover Image <input type="file" accept="image/*" onInput={(e)=> setImageFile(e.target.files[0])}/></div>
+              <div>Cover Image <input type="file" accept=".jpg, .jpeg, .png" onInput={(e)=> setImageFile(e.target.files[0])}/></div>
               <div hidden><br /><div id='adding-book-label'>Adding Book...</div></div>
               <div><button type="submit">Add Book</button></div>
           </form>
