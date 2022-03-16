@@ -113,7 +113,7 @@ function BookInfo({user, uid, books}) {
             </div>
             <img className='info-hidden-cover' src={(bookInfo.imageURL != "" && bookInfo.imageURL) || DefaultCover} />
             <div className='info-amount'>
-              Amount: {bookInfo.amount}
+              <strong>Amount:</strong> {bookInfo.amount}
             </div>
             <div className='info-description'>
               {bookInfo.desc}
