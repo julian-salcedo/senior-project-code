@@ -78,17 +78,19 @@ function BookInfo({user, uid, books}) {
 
       {bookInfo && 
       <div>
-        <div className='info-container'>
-          <img className='cover' src={DefaultCover} />
-          <h2 className='title'>{bookInfo.title}</h2>
-          <p className='author'>
-            by <strong>{bookInfo.author}</strong>
-          </p>
-          <p className='description'>
-            {bookInfo.desc}
-          </p>
-          {!alreadyOnHold() && <a onClick={placeHold} className='btn-checkout'>Place Hold</a>}
-          {alreadyOnHold() && <a onClick={cancelHold} className='btn-checkout'>Cancel Hold</a>}
+        <div className='info-page'>
+          <img className='info-cover' src={DefaultCover} />
+          <div className='info-text'>
+            <div className='info-title'>{bookInfo.title}</div>
+            <div className='info-author'>
+              by <strong>{bookInfo.author}</strong>
+            </div>
+            <div className='info-description'>
+              {bookInfo.desc}
+            </div>
+            {!alreadyOnHold() && <a onClick={placeHold} className='info-checkout'>Place Hold</a>}
+            {alreadyOnHold() && <a onClick={cancelHold} className='info-checkout'>Cancel Hold</a>}
+          </div>
         </div>
       </div>
       }
