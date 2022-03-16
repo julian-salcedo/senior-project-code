@@ -23,17 +23,24 @@ function Home({user}) {
             </button>
           </Link>
         </div>
-        {user && <div className='welcome-books'>
+        {user && user.email != "admin@gmail.com" && 
+        <div className='welcome-books'>
           <Link to='my-books'>
             <button>View Your Books</button>
           </Link>
         </div>}
-        {!user && <div className='welcome-sign-in'>
+        {!user && 
+        <div className='welcome-sign-in'>
           <Link to='sign-in'>
             <button>Sign In</button>
           </Link>
         </div>}
-        {user && user.email == "admin@gmail.com" && <div><Link to='admin'><button>View Admin Page</button></Link></div>}
+        {user && user.email == "admin@gmail.com" && 
+        <div className='welcome-admin'>
+          <Link to='admin'>
+            <button>View Admin Page</button>
+          </Link>
+        </div>}
       </div>
      </div>
   ); 
