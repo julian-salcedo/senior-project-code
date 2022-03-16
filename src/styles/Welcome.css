@@ -43,19 +43,8 @@
     animation: ease;
 }
 
-<<<<<<< HEAD
 .welcome-info button:hover {
     color: #CDBE87;
-=======
-#welcome-page button{
-    padding: 2px 25px 2px 25px;
-    background-color: rgb(5, 119, 125);
-    font-weight: bold;
-    border-color: rgb(27, 27, 27);
-    border-radius: 10px;
-    transition: transform 0.3s ease;
-    cursor: pointer;
->>>>>>> master
 }
 
 .welcome-sign-in {
