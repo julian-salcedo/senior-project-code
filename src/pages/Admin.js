@@ -227,10 +227,21 @@ function Admin({user, books}) {
       document.getElementById('checkout-label').hidden = false;
     }
     else if(theBook && theBook.isCheckedOut){
-      alert("Book is already checked out")
+      alert("Book is already checked out by user")
       return
     }
     else if(books.find(book => book.id == bookId)){
+      const bookInfo = books.find(book => book.id == bookId)
+      if(bookInfo.amount == 0){
+        alert("Book is out of stock")
+        return
+      }
+      const bookRef = doc(db, 'books', bookInfo.id)
+      updateDoc(bookRef, {
+        amount: bookInfo.amount - 1
+      })
+        .then(() => console.log('book amount decremented'))
+        .catch((err) => console.log(err.message))
       user.books.push({bookId: bookId, isCheckedOut: true, dueDate: dueDate})
       document.getElementById('checkout-label').hidden = false;
     }
