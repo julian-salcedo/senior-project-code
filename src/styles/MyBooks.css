@@ -27,6 +27,13 @@
     font-family: 'Georgia', 'Century Expanded', 'Times New Roman', serif;
 }
 
+.my-books-days {
+    color: #F1F1F1;
+    font-size: 1rem;
+    font-family: 'Times New Roman', serif;
+    margin-top: 2vh;
+}
+
 .my-books-fees {
     color: #F1F1F1;
     font-size: 1rem;

@@ -49,12 +49,12 @@ function MyBooks({user, books}) {
           <div className='my-books-title'>
             My Books
           </div>
-          <p>Total Days Overdue: {overdueDays}</p>
-          <p>Overdue Fee per Day: ${overdueFee}</p>
-          <p>Total Overdue Fees: ${overdueFee * overdueDays}</p>
-          {/* <div className='my-books-fees'>
-            Total Overdue Fees: 
-          </div> */}
+          <div className='my-books-days'>
+            Total Days Overdue: {overdueDays}
+          </div>
+          <div className='my-books-fees'>
+            Total Overdue Fees (${overdueFee} per day): ${overdueFee * overdueDays}
+          </div>
         </div>
         <div className='my-books-middle'>
           <div className='my-books-checked'>
