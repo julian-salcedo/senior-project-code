@@ -269,13 +269,20 @@ function Admin({user, books}) {
   function returnBook(e){
     e.preventDefault();
     const user = users.find((u)=> {return u.email== email})
+    if(!user.books.find(book=> book.bookId == bookId)){
+      alert("Book not found")
+      return
+    }
     const returnArr = user.books.filter((book)=> {return ((book.bookId != bookId) || (book.bookId == bookId && !book.isCheckedOut))})
+    document.getElementById('return-label').hidden = false;
+
     const docRef = doc(db, 'users', user.id)
 
     updateDoc(docRef, {
       books: returnArr
     }).then(()=> {
-      console.log('return successful')
+      document.getElementById('return-label').hidden = true;
+      alert('Successfully returned book')
       resetStates();
     }).catch((err)=> {
       console.log(err.message)
@@ -384,6 +391,7 @@ function Admin({user, books}) {
               <Select options={options} onChange={handleSelect} value={selected} isSearchable={false}/> 
             </div>
             <div>Book Id <input required type="text" value={bookId} onChange={(e)=> setBookId(e.target.value)}/> </div>
+            <div hidden id='return-label'><br />Returning Book...</div>
             <button type="submit">Return Book</button>
           </form>
         </div>
