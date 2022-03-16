@@ -23,6 +23,7 @@ function Admin({user, books}) {
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState(0);
   const [imageFile, setImageFile] = useState('');
+  const [filePath, setFilePath] = useState("");
   const [email, setEmail] = useState('');
   const [bookId, setBookId] = useState('');
   const [dueDate, setDueDate] = useState('')
@@ -380,6 +381,7 @@ function Admin({user, books}) {
     setDescription('');
     setAmount(0);
     setImageFile('');
+    setFilePath("");
     setEmail('');
     setBookId('');
     setOptions([]);
@@ -415,7 +417,7 @@ function Admin({user, books}) {
               <div>Author <input required type="text" value={author} onInput={(e)=> setAuthor(e.target.value)}/></div>
               <div>Description <input required type="text" value={description} onInput={(e)=> setDescription(e.target.value)}/></div>  
               <div>In Stock <input required type="number" value={amount} onInput={(e)=> setAmount(e.target.value)}/></div>
-              <div>Cover Image <input type="file" accept=".jpg, .jpeg, .png" onInput={(e)=> setImageFile(e.target.files[0])}/></div>
+              <div>Cover Image <input type="file" value={filePath} accept=".jpg, .jpeg, .png" onInput={(e)=> {setImageFile(e.target.files[0]); setFilePath(e.target.value)}}/></div>
               <div hidden><br /><div id='adding-book-label'>Adding Book...</div></div>
               <div><button type="submit">Add Book</button></div>
           </form>
