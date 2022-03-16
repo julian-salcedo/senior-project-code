@@ -4,6 +4,7 @@ import '../styles/Card.css'
 import DefaultCover from '../assets/random-book-cover.jpg';
 
 function Card({title,image,author,page,dueDate}) {
+    dueDate = dueDate && dueDate.toDate(dueDate)
     let isOnTime = dueDate && (dueDate - (new Date()).setHours(0, 0, 0, 0) >= 0);
 
     return (
