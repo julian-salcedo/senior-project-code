@@ -2,8 +2,10 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import '../styles/Card.css'
 import DefaultCover from '../assets/random-book-cover.jpg';
+import {Timestamp} from 'firebase/firestore'
 
 function Card({title,image,author,page,dueDate}) {
+    dueDate = dueDate && dueDate.toDate(dueDate)
     let isOnTime = dueDate && (dueDate - (new Date()).setHours(0, 0, 0, 0) >= 0);
 
     return (

@@ -76,7 +76,7 @@ function Admin({user, books}) {
 
   function getBookFromId(id) {
     const book = books.find(book => book.id == id);
-    return book;
+    return Object.create(book);
   }
 
   function selectForm(formName){

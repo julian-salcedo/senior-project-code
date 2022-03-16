@@ -8,7 +8,7 @@ function FlexBooks({books}) {
       {books.map(function(book){
         return(
           <td key={book.id}>
-            <Card title={book.title} image={book.imageURL} author={book.author} page={"/catalog/" + book.id}/>
+            <Card title={book.title} image={book.imageURL} author={book.author} page={"/catalog/" + book.id} dueDate={book.dueDate} />
           </td>
         )
       })}
