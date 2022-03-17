@@ -11,7 +11,6 @@ function BookInfo({user, uid, books}) {
   let { id } = useParams();
 
   const bookInfo = books.find(book => book.id == id);
-  console.log(bookInfo)
 
   function alreadyOnHold() {
     if(user && uid != 'y4pfi7AYC7XwzsmgSKRLmF792VS2'){

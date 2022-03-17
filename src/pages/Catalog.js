@@ -10,7 +10,7 @@ function Catalog({books}) {
     const query = document.getElementById("search-bar").value
     books.forEach(book => {
       const title = book.querySelector(".card-title").querySelector("strong").innerHTML
-      if(title.toLowerCase().startsWith(query.toLowerCase())) {
+      if(title.toLowerCase().includes(query.toLowerCase())) {
         book.hidden = false
       }
       else{
