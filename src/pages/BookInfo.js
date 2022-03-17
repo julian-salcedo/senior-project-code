@@ -103,7 +103,7 @@ function BookInfo({user, uid, books}) {
               {bookInfo.desc}
             </div>
             {alreadyCheckedOut() && <p>Already checked out</p>}
-            {(!alreadyCheckedOut() && !alreadyOnHold() && user.email != "admin@gmail.com") && <a onClick={placeHold} className='info-checkout'>Place Hold</a>}
+            {(user && !alreadyCheckedOut() && !alreadyOnHold() && user.email != "admin@gmail.com") && <a onClick={placeHold} className='info-checkout'>Place Hold</a>}
             {alreadyOnHold() && <a onClick={cancelHold} className='info-checkout'>Cancel Hold</a>}
           </div>
         </div>
