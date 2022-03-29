@@ -11,7 +11,6 @@ function BookInfo({user, uid, books}) {
   let { id } = useParams();
 
   const bookInfo = books.find(book => book.id == id);
-  console.log(bookInfo)
 
   function alreadyOnHold() {
     if(user && uid != 'y4pfi7AYC7XwzsmgSKRLmF792VS2'){
@@ -104,7 +103,7 @@ function BookInfo({user, uid, books}) {
               {bookInfo.desc}
             </div>
             {alreadyCheckedOut() && <p>Already checked out</p>}
-            {(!alreadyCheckedOut() && !alreadyOnHold() && user.email != "admin@gmail.com") && <a onClick={placeHold} className='info-checkout'>Place Hold</a>}
+            {(user && !alreadyCheckedOut() && !alreadyOnHold() && user.email != "admin@gmail.com") && <a onClick={placeHold} className='info-checkout'>Place Hold</a>}
             {alreadyOnHold() && <a onClick={cancelHold} className='info-checkout'>Cancel Hold</a>}
           </div>
         </div>
