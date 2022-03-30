@@ -1,5 +1,6 @@
 import React from 'react';
 import FlexBooks from '../components/FlexBooks.js';
+import '../styles/MyBooks.css';
 import {Timestamp} from 'firebase/firestore'
 
 function MyBooks({user, books}) {
@@ -44,15 +45,29 @@ function MyBooks({user, books}) {
     <div>
       {(user && user.email != "admin@gmail.com" && books &&
       <div>
-        <h1>My Books</h1>
-        <p>Total Days Overdue: {overdueDays}</p>
-        <p>Overdue Fee per Day: ${overdueFee}</p>
-        <p>Total Overdue Fees: ${overdueFee * overdueDays}</p>
-        <h3>Checked Out:</h3>
-        <FlexBooks books={checkedOutList} />
-        <h3>On Hold:</h3>
-        <FlexBooks books={(user.books.filter(book => !book.isCheckedOut)).map(hold => {return getBookFromId(hold.bookId);})} />
-        <br />
+        <div className='my-books-top'>
+          <div className='my-books-title'>
+            My Books
+          </div>
+          <div className='my-books-days'>
+            Total Days Overdue: {overdueDays}
+          </div>
+          <div className='my-books-fees'>
+            Total Overdue Fees (${overdueFee} per day): ${overdueFee * overdueDays}
+          </div>
+        </div>
+        <div className='my-books-middle'>
+          <div className='my-books-checked'>
+            Checked Out
+          </div>
+          <FlexBooks books={checkedOutList} />
+        </div>
+        <div className='my-books-bottom'>
+          <div className='my-books-hold'>
+            On Hold
+          </div>
+          <FlexBooks books={(user.books.filter(book => !book.isCheckedOut)).map(hold => {return getBookFromId(hold.bookId);})} />
+        </div>
       </div>)
         || (user && user.email == "admin@gmail.com" &&
           <h2>Not Signed In As Student</h2>) 

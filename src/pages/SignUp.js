@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import '../styles/SignIn.css';
 import { auth, db } from '../firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { useHistory, Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { doc, setDoc } from 'firebase/firestore';
+import '../styles/SignUp.css';
 
 function SignUp({user}) {
 
@@ -17,7 +18,6 @@ function SignUp({user}) {
 
   function handleSubmit(e){
     e.preventDefault();
-    // console.log('form submitted')
     createUserWithEmailAndPassword(auth, email, password)
       .then((cred)=> {
         console.log('user created', cred.user.uid)
@@ -45,37 +45,46 @@ function SignUp({user}) {
     <div>
     { (!user &&
       <div className='sign-in-page'>
-        <h1>Sign Up</h1>
-        <form onSubmit={handleSubmit}>
-          <table>
-            <tbody>
-              <tr>
-                  <td>
-                      <p>First Name</p>
-                      <input required type='text' name='firstName' value={firstName} onChange={(e)=> setFirstName(e.target.value)}/>
-                  </td>
-                  <td>
-                      <p>Last Name</p>
-                      <input required type='text' name='lastName' value={lastName} onChange={(e)=> setLastName(e.target.value)}/>
-                  </td>
-              </tr>
-              <tr>
-                  <td>
-                      <p>Email Address</p>
-                      <input required type='email' name='email' value={email} onChange={(e)=> setEmail(e.target.value)}/>
-                  </td>
-                  <td>
-                      <p>Password</p>
-                      <input required type='text' name='password' value={password} onChange={(e)=> setPassword(e.target.value)}/><br/>
-                  </td>
-              </tr>
+        <div className='sign-in-message'>
+          Sign Up
+        </div>
+        <div className='sign-in-form-container'>
+          <form onSubmit={handleSubmit}>
+            <div className='sign-in-form'>
+              <input 
+                className=''
+                required type='text' 
+                name='firstName' 
+                value={firstName} 
+                onChange={(e)=> setFirstName(e.target.value)}
+                placeholder='First Name'
+              />
+              <input 
+                required type='text' 
+                name='lastName' 
+                value={lastName} 
+                onChange={(e)=> setLastName(e.target.value)}
+                placeholder='Last Name'
+              />
+              <input 
+                className=''
+                required type='email' 
+                name='email' 
+                value={email} 
+                onChange={(e)=> setEmail(e.target.value)}
+                placeholder='Email'
+              />
+              <input 
+                required type='password' 
+                name='password' value={password} 
+                onChange={(e)=> setPassword(e.target.value)}
+                placeholder='Password'
+              />
 
-            </tbody>
-          </table>
-          <input type='submit' value='Sign Up' />
-        </form>
-        <p>Already have an account?</p>
-        <Link to='/sign-in'>Sign In</Link>
+              <input type='submit' value='Sign Up' />
+            </div>
+          </form>
+        </div>
       </div>)
       || (<h2>Already Logged In</h2>)
     }
