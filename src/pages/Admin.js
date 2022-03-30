@@ -379,6 +379,52 @@ function Admin({user, books}) {
     { ((user && user.email == "admin@gmail.com") &&
       <div className='admin-page'>
         <div className='admin-title'>Admin</div>
+        
+        <div>
+          <div className='admin-header' onClick={()=>selectForm("add-form")}>
+            Add Book
+          </div>
+          <form id='add-form' hidden={true} onSubmit={addBook}>
+            <div>
+              <div className='admin-subtitle'>Title</div>
+              <input 
+              className='admin-input'
+              required type="text" 
+              value={title} 
+              onInput={(e)=> setTitle(e.target.value)}/>
+              
+              <div className='admin-subtitle'>Author</div>
+              <input 
+              className='admin-input'
+              required type="text" 
+              value={author} 
+              onInput={(e)=> setAuthor(e.target.value)}/>
+              
+              <div className='admin-subtitle'>Description</div>
+              <input 
+              className='admin-input'
+              required type="text" 
+              value={description} 
+              onInput={(e)=> setDescription(e.target.value)}/>
+
+              <div className='admin-subtitle'>In Stock</div>
+              <input 
+              className='admin-input'
+              required type="number" 
+              value={amount} 
+              onInput={(e)=> setAmount(e.target.value)}/>
+
+              <div className='admin-subtitle'>Cover Image</div>
+              <input 
+              type="file" 
+              value={filePath} 
+              accept=".jpg, .jpeg, .png" 
+              onInput={(e)=> {setImageFile(e.target.files[0]); setFilePath(e.target.value)}}/>
+            </div>
+            <div hidden><br /><div id='adding-book-label'>Adding Book...</div></div>
+            <div className='admin-button-container'><button type="submit">Add Book</button></div>
+          </form>
+        </div>
 
         <div className='admin-tab'>
           <div className='admin-header' onClick={()=>selectForm("checkout-form")}>
@@ -392,9 +438,9 @@ function Admin({user, books}) {
               required type="email" 
               value={email} 
               onInput={(e)=> setEmail(e.target.value)} />
-              <button type='button' onClick={()=> {populateOptions(false)}}>
+              <div className='admin-button-container'><button type='button' onClick={()=> {populateOptions(false)}}>
                 Get Holds
-              </button>
+              </button></div>
             </div>
             <div>Reserved Books
               <Select className='admin-select' options={options} onChange={handleSelect} value={selected} isSearchable={false}/>
@@ -420,53 +466,38 @@ function Admin({user, books}) {
             <div hidden><br />
               <div id='checkout-label'>Checking Out Book...</div>
             </div>
-            <button type="submit">Checkout Book</button>
+            <div className='admin-button-container'><button type="submit">Checkout Book</button></div>
           </form>
         </div>
 
+
         <div className='admin-tab'>
-          <div className='admin-header' onClick={()=>selectForm("add-form")}>
-          Add Book
+          <div className='admin-header' onClick={()=>selectForm("return-form")}>
+            Return Book
           </div>
-          <form id='add-form' hidden={true} onSubmit={addBook}>
-              <div>
-                <div>Title</div>
-                <input 
-                className='admin-input'
-                required type="text" 
-                value={title} 
-                onInput={(e)=> setTitle(e.target.value)}/>
-              </div> 
-              <div>
-                <div>Author</div>
-                <input 
-                className='admin-input'
-                required type="text" 
-                value={author} 
-                onInput={(e)=> setAuthor(e.target.value)}/>
-              </div>
-              <div>
-                <div>Description</div>
-                <input 
-                className='admin-input'
-                required type="text" 
-                value={description} 
-                onInput={(e)=> setDescription(e.target.value)}/>
-              </div>  
-              <div>
-                <div>In Stock</div>
-                <input 
-                className='admin-input'
-                required type="number" 
-                value={amount} 
-                onInput={(e)=> setAmount(e.target.value)}/>
-              </div>
-              <div>
-                <div>Cover Image</div>
-                <input type="file" value={filePath} accept=".jpg, .jpeg, .png" onInput={(e)=> {setImageFile(e.target.files[0]); setFilePath(e.target.value)}}/>
-              </div>
-              <div hidden><br /><div id='adding-book-label'>Adding Book...</div></div>
-              <div><button type="submit">Add Book</button></div>
+          <form id='return-form' hidden={true} onSubmit={returnBook}>
+            <div>
+              <div>User Email</div>
+              <input 
+              className='admin-input'
+              required type="email" 
+              value={email} 
+              onInput={(e)=> setEmail(e.target.value)}/> 
+              <div className='admin-button-container'><button type='button' onClick={()=> populateOptions(true)}>Get Books</button></div> 
+            </div>
+            <div>Checked Out Books 
+              <Select options={options} onChange={handleSelect} value={selected} isSearchable={false}/> 
+            </div>
+            <div>
+              <div>Book ID</div>
+              <input 
+              className='admin-input'
+              required type="text" 
+              value={bookId} 
+              onChange={(e)=> setBookId(e.target.value)}/> 
+            </div>
+            <div hidden><br /><div id='return-label'>Returning Book...</div></div>
+            <div className='admin-button-container'><button type="submit">Return Book</button></div> 
           </form>
         </div>
 
@@ -483,37 +514,7 @@ function Admin({user, books}) {
                 value={bookId} 
                 onInput={(e)=> setBookId(e.target.value)}/></div>
               <div hidden><br /><div id='delete-label'>Deleting Book...</div></div>
-              <div><button type="submit">Delete Book</button></div>
-          </form>
-        </div>
-
-        <div className='admin-tab'>
-          <div className='admin-header' onClick={()=>selectForm("return-form")}>
-            Return Book
-          </div>
-          <form id='return-form' hidden={true} onSubmit={returnBook}>
-            <div>
-              <div>User Email</div>
-              <input 
-              className='admin-input'
-              required type="email" 
-              value={email} 
-              onInput={(e)=> setEmail(e.target.value)}/> 
-              <button type='button' onClick={()=> populateOptions(true)}>Get Books</button>
-            </div>
-            <div>Checked Out Books 
-              <Select options={options} onChange={handleSelect} value={selected} isSearchable={false}/> 
-            </div>
-            <div>
-              <div>Book ID</div>
-              <input 
-              className='admin-input'
-              required type="text" 
-              value={bookId} 
-              onChange={(e)=> setBookId(e.target.value)}/> 
-            </div>
-            <div hidden><br /><div id='return-label'>Returning Book...</div></div>
-            <button type="submit">Return Book</button>
+              <div className='admin-button-container'><button type="submit">Delete Book</button></div>
           </form>
         </div>
 

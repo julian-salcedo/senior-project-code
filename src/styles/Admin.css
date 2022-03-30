@@ -1,7 +1,6 @@
 .admin-page{
     height: calc(100vh - 100px);
-    width: 30vw;
-    padding: 0vw 35vw;
+    min-height: 730px;
     border: 1px solid transparent;
     background: #EDDDD0;
     display: flex;
@@ -30,15 +29,44 @@
     cursor: pointer;
 }
 
+.admin-subtitle {
+    color: #422A14;
+    font-size: 1rem;
+    font-family: 'Times New Roman', serif;
+    font-weight: bold;
+}
+
 .admin-input {
     width: calc(100% - 41px);
     padding: 10px 20px;
-    margin: 16px 0px 16px 0px;
+    margin-bottom: 16px;
     border: none;
     border: 1px solid rgb(200,200,200);
     border-radius: 5px;
 }
 
+.admin-button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
 .admin-page button {
+    background: #EDDDD0;
+    color: #422A14;
+    padding: 3px 15px;
+    border: 1.5px solid #422A14;
+    border-radius: 30px;
+    margin-bottom: 16px;
+    font-size: 1rem;
+    font-family: 'Times New Roman', serif;
     cursor: pointer;
+    transition: 0.3s;
+    animation: ease;
+}
+
+.admin-page button:hover {
+    background: #EF5D58;
+    border: 1.5px solid #EF5D58;
+    color: #F1F1F1;
 }
