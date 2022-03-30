@@ -45,6 +45,10 @@
     border-radius: 5px;
 }
 
+.admin-select {
+    margin-bottom: 16px;
+}
+
 .admin-button-container {
     display: flex;
     flex-direction: row;

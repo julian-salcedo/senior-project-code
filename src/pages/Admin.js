@@ -431,30 +431,30 @@ function Admin({user, books}) {
             Checkout Book
           </div>
           <form id='checkout-form' hidden={true} onSubmit={checkoutBook}>
-            <div> 
-              <div>User Email</div>
+
+              <div className='admin-subtitle'>User Email</div>
               <input 
               className='admin-input'
               required type="email" 
               value={email} 
               onInput={(e)=> setEmail(e.target.value)} />
-              <div className='admin-button-container'><button type='button' onClick={()=> {populateOptions(false)}}>
-                Get Holds
-              </button></div>
-            </div>
-            <div>Reserved Books
+              <div className='admin-button-container'>
+                <button type='button' onClick={()=> {populateOptions(false)}}>
+                  Get Holds
+                </button>
+              </div>
+            
+              <div className='admin-subtitle'>Reserved Books</div>
               <Select className='admin-select' options={options} onChange={handleSelect} value={selected} isSearchable={false}/>
-            </div>
-            <div>
-              <div>Book ID</div>
+            
+              <div className='admin-subtitle'>Book ID</div>
               <input 
               className='admin-input'
               required type="text" 
               value={bookId} 
               onChange={(e)=> setBookId(e.target.value)}/>
-            </div> 
-            <div>
-              <div>Due Date</div>
+
+              <div className='admin-subtitle'>Due Date</div>
               <input 
               className='admin-input'
               required type="date" 
@@ -462,7 +462,7 @@ function Admin({user, books}) {
               onInput={(e)=> setDueDate(e.target.value)} 
               min={todayString} 
               id='due-date-input' />
-            </div>
+
             <div hidden><br />
               <div id='checkout-label'>Checking Out Book...</div>
             </div>
@@ -476,26 +476,25 @@ function Admin({user, books}) {
             Return Book
           </div>
           <form id='return-form' hidden={true} onSubmit={returnBook}>
-            <div>
-              <div>User Email</div>
+
+              <div className='admin-subtitle'>User Email</div>
               <input 
               className='admin-input'
               required type="email" 
               value={email} 
               onInput={(e)=> setEmail(e.target.value)}/> 
               <div className='admin-button-container'><button type='button' onClick={()=> populateOptions(true)}>Get Books</button></div> 
-            </div>
-            <div>Checked Out Books 
-              <Select options={options} onChange={handleSelect} value={selected} isSearchable={false}/> 
-            </div>
-            <div>
-              <div>Book ID</div>
+            
+              <div className='admin-subtitle'>Checked Out Books</div> 
+              <Select className='admin-select' options={options} onChange={handleSelect} value={selected} isSearchable={false}/> 
+
+              <div className='admin-subtitle'>Book ID</div>
               <input 
               className='admin-input'
               required type="text" 
               value={bookId} 
               onChange={(e)=> setBookId(e.target.value)}/> 
-            </div>
+
             <div hidden><br /><div id='return-label'>Returning Book...</div></div>
             <div className='admin-button-container'><button type="submit">Return Book</button></div> 
           </form>
@@ -507,7 +506,7 @@ function Admin({user, books}) {
           </div>
           <form id='delete-form' hidden={true} onSubmit={deleteBook}>
               <div>
-                <div>Book ID</div>
+                <div className='admin-subtitle'>Book ID</div>
                 <input 
                 className='admin-input'
                 required type="text" 
