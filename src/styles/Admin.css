@@ -1,13 +1,44 @@
-#admin-page{
-    width: 40%;
-    margin: auto;
+.admin-page{
+    height: calc(100vh - 100px);
+    width: 30vw;
+    padding: 0vw 35vw;
+    border: 1px solid transparent;
+    background: #EDDDD0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-#admin-page .header {
-    background-color: rgb(5, 119, 125);
+.admin-title {
+    color: #422A14;
+    font-size: 3rem;
+    font-family: 'Georgia', 'Century Expanded', 'Times New Roman', serif;
+    margin: 2rem;
+}
+
+.admin-header {
+    background-color: #487876;
+    color: #F1F1F1;
+    width: 400px;
+    padding: 0.25rem;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-family: 'Times New Roman', serif;
+    text-align: center;
     cursor: pointer;
 }
 
-#admin-page button {
+.admin-input {
+    width: calc(100% - 41px);
+    padding: 10px 20px;
+    margin: 16px 0px 16px 0px;
+    border: none;
+    border: 1px solid rgb(200,200,200);
+    border-radius: 5px;
+}
+
+.admin-page button {
     cursor: pointer;
 }
