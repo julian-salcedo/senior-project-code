@@ -36,11 +36,6 @@ function Admin({user, books}) {
   const returnLabel = document.getElementById('return-label')
 
   useEffect(() => {
-    const getUsers = async () => {
-      const data = await getDocs(usersColRef);
-      setUsers(data.docs.map((doc) => {return ({ ...doc.data(), id: doc.id }) }));
-    }
-    getUsers();
     resetStates();
 
     onSnapshot(usersColRef, (snapshot)=> {
@@ -91,6 +86,7 @@ function Admin({user, books}) {
     addingBookLabel.parentNode.hidden = true
     deleteLabel.parentNode.hidden = true
     returnLabel.parentNode.hidden = true
+    resetStates();
   }
 
   function addBook(e){
@@ -102,6 +98,7 @@ function Admin({user, books}) {
       return
     }
 
+    //adding a book without an image
     if(!imageFile){
       addingBookLabel.innerHTML = "Adding Book..."
       addDoc(booksColRef, {
@@ -270,34 +267,47 @@ function Admin({user, books}) {
     returnLabel.innerHTML = "Returning Book..."
     const returnArr = user.books.filter((book)=> {return ((book.bookId != bookId) || (book.bookId == bookId && !book.isCheckedOut))})
 
-    const docRef = doc(db, 'users', user.id)
-
-    updateDoc(docRef, {
+    //update books field in user doc
+    const userDocRef = doc(db, 'users', user.id)
+    updateDoc(userDocRef, {
       books: returnArr
     }).then(()=> {
-      returnLabel.innerHTML = 'Successfully returned book'
-      resetStates();
+      const bookDocRef = doc(db, 'books', bookId);
+      const bookInfo = books.find(book => book.id == bookId)
+      updateDoc(bookDocRef, {
+        amount: bookInfo.amount + 1
+      }).then(()=> {
+        returnLabel.innerHTML = 'Successfully returned book'
+        resetStates();
+
+      }).catch((err)=> {
+        console.log(err.message)
+        returnLabel.innerHTML = 'Error: ' + err.message
+      })
     }).catch((err)=> {
       console.log(err.message)
       returnLabel.innerHTML = 'Error: ' + err.message
     })
+
 
   }
 
   function deleteBook(e){
     e.preventDefault()
 
-    //first erase book from all users
-    //doesnt update users state directly
     deleteLabel.parentNode.hidden = false
-
+    
     if(!books.find(book=> book.id == bookId)){
       deleteLabel.innerHTML = "Book not found"
       return
     }
-
+    
     deleteLabel.innerHTML = "Deleting Book..."
+    
+    //first erase book from all users
+    //doesnt update users state directly
 
+    //find users with book from users state
     const usersWithBook = users.filter((user)=> {return user.books.some((book)=> {return book.bookId == bookId})})
     usersWithBook.forEach((user)=> {
       const docRef = doc(db, 'users', user.id)
@@ -359,6 +369,7 @@ function Admin({user, books}) {
 
   }
 
+  //resets all states except for users
   function resetStates(){
     setTitle('');
     setAuthor('');
