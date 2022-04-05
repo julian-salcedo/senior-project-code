@@ -16,12 +16,4 @@ function FlexBooks({books}) {
   )
 }
 
-// function TestFlexBooks() {
-//   return (
-//     <div className='wrapper'>
-//       <Card image={DefaultCover} title='Test Book' author='person' />   
-//     </div>
-//   )
-// }
-
 export default FlexBooks
