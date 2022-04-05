@@ -1,13 +1,76 @@
-#admin-page{
-    width: 40%;
-    margin: auto;
+.admin-page{
+    height: calc(100vh - 100px);
+    min-height: 730px;
+    border: 1px solid transparent;
+    background: #EDDDD0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-#admin-page .header {
-    background-color: rgb(5, 119, 125);
+.admin-title {
+    color: #422A14;
+    font-size: 3rem;
+    font-family: 'Georgia', 'Century Expanded', 'Times New Roman', serif;
+    margin: 2rem;
+}
+
+.admin-header {
+    background-color: #487876;
+    color: #F1F1F1;
+    width: 400px;
+    padding: 0.25rem;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-family: 'Times New Roman', serif;
+    text-align: center;
     cursor: pointer;
 }
 
-#admin-page button {
+.admin-subtitle {
+    color: #422A14;
+    font-size: 1rem;
+    font-family: 'Times New Roman', serif;
+    font-weight: bold;
+}
+
+.admin-input {
+    width: calc(100% - 41px);
+    padding: 10px 20px;
+    margin-bottom: 16px;
+    border: none;
+    border: 1px solid rgb(200,200,200);
+    border-radius: 5px;
+}
+
+.admin-select {
+    margin-bottom: 16px;
+}
+
+.admin-button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.admin-page button {
+    background: #EDDDD0;
+    color: #422A14;
+    padding: 3px 15px;
+    border: 1.5px solid #422A14;
+    border-radius: 30px;
+    margin-bottom: 16px;
+    font-size: 1rem;
+    font-family: 'Times New Roman', serif;
     cursor: pointer;
+    transition: 0.3s;
+    animation: ease;
+}
+
+.admin-page button:hover {
+    background: #EF5D58;
+    border: 1.5px solid #EF5D58;
+    color: #F1F1F1;
 }

@@ -36,11 +36,6 @@ function Admin({user, books}) {
   const returnLabel = document.getElementById('return-label')
 
   useEffect(() => {
-    const getUsers = async () => {
-      const data = await getDocs(usersColRef);
-      setUsers(data.docs.map((doc) => {return ({ ...doc.data(), id: doc.id }) }));
-    }
-    getUsers();
     resetStates();
 
     onSnapshot(usersColRef, (snapshot)=> {
@@ -91,6 +86,7 @@ function Admin({user, books}) {
     addingBookLabel.parentNode.hidden = true
     deleteLabel.parentNode.hidden = true
     returnLabel.parentNode.hidden = true
+    resetStates();
   }
 
   function addBook(e){
@@ -102,6 +98,7 @@ function Admin({user, books}) {
       return
     }
 
+    //adding a book without an image
     if(!imageFile){
       addingBookLabel.innerHTML = "Adding Book..."
       addDoc(booksColRef, {
@@ -270,34 +267,47 @@ function Admin({user, books}) {
     returnLabel.innerHTML = "Returning Book..."
     const returnArr = user.books.filter((book)=> {return ((book.bookId != bookId) || (book.bookId == bookId && !book.isCheckedOut))})
 
-    const docRef = doc(db, 'users', user.id)
-
-    updateDoc(docRef, {
+    //update books field in user doc
+    const userDocRef = doc(db, 'users', user.id)
+    updateDoc(userDocRef, {
       books: returnArr
     }).then(()=> {
-      returnLabel.innerHTML = 'Successfully returned book'
-      resetStates();
+      const bookDocRef = doc(db, 'books', bookId);
+      const bookInfo = books.find(book => book.id == bookId)
+      updateDoc(bookDocRef, {
+        amount: bookInfo.amount + 1
+      }).then(()=> {
+        returnLabel.innerHTML = 'Successfully returned book'
+        resetStates();
+
+      }).catch((err)=> {
+        console.log(err.message)
+        returnLabel.innerHTML = 'Error: ' + err.message
+      })
     }).catch((err)=> {
       console.log(err.message)
       returnLabel.innerHTML = 'Error: ' + err.message
     })
+
 
   }
 
   function deleteBook(e){
     e.preventDefault()
 
-    //first erase book from all users
-    //doesnt update users state directly
     deleteLabel.parentNode.hidden = false
-
+    
     if(!books.find(book=> book.id == bookId)){
       deleteLabel.innerHTML = "Book not found"
       return
     }
-
+    
     deleteLabel.innerHTML = "Deleting Book..."
+    
+    //first erase book from all users
+    //doesnt update users state directly
 
+    //find users with book from users state
     const usersWithBook = users.filter((user)=> {return user.books.some((book)=> {return book.bookId == bookId})})
     usersWithBook.forEach((user)=> {
       const docRef = doc(db, 'users', user.id)
@@ -359,6 +369,7 @@ function Admin({user, books}) {
 
   }
 
+  //resets all states except for users
   function resetStates(){
     setTitle('');
     setAuthor('');
@@ -377,55 +388,143 @@ function Admin({user, books}) {
   return (
     <div>
     { ((user && user.email == "admin@gmail.com") &&
-      <div id='admin-page'>
-        <h1>Admin</h1>
-
+      <div className='admin-page'>
+        <div className='admin-title'>Admin</div>
+        
         <div>
-          <h3 className='header' onClick={()=>selectForm("checkout-form")}>Checkout Book</h3>
-          <form id='checkout-form' hidden={true} onSubmit={checkoutBook}>
-            <div>User Email <input required type="email" value={email} onInput={(e)=> setEmail(e.target.value)}/> <button type='button' onClick={()=> {populateOptions(false)}}>Get Holds</button></div>
-            <div>Reserved Books
-              <Select options={options} onChange={handleSelect} value={selected} isSearchable={false}/>
-            </div>
-            <div>Book Id <input required type="text" value={bookId} onChange={(e)=> setBookId(e.target.value)}/></div> 
-            <div>Due Date <input required type="date" value={dueDate} onInput={(e)=> setDueDate(e.target.value)} min={todayString} id='due-date-input' /></div>
-            <div hidden><br /><div id='checkout-label'>Checking Out Book...</div></div>
-            <button type="submit">Checkout Book</button>
-          </form>
-        </div>
-
-        <div>
-          <h3 className='header' onClick={()=>selectForm("add-form")}>Add Book</h3>
+          <div className='admin-header' onClick={()=>selectForm("add-form")}>
+            Add Book
+          </div>
           <form id='add-form' hidden={true} onSubmit={addBook}>
-              <div>Title <input required type="text" value={title} onInput={(e)=> setTitle(e.target.value)}/></div> 
-              <div>Author <input required type="text" value={author} onInput={(e)=> setAuthor(e.target.value)}/></div>
-              <div>Description <input required type="text" value={description} onInput={(e)=> setDescription(e.target.value)}/></div>  
-              <div>In Stock <input required type="number" value={amount} onInput={(e)=> setAmount(e.target.value)}/></div>
-              <div>Cover Image <input type="file" value={filePath} accept=".jpg, .jpeg, .png" onInput={(e)=> {setImageFile(e.target.files[0]); setFilePath(e.target.value)}}/></div>
-              <div hidden><br /><div id='adding-book-label'>Adding Book...</div></div>
-              <div><button type="submit">Add Book</button></div>
-          </form>
-        </div>
+            <div>
+              <div className='admin-subtitle'>Title</div>
+              <input 
+              className='admin-input'
+              required type="text" 
+              value={title} 
+              onInput={(e)=> setTitle(e.target.value)}/>
+              
+              <div className='admin-subtitle'>Author</div>
+              <input 
+              className='admin-input'
+              required type="text" 
+              value={author} 
+              onInput={(e)=> setAuthor(e.target.value)}/>
+              
+              <div className='admin-subtitle'>Description</div>
+              <input 
+              className='admin-input'
+              required type="text" 
+              value={description} 
+              onInput={(e)=> setDescription(e.target.value)}/>
 
-        <div>
-          <h3 className='header' onClick={()=>selectForm("delete-form")}>Delete Book</h3>
-          <form id='delete-form' hidden={true} onSubmit={deleteBook}>
-              <div>Book Id<input required type="text" value={bookId} onInput={(e)=> setBookId(e.target.value)}/></div>
-              <div hidden><br /><div id='delete-label'>Deleting Book...</div></div>
-              <div><button type="submit">Delete Book</button></div>
-          </form>
-        </div>
+              <div className='admin-subtitle'>In Stock</div>
+              <input 
+              className='admin-input'
+              required type="number" 
+              value={amount} 
+              onInput={(e)=> setAmount(e.target.value)}/>
 
-        <div>
-          <h3 className='header' onClick={()=>selectForm("return-form")}>Return Book</h3>
-          <form id='return-form' hidden={true} onSubmit={returnBook}>
-            <div>User Email <input required type="email" value={email} onInput={(e)=> setEmail(e.target.value)}/> <button type='button' onClick={()=> populateOptions(true)}>Get Books</button></div>
-            <div>Checked Out Books 
-              <Select options={options} onChange={handleSelect} value={selected} isSearchable={false}/> 
+              <div className='admin-subtitle'>Cover Image</div>
+              <input 
+              type="file" 
+              value={filePath} 
+              accept=".jpg, .jpeg, .png" 
+              onInput={(e)=> {setImageFile(e.target.files[0]); setFilePath(e.target.value)}}/>
             </div>
-            <div>Book Id <input required type="text" value={bookId} onChange={(e)=> setBookId(e.target.value)}/> </div>
+            <div hidden><br /><div id='adding-book-label'>Adding Book...</div></div>
+            <div className='admin-button-container'><button type="submit">Add Book</button></div>
+          </form>
+        </div>
+
+        <div className='admin-tab'>
+          <div className='admin-header' onClick={()=>selectForm("checkout-form")}>
+            Checkout Book
+          </div>
+          <form id='checkout-form' hidden={true} onSubmit={checkoutBook}>
+
+              <div className='admin-subtitle'>User Email</div>
+              <input 
+              className='admin-input'
+              required type="email" 
+              value={email} 
+              onInput={(e)=> setEmail(e.target.value)} />
+              <div className='admin-button-container'>
+                <button type='button' onClick={()=> {populateOptions(false)}}>
+                  Get Holds
+                </button>
+              </div>
+            
+              <div className='admin-subtitle'>Reserved Books</div>
+              <Select className='admin-select' options={options} onChange={handleSelect} value={selected} isSearchable={false}/>
+            
+              <div className='admin-subtitle'>Book ID</div>
+              <input 
+              className='admin-input'
+              required type="text" 
+              value={bookId} 
+              onChange={(e)=> setBookId(e.target.value)}/>
+
+              <div className='admin-subtitle'>Due Date</div>
+              <input 
+              className='admin-input'
+              required type="date" 
+              value={dueDate} 
+              onInput={(e)=> setDueDate(e.target.value)} 
+              min={todayString} 
+              id='due-date-input' />
+
+            <div hidden><br />
+              <div id='checkout-label'>Checking Out Book...</div>
+            </div>
+            <div className='admin-button-container'><button type="submit">Checkout Book</button></div>
+          </form>
+        </div>
+
+
+        <div className='admin-tab'>
+          <div className='admin-header' onClick={()=>selectForm("return-form")}>
+            Return Book
+          </div>
+          <form id='return-form' hidden={true} onSubmit={returnBook}>
+
+              <div className='admin-subtitle'>User Email</div>
+              <input 
+              className='admin-input'
+              required type="email" 
+              value={email} 
+              onInput={(e)=> setEmail(e.target.value)}/> 
+              <div className='admin-button-container'><button type='button' onClick={()=> populateOptions(true)}>Get Books</button></div> 
+            
+              <div className='admin-subtitle'>Checked Out Books</div> 
+              <Select className='admin-select' options={options} onChange={handleSelect} value={selected} isSearchable={false}/> 
+
+              <div className='admin-subtitle'>Book ID</div>
+              <input 
+              className='admin-input'
+              required type="text" 
+              value={bookId} 
+              onChange={(e)=> setBookId(e.target.value)}/> 
+
             <div hidden><br /><div id='return-label'>Returning Book...</div></div>
-            <button type="submit">Return Book</button>
+            <div className='admin-button-container'><button type="submit">Return Book</button></div> 
+          </form>
+        </div>
+
+        <div className='admin-tab'>
+          <div className='admin-header' onClick={()=>selectForm("delete-form")}>
+            Delete Book
+          </div>
+          <form id='delete-form' hidden={true} onSubmit={deleteBook}>
+              <div>
+                <div className='admin-subtitle'>Book ID</div>
+                <input 
+                className='admin-input'
+                required type="text" 
+                value={bookId} 
+                onInput={(e)=> setBookId(e.target.value)}/></div>
+              <div hidden><br /><div id='delete-label'>Deleting Book...</div></div>
+              <div className='admin-button-container'><button type="submit">Delete Book</button></div>
           </form>
         </div>
 

@@ -77,6 +77,19 @@
     background: #EF5D58;
 }
 
+.info-checked-out {
+    padding: 20px 45px;
+    align-self: center;
+    margin: 32px;
+    background: #EDDDD0;
+    color: #422A14;
+    font-size: 1rem;
+    font-family: 'Times New Roman', serif;
+    font-weight: bold;
+    border: 2px dashed #422A14;
+    border-radius: 30px;
+}
+
 @media only screen and (max-width: 800px) {
     .info-page {
         flex-direction: column;
