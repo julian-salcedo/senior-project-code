@@ -48,6 +48,26 @@ function Admin({user, books}) {
 
   }, []);
 
+  function getOverdueDays(user, bookId){
+      if(!user || !bookId){
+        return ""
+      }
+      const theBook = user.books.find(book => book.bookId == bookId)
+      if(!theBook){
+        return ""
+      }
+      if(!theBook.isCheckedOut){
+        return ""
+      }
+
+      let daysLate = Math.floor((Timestamp.now().seconds - theBook.dueDate.seconds) / 86400)
+      if(daysLate > 0){
+        return " (" + daysLate + " DAYS LATE)"
+      }
+      
+      return ""
+    }
+
   //populates options state depending on if you want isCheckedOut to be true or false
   function populateOptions(isCheckedOut){
     const user = users.find((u)=> {return u.email == email})
@@ -58,7 +78,7 @@ function Admin({user, books}) {
 
     holds.forEach((hold)=> {
       opts.push({
-        label: getBookFromId(hold.bookId).title,
+        label: (getBookFromId(hold.bookId).title + getOverdueDays(user, hold.bookId)),
         value: hold.bookId
       })
     })
@@ -249,6 +269,8 @@ function Admin({user, books}) {
       checkoutLabel.innerHTML = "Error checking out book: " + err.message
     })
   }
+
+  
 
   function returnBook(e){
     e.preventDefault();
